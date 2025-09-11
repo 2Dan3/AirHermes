@@ -45,7 +45,7 @@ public class UserDAOImpl implements UserDAO {
     public List<User> find(String name, String surname, String username, String email, Boolean admin, Boolean blocked) {
         ArrayList<Object> listaArgumenata = new ArrayList<Object>();
 
-        String sql = "SELECT id, name, surname, username, password, email, dateOfBirth, registrationTimestamp, admin, blocked FROM users ";
+        String sql = "SELECT id, name, surname, username, password, email, date_of_birth, registration_timestamp, admin, blocked FROM users ";
 
         StringBuffer whereSql = new StringBuffer(" WHERE ");
         boolean imaArgumenata = false;

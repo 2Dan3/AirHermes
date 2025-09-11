@@ -2,7 +2,6 @@ package com.ftn.dan.airhermes.controller;
 
 import com.ftn.dan.airhermes.model.entity.User;
 import com.ftn.dan.airhermes.service.UserService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

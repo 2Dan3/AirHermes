@@ -25,8 +25,6 @@
             </tr>
             <tr>
                 <th></th>
-                <th><input type="search" name="username" th:value="${param.username}?: null"/></th>
-                <th><input type="search" name="email" th:value="${param.email}?: null"/></th>
 <!--                <th>-->
 <!--                    <select name="pol">-->
 <!--                        <option value="">odaberi</option>-->
@@ -38,6 +36,8 @@
                 <th><input type="search" name="surname" th:value="${param.surname}?: null"/></th>
                 <th><input type="search" name="username" th:value="${param.username}?: null"/></th>
                 <th><input type="search" name="email" th:value="${param.email}?: null"/></th>
+                <th></th>
+                <th></th>
                 <th><input type="checkbox" name="admin" th:checked="${param.admin != null}"/></th>
                 <th><input type="checkbox" name="blocked" th:checked="${param.blocked != null}"/></th>
                 <th><input type="submit" value="Search"/></th>
