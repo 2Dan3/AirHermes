@@ -1,9 +1,25 @@
+-- Production v1.0 - Projekat AIRPORT:
+
 DROP SCHEMA IF EXISTS airhermes;
 CREATE SCHEMA airhermes DEFAULT CHARACTER SET utf8;
 USE airhermes;
 
+CREATE TABLE users (
+	id BIGINT AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    surname VARCHAR(40) NOT NULL,
+    username VARCHAR(30) NOT NULL,
+    password VARCHAR(20) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    date_of_birth DATETIME,
+    registration_timestamp DATETIME,
+    admin BOOL DEFAULT false,
+    blocked BOOL DEFAULT false,
+    PRIMARY KEY(id)
+);
+
 CREATE TABLE locations (
-    id BIGINT,
+    id BIGINT AUTO_INCREMENT,
     city VARCHAR(40),
     state VARCHAR(40),
     continent VARCHAR(40),
@@ -12,7 +28,7 @@ CREATE TABLE locations (
 );
 
 CREATE TABLE airplanes (
-	id BIGINT,
+	id BIGINT AUTO_INCREMENT,
     name VARCHAR(40) NOT NULL,
     seat_rows INT NOT NULL,
     seat_columns INT NOT NULL,
@@ -20,15 +36,14 @@ CREATE TABLE airplanes (
 );
 
 CREATE TABLE airports (
-    id BIGINT AUTO_INCREMENT,
     airport_code_name VARCHAR(3),
     location_id BIGINT,
-    PRIMARY KEY(id),
+    PRIMARY KEY(airport_code_name),
     FOREIGN KEY(location_id) REFERENCES locations(id)
 );
 
 CREATE TABLE discounts_standard (
-    id BIGINT,
+    id BIGINT AUTO_INCREMENT,
 --    check line
     discount_coefficient DECIMAL(10, 2) DEFAULT 0,
     valid_until_date DATETIME NOT NULL,
@@ -37,33 +52,36 @@ CREATE TABLE discounts_standard (
 
 CREATE TABLE flights (
     id BIGINT AUTO_INCREMENT,
-    airport_departure_id BIGINT,
-    airport_destination_id BIGINT,
+    airport_departure_code_name VARCHAR(3),
+    airport_destination_code_name VARCHAR(3),
     airplane_id BIGINT,
     departure_timestamp DATETIME,
     flight_duration_minutes INT,
     flight_ticket_price INT,
     discount_standard_id BIGINT,
     PRIMARY KEY(id),
-    FOREIGN KEY(airport_departure_id) REFERENCES airports(id),
-    FOREIGN KEY(airport_destination_id) REFERENCES airports(id),
+    FOREIGN KEY(airport_departure_code_name) REFERENCES airports(airport_code_name),
+    FOREIGN KEY(airport_destination_code_name) REFERENCES airports(airport_code_name),
     FOREIGN KEY(airplane_id) REFERENCES airplanes(id),
     FOREIGN KEY(discount_standard_id) REFERENCES discounts_standard(id)
 );
 
 CREATE TABLE flight_cancellations (
-    id BIGINT,
-    flight_cancelled_id BIGINT,
+    flight_cancelled_id BIGINT AUTO_INCREMENT,
     reason_of_cancellation VARCHAR(80),
-    PRIMARY KEY(id),
-    FOREIGN KEY(flight_cancelled_id) REFERENCES flights(id)
+    PRIMARY KEY(flight_cancelled_id),
+    FOREIGN KEY(flight_cancelled_id) REFERENCES flights(id) 
+		 ON DELETE CASCADE
 );
 
 CREATE TABLE flight_reservations (
-    id BIGINT,
+    id BIGINT AUTO_INCREMENT,
     reservation_creation_timestamp DATETIME,
     sum_price_of_flight_tickets INT,
-    PRIMARY KEY(id)
+    user_id BIGINT,
+    PRIMARY KEY(id),
+    FOREIGN KEY(user_id) REFERENCES users(id) 
+		ON DELETE CASCADE
 );
 
 CREATE TABLE flight_flight_reservation (
@@ -77,83 +95,224 @@ CREATE TABLE flight_flight_reservation (
 );
 
 CREATE TABLE flight_tickets (
-    id BIGINT,
+    id BIGINT AUTO_INCREMENT,
     flight_id BIGINT,
     seat_number INT,
     flight_ticket_price INT,
-    passenger_name_surname VARCHAR(70),
+    user_id BIGINT,
 --    check paranthesis
     passport_number INT(9),
+    flight_reservation_id BIGINT,
     PRIMARY KEY(id),
-    FOREIGN KEY(flight_id) REFERENCES flights(id)
-);
-
-CREATE TABLE users (
-    name VARCHAR(30) NOT NULL,
-    surname VARCHAR(40) NOT NULL,
-    username VARCHAR(30) NOT NULL,
-    password VARCHAR(20) NOT NULL,
-    email VARCHAR(50) NOT NULL,
-    date_of_birth DATETIME,
-    registration_timestamp DATETIME,
-    admin BOOL DEFAULT false,
-    blocked BOOL DEFAULT false,
-    PRIMARY KEY(username)
+    FOREIGN KEY(flight_id) REFERENCES flights(id),
+    FOREIGN KEY(flight_reservation_id) REFERENCES flight_reservations(id) 
+		 ON DELETE CASCADE, 
+	 FOREIGN KEY(user_id) REFERENCES users(id) 
+		ON DELETE CASCADE
 );
 
 CREATE TABLE loyalty_cards (
-    id BIGINT,
+    id BIGINT AUTO_INCREMENT,
     granted_discount_coefficient DECIMAL(10, 2),
     points_collected INT,
-    user_username VARCHAR(30),
+    user_id BIGINT,
     PRIMARY KEY(id),
-    FOREIGN KEY(user_username) REFERENCES users(username)
+    FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
 CREATE TABLE loyalty_card_creation_requests (
-    user_username VARCHAR(30),
+    user_id BIGINT,
     status VARCHAR(8),
-    PRIMARY KEY(user_username),
-    FOREIGN KEY(user_username) REFERENCES users(username)
+    PRIMARY KEY(user_id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
 CREATE TABLE shopping_carts (
-    user_username VARCHAR(30),
+    user_id BIGINT,
     flight_ticket_id BIGINT,
-    PRIMARY KEY(user_username, flight_ticket_id),
-    FOREIGN KEY(user_username) REFERENCES users(username)
+    PRIMARY KEY(user_id, flight_ticket_id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
         ON DELETE CASCADE,
     FOREIGN KEY(flight_ticket_id) REFERENCES flight_tickets(id)
         ON DELETE CASCADE
 );
 
 CREATE TABLE wish_list_of_flights (
-    user_username VARCHAR(30),
+    user_id BIGINT,
     flight_id BIGINT,
-    PRIMARY KEY(user_username, flight_id),
-    FOREIGN KEY(user_username) REFERENCES users(username)
+    PRIMARY KEY(user_id, flight_id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
         ON DELETE CASCADE,
     FOREIGN KEY(flight_id) REFERENCES flights(id)
         ON DELETE CASCADE
 );
 
 
-INSERT INTO
-users (username, name, surname, password, email, date_of_birth, registration_timestamp, admin, blocked)
-VALUES ('dan23', 'D', 'U', '123', 'dan23.ftn@gmail.com', '2001-12-23 00:00', '2024-12-23 13:22', 1, 0);
+INSERT INTO 
+users (id, username, name, surname, password, email, date_of_birth, registration_timestamp, admin, blocked) 
+VALUES (1, 'dan23', 'D', 'U', '123', 'dan23.ftn@gmail.com', '2001-12-23 00:00', '2024-12-23 13:22', 1, 0);
+INSERT INTO 
+users (id, username, name, surname, password, email, date_of_birth, registration_timestamp, admin, blocked) 
+VALUES (2, 'mar23', 'Marko', 'Markovic', '123', 'mar23.ftn@gmail.com', '2008-12-23 00:00', '2024-12-23 21:48', 0, 0);
+INSERT INTO 
+users (id, username, name, surname, password, email, date_of_birth, registration_timestamp, admin, blocked) 
+VALUES (3, 'mil23', 'Milica', 'B', '123', 'mil23.ftn@gmail.com', '1998-12-23 00:00', '2024-01-23 18:11', 0, 0);
+INSERT INTO 
+users (id, username, name, surname, password, email, date_of_birth, registration_timestamp, admin, blocked) 
+VALUES (4, 'iva23', 'Ivana', 'P', '123', 'iva23.ftn@gmail.com', '2001-03-23 00:00', '2025-09-23 09:58', 0, 1);
 
-INSERT INTO
-users (username, name, surname, password, email, date_of_birth, registration_timestamp, admin, blocked)
-VALUES ('mar23', 'Marko', 'Markovic', '123', 'mar23.ftn@gmail.com', '2008-12-23 00:00', '2024-12-23 21:48', 0, 1);
 
-INSERT INTO
-users (username, name, surname, password, email, date_of_birth, registration_timestamp, admin, blocked)
-VALUES ('mil23', 'Milica', 'B', '123', 'mil23.ftn@gmail.com', '1998-12-23 00:00', '2024-01-23 18:11', 0, 0);
+INSERT INTO 
+airplanes (id, name, seat_rows, seat_columns) 
+VALUES (1, 'Airbus A320', 30, 6);
+INSERT INTO 
+airplanes (id, name, seat_rows, seat_columns) 
+VALUES (2, 'Boeing 737', 31, 6);
+INSERT INTO 
+airplanes (id, name, seat_rows, seat_columns) 
+VALUES (3, 'Airbus A350', 40, 9);
+INSERT INTO 
+airplanes (id, name, seat_rows, seat_columns) 
+VALUES (4, 'Airbus A330', 32, 8);
+INSERT INTO 
+airplanes (id, name, seat_rows, seat_columns) 
+VALUES (5, 'ATR 72', 18, 4);
 
-INSERT INTO
-users (username, name, surname, password, email, date_of_birth, registration_timestamp, admin, blocked)
-VALUES ('iva23', 'Ivana', 'P', '123', 'iva23.ftn@gmail.com', '2001-03-23 00:00', '2025-09-23 09:58', 0, 0);
 
-INSERT INTO
-airplanes (name, seat_rows, seat_columns)
-VALUES ('');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (1, 'Belgrade', 'Serbia', 'Europe', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (2, 'Zagreb', 'Croatia', 'Europe', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (3, 'Toronto', 'Ontario, Canada', 'North America', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (4, 'New York City', 'New York, United States', 'North America', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (5, 'London', 'England, United Kingdom', 'Europe', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (6, 'Moscow', 'Russia', 'Europe', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (7, 'Istanbul', 'Turkey', 'Europe', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (8, 'Warsaw', 'Poland', 'Europe', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (9, 'Rome', 'Lazio, Italy', 'Europe', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (10, 'Milan', 'Lombardy, Italy', 'Europe', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (11, 'Madrid', 'Spain', 'Europe', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (12, 'Tokyo', 'Honshu, Japan', 'Asia', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (13, 'Antanànarìvo', 'Madagascar', 'Africa', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (14, 'Sydney', 'Australia', 'Australia', 'iwdaojd');
+INSERT INTO 
+locations (id, city, state, continent, image_path) 
+VALUES (15, 'Rio de Janeiro', 'Brazil', 'South America', 'iwdaojd');
+
+
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('BEG', 1);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('ZAG', 2);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('YYZ', 3);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('JFK', 4);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('LHR', 5);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('SVO', 6);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('IST', 7);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('WAW', 8);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('FCO', 9);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('MXP', 10);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('MAD', 11);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('HND', 12);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('TNR', 13);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('SYD', 14);
+INSERT INTO 
+airports (airport_code_name, location_id) 
+VALUES ('RRJ', 15);
+
+
+
+-- Example of flight reservation with a general-discount (admin-defined discount for everyone) claimed.
+
+INSERT INTO 
+discounts_standard (id, discount_coefficient, valid_until_date) 
+VALUES (1, 0.5, '2026-09-09 00:00');
+
+
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (1, 'JFK', 'BEG', 1, '2026-09-11 10:00', 360, 70000, null);
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (2, 'BEG', 'SVO', 2, '2026-09-11 17:00', 240, 40000, 1);
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (3, 'SVO', 'SYD', 3, '2026-09-11 22:00', 240, 50000, null);
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (4, 'BEG', 'IST', 4, '2026-09-11 17:00', 120, 30000, null);
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (5, 'IST', 'SYD', 5, '2026-09-11 19:00', 180, 40000, null);
+
+INSERT INTO 
+flight_reservations (id, reservation_creation_timestamp, sum_price_of_flight_tickets, user_id) 
+VALUES (1, '2025-09-05 00:00', 40000, 1);
+
+INSERT INTO 
+flight_flight_reservation (flight_id, flight_reservation_id) 
+VALUES (2, 1);
+
+INSERT INTO 
+flight_tickets (id, flight_id, seat_number, flight_ticket_price, user_id, passport_number, flight_reservation_id) 
+VALUES (1, 2, 10, 20000, 2, 123456789, 1);
+INSERT INTO 
+flight_tickets (id, flight_id, seat_number, flight_ticket_price, user_id, passport_number, flight_reservation_id) 
+VALUES (2, 2, 11, 20000, 3, 987654321, 1);
+
+
+INSERT INTO 
+loyalty_card_creation_requests (user_id, status) 
+VALUES (2, 'SENT');
