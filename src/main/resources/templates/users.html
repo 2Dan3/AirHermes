@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/StiloviTabela.css"/>
+    <title>Users</title>
+</head>
+<body>
+
+<div th:fragment="centralniDiv">
+    <form method="get">
+        <table class="tabela">
+            <caption>Users</caption>
+            <tr>
+                <th>ord. num.</th>
+                <th>name</th>
+                <th>surname</th>
+                <th>email</th>
+                <th>username</th>
+                <th>date of birth</th>
+                <th>registered on</th>
+                <th>admin</th>
+                <th>blocked</th>
+                <th></th>
+            </tr>
+            <tr>
+                <th></th>
+                <th><input type="search" name="username" th:value="${param.username}?: null"/></th>
+                <th><input type="search" name="email" th:value="${param.email}?: null"/></th>
+<!--                <th>-->
+<!--                    <select name="pol">-->
+<!--                        <option value="">odaberi</option>-->
+<!--                        <option value="muški" th:selected="${#strings.equals(param.pol, 'muški')}">muški</option>-->
+<!--                        <option value="ženski" th:selected="${#strings.equals(param.pol, 'ženski')}">ženski</option>-->
+<!--                    </select>-->
+<!--                </th>-->
+                <th><input type="search" name="name" th:value="${param.name}?: null"/></th>
+                <th><input type="search" name="surname" th:value="${param.surname}?: null"/></th>
+                <th><input type="search" name="username" th:value="${param.username}?: null"/></th>
+                <th><input type="search" name="email" th:value="${param.email}?: null"/></th>
+                <th><input type="checkbox" name="admin" th:checked="${param.admin != null}"/></th>
+                <th><input type="checkbox" name="blocked" th:checked="${param.blocked != null}"/></th>
+                <th><input type="submit" value="Search"/></th>
+            </tr>
+            <tr th:each="iterUser, status: ${users}">
+                <td th:value="${status.index + 1}"></td>
+                <td th:text="${iterUser.name}"></td>
+                <td th:text="${iterUser.surname}"></td>
+                <td th:text="${iterUser.email}"></td>
+                <td><a th:href="|users/details?username=${iterUser.username}|" th:text="${iterUser.username}"></a></td>
+                <td th:text="${iterUser.dateOfBirth}"></td>
+                <td th:text="${iterUser.registrationTimestamp}"></td>
+                <td th:text="${iterUser.admin}? 'yes': 'no'"></td>
+                <td th:text="${iterUser.blocked}? 'yes': 'no'"></td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+    <ul>
+        <li><a href="users/create">Add a new user</a></li>
+    </ul>
+</div>
+</body>
+</html>

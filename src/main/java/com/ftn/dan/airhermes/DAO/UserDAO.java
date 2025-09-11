@@ -1,0 +1,9 @@
+package com.ftn.dan.airhermes.DAO;
+
+import com.ftn.dan.airhermes.model.entity.User;
+
+import java.util.List;
+
+public interface UserDAO {
+    List<User> find(String name, String surname, String username, String email, Boolean admin, Boolean blocked);
+}
