@@ -50,7 +50,7 @@
                 <td th:text="${iterFlight.id}"></td>
                 <td th:text="|${iterFlight.airportDeparture.airportCodeName}, ${iterFlight.airportDeparture.location.city}, ${iterFlight.airportDeparture.location.state}|"></td>
                 <td th:text="|${iterFlight.airportDestination.airportCodeName}, ${iterFlight.airportDestination.location.city}, ${iterFlight.airportDestination.location.state}|"></td>
-                    <td th:text="${#temporals.format(iterFlight.departureTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${#dates.format(iterFlight.departureTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
 
                 <!--                <td th:inline="text" th:text="|${iterFlight.flightTicketPrice}RSD|"></td>-->
                 <td th:inline="text">

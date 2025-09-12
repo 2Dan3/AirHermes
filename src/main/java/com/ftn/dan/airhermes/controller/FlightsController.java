@@ -36,7 +36,7 @@ public class FlightsController {
     @GetMapping
     public ModelAndView index(
             @RequestParam(required = false) Long flight_id,
-//            todo @RequestParam(required = false) Date departureTimestamp,
+//            todo @RequestParam(required = false) Timestamp departureTimestamp,
             @RequestParam(required = false) String departureTimestamp,
             @RequestParam(required = false) String departureAirportOrCityOrStateSearchTerm,
             @RequestParam(required = false) String destinationAirportOrCityOrStateSearchTerm,

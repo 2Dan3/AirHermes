@@ -1,14 +1,16 @@
 package com.ftn.dan.airhermes.model.entity;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class DiscountStandard {
     private Long id;
 //   todo can be 0.01 to 0.99
     private double discountCoefficient;
-    private Date validUntilDate;
+    private Timestamp validUntilDate;
 
-    public DiscountStandard(Long discount_id, Double discount_coefficient, Date valid_until_date) {
+    public DiscountStandard(Long discount_id, Double discount_coefficient, Timestamp valid_until_date) {
         this.id = discount_id;
         this.discountCoefficient = discount_coefficient;
         this.validUntilDate = valid_until_date;
@@ -64,11 +66,11 @@ public class DiscountStandard {
         this.discountCoefficient = discountCoefficient;
     }
 
-    public Date getValidUntilDate() {
+    public Timestamp getValidUntilDate() {
         return validUntilDate;
     }
 
-    public void setValidUntilDate(Date validUntilDate) {
+    public void setValidUntilDate(Timestamp validUntilDate) {
         this.validUntilDate = validUntilDate;
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +27,7 @@ public class FlightDAOImpl implements FlightDAO {
         public Flight mapRow(ResultSet rs, int rowNum) throws SQLException {
             int index = 1;
             Long flight_uid = rs.getLong(index++);
-            Date departure_timestamp = rs.getDate(index++);
+            Timestamp departure_timestamp = rs.getTimestamp(index++);
             Integer flight_duration_minutes = rs.getInt(index++);
             Integer flight_ticket_price = rs.getInt(index++);
 
@@ -49,7 +51,7 @@ public class FlightDAOImpl implements FlightDAO {
 
             Long discount_id = rs.getLong(index++);
             Double discount_coefficient = rs.getDouble(index++);
-            Date valid_until_date = rs.getDate(index++);
+            Timestamp valid_until_date = rs.getTimestamp(index++);
 
             DiscountStandard discount = new DiscountStandard(discount_id, discount_coefficient, valid_until_date);
             Airplane airplane = new Airplane(airplane_id, airplane_name, seat_rows, seat_columns);

@@ -1,5 +1,6 @@
 package com.ftn.dan.airhermes.model.entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Flight {
@@ -7,12 +8,12 @@ public class Flight {
     private Airport airportDeparture;
     private Airport airportDestination;
     private Airplane airplane;
-    private Date departureTimestamp;
+    private Timestamp departureTimestamp;
     private int flightDurationMinutes;
     private int flightTicketPrice;
     private DiscountStandard discountStandard;
 
-    public Flight(Long flight_uid, Date departure_timestamp, Integer flight_duration_minutes, Integer flight_ticket_price, Airplane airplane, Airport airportDeparture, Airport airportDestination, DiscountStandard discountStandard) {
+    public Flight(Long flight_uid, Timestamp departure_timestamp, Integer flight_duration_minutes, Integer flight_ticket_price, Airplane airplane, Airport airportDeparture, Airport airportDestination, DiscountStandard discountStandard) {
         this.id = flight_uid;
         this.airportDeparture = airportDeparture;
         this.airportDestination = airportDestination;
@@ -94,11 +95,11 @@ public class Flight {
         this.airplane = airplane;
     }
 
-    public Date getDepartureTimestamp() {
+    public Timestamp getDepartureTimestamp() {
         return departureTimestamp;
     }
 
-    public void setDepartureTimestamp(Date departureTimestamp) {
+    public void setDepartureTimestamp(Timestamp departureTimestamp) {
         this.departureTimestamp = departureTimestamp;
     }
 

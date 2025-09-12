@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,8 +31,8 @@ public class UserDAOImpl implements UserDAO {
             String username = rs.getString(index++);
             String password = rs.getString(index++);
             String email = rs.getString(index++);
-            Date dateOfBirth = rs.getDate(index++);
-            Date registrationTimestamp = rs.getDate(index++);
+            Timestamp dateOfBirth = rs.getTimestamp(index++);
+            Timestamp registrationTimestamp = rs.getTimestamp(index++);
             Boolean admin = rs.getBoolean(index++);
             Boolean blocked = rs.getBoolean(index++);
 

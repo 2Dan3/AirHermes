@@ -1,16 +1,17 @@
 package com.ftn.dan.airhermes.model.entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class User {
     private Long id;
     private String name, surname, username, password, email;
-    private Date dateOfBirth, registrationTimestamp;
+    private Timestamp dateOfBirth, registrationTimestamp;
     private boolean admin = false;
     private boolean blocked = false;
 
     public User(){}
-    public User(Long id, String name, String surname, String username, String password, String email, Date dateOfBirth, Date registrationTimestamp, boolean admin, boolean blocked) {
+    public User(Long id, String name, String surname, String username, String password, String email, Timestamp dateOfBirth, Timestamp registrationTimestamp, boolean admin, boolean blocked) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -71,19 +72,19 @@ public class User {
         this.email = email;
     }
 
-    public Date getDateOfBirth() {
+    public Timestamp getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(Timestamp dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Date getRegistrationTimestamp() {
+    public Timestamp getRegistrationTimestamp() {
         return registrationTimestamp;
     }
 
-    public void setRegistrationTimestamp(Date registrationTimestamp) {
+    public void setRegistrationTimestamp(Timestamp registrationTimestamp) {
         this.registrationTimestamp = registrationTimestamp;
     }
 
