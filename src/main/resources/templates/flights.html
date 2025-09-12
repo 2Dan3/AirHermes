@@ -1,10 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/StiloviTabela.css"/>
     <title>Flights</title>
 </head>
 <body>
-${msg}
+
+<!--todo <div th:fragment="centralniDiv2">-->
+<div th:fragment="centralniDiv">
+    <form method="get">
+        <table class="tabela">
+            <caption>Flights</caption>
+            <tr>
+                <th>image</th>
+                <th>flight UID</th>
+                <th>departure</th>
+                <th>destination</th>
+                <th>departure time</th>
+                <th>price</th>
+                <th>duration</th>
+                <th>discount</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th></th>
+                <!--                <th>-->
+                <!--                    <select name="pol">-->
+                <!--                        <option value="">odaberi</option>-->
+                <!--                        <option value="muški" th:selected="${#strings.equals(param.pol, 'muški')}">muški</option>-->
+                <!--                        <option value="ženski" th:selected="${#strings.equals(param.pol, 'ženski')}">ženski</option>-->
+                <!--                    </select>-->
+                <!--                </th>-->
+                <th><input type="search" name="flight_id" th:value="${param.flight_id}?: null"/></th>
+                <th><input type="search" name="departureAirportOrCityOrStateSearchTerm" th:value="${param.departureAirportOrCityOrStateSearchTerm}?: null"/></th>
+                <th><input type="search" name="destinationAirportOrCityOrStateSearchTerm" th:value="${param.destinationAirportOrCityOrStateSearchTerm}?: null"/></th>
+                <th><input type="search" name="departureTimestamp" th:value="${param.departureTimestamp}?: null"/></th>
+                <th><input type="search" name="passengers" th:value="${param.passengers}?: null"/></th>
+<!--                <th></th>-->
+                <th></th>
+                <th><input type="checkbox" name="lookForSimilarTimingFlights" th:checked="${param.lookForSimilarTimingFlights != null}"/></th>
+                <th></th>
+                <th><input type="submit" value="Search"/></th>
+            </tr>
+            <tr th:each="iterFlight, status: ${flights}">
+<!--                <td th:value="${status.index + 1}"></td>-->
+                <td></td>
+                <td th:text="${iterFlight.id}"></td>
+                <td th:text="|${iterFlight.airportDeparture.airportCodeName}, ${iterFlight.airportDeparture.location.city}, ${iterFlight.airportDeparture.location.state}|"></td>
+                <td th:text="|${iterFlight.airportDestination.airportCodeName}, ${iterFlight.airportDestination.location.city}, ${iterFlight.airportDestination.location.state}|"></td>
+                    <td th:text="${#temporals.format(iterFlight.departureTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
+
+                <!--                <td th:inline="text" th:text="|${iterFlight.flightTicketPrice}RSD|"></td>-->
+                <td th:inline="text">
+                <span th:if="${iterFlight.discountStandard.discountCoefficient > 0.0}">
+                    <s th:text="|${iterFlight.flightTicketPrice} RSD|"></s>
+                    <span th:text="| ${(1 - iterFlight.discountStandard.discountCoefficient) * iterFlight.flightTicketPrice} RSD |"></span>
+                </span>
+                <span th:unless="${iterFlight.discountStandard.discountCoefficient > 0.0}"
+                      th:text="|${iterFlight.flightTicketPrice} RSD|"></span>
+                </td>
+                <td th:inline="text" th:text="|${iterFlight.flightDurationMinutes / 60}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}h|"></td>
+                <td th:inline="text" th:text="|${iterFlight.discountStandard.discountCoefficient * 100}%|"></td>
+                <td><a th:href="|flights/details?id=${iterFlight.id}|" th:text="Tickets"></a></td>
+
+                <td></td>
+            </tr>
+        </table>
+    </form>
+    <ul>
+        <li><a href="flights/create">Add a new flight</a></li>
+    </ul>
+</div>
 </body>
 </html>

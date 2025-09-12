@@ -1,0 +1,20 @@
+package com.ftn.dan.airhermes.service.impl;
+
+import com.ftn.dan.airhermes.DAO.FlightDAO;
+import com.ftn.dan.airhermes.model.entity.Flight;
+import com.ftn.dan.airhermes.service.FlightService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class DatabaseFlightService implements FlightService {
+    @Autowired
+    private FlightDAO flightDAO;
+
+    @Override
+    public List<Flight> find(Long flight_id, String departureTimestamp, String departureAirportOrCityOrStateSearchTerm, String destinationAirportOrCityOrStateSearchTerm, Integer passengers, Boolean lookForSimilarTimingFlights) {
+        return flightDAO.find(flight_id, departureTimestamp, departureAirportOrCityOrStateSearchTerm, destinationAirportOrCityOrStateSearchTerm, passengers, lookForSimilarTimingFlights);
+    }
+}

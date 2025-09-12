@@ -48,8 +48,10 @@
                 <td th:text="${iterUser.surname}"></td>
                 <td th:text="${iterUser.email}"></td>
                 <td><a th:href="|users/details?username=${iterUser.username}|" th:text="${iterUser.username}"></a></td>
-                <td th:text="${iterUser.dateOfBirth}"></td>
-                <td th:text="${iterUser.registrationTimestamp}"></td>
+<!--                <td th:text="${iterUser.dateOfBirth}"></td>-->
+                <td th:text="${#temporals.format(iterUser.dateOfBirth, 'yyyy-MM-dd')}"></td>
+<!--                <td th:text="${iterUser.registrationTimestamp}"></td>-->
+                <td th:text="${#temporals.format(iterUser.registrationTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
                 <td th:text="${iterUser.admin}? 'yes': 'no'"></td>
                 <td th:text="${iterUser.blocked}? 'yes': 'no'"></td>
                 <td></td>
