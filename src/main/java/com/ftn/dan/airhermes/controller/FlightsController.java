@@ -4,6 +4,7 @@ import com.ftn.dan.airhermes.model.entity.Flight;
 import com.ftn.dan.airhermes.model.entity.User;
 import com.ftn.dan.airhermes.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -36,8 +39,8 @@ public class FlightsController {
     @GetMapping
     public ModelAndView index(
             @RequestParam(required = false) Long flight_id,
-//            todo @RequestParam(required = false) Timestamp departureTimestamp,
-            @RequestParam(required = false) String departureTimestamp,
+            @RequestParam(required = false, name = "departureTimestamp")
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime rawParamDepartureDateTime,
             @RequestParam(required = false) String departureAirportOrCityOrStateSearchTerm,
             @RequestParam(required = false) String destinationAirportOrCityOrStateSearchTerm,
             @RequestParam(required = false) Integer passengers,
@@ -51,8 +54,12 @@ public class FlightsController {
 //            return null;
 //        }
 
-        if (departureTimestamp!=null && departureTimestamp.trim().equals(""))
-            departureTimestamp = null;
+//        if (departureTimestamp!=null && departureTimestamp.trim().equals(""))
+//            departureTimestamp = null;
+
+        Timestamp departureTimestamp = null;
+        if (rawParamDepartureDateTime != null)
+            departureTimestamp = Timestamp.valueOf(rawParamDepartureDateTime);
 
         if ( flight_id!=null && (flight_id.equals(0L) || flight_id.equals(0)) )
             flight_id = null;
@@ -60,8 +67,8 @@ public class FlightsController {
         if (passengers!=null && passengers.equals(0))
             passengers = null;
 
-        if (lookForSimilarTimingFlights!=null && !lookForSimilarTimingFlights.booleanValue() && departureTimestamp==null)
-            lookForSimilarTimingFlights = null;
+        if ( lookForSimilarTimingFlights == null || Boolean.FALSE.equals(lookForSimilarTimingFlights) || departureTimestamp==null )
+            lookForSimilarTimingFlights = false;
 
         if (departureAirportOrCityOrStateSearchTerm!=null && departureAirportOrCityOrStateSearchTerm.trim().equals(""))
             departureAirportOrCityOrStateSearchTerm = null;

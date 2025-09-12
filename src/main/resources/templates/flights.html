@@ -13,14 +13,14 @@
         <table class="tabela">
             <caption>Flights</caption>
             <tr>
-                <th>image</th>
-                <th>flight UID</th>
-                <th>departure</th>
-                <th>destination</th>
-                <th>departure time</th>
-                <th>price</th>
-                <th>duration</th>
-                <th>discount</th>
+                <th></th>
+                <th>What is the Flight UID?</th>
+                <th>Departing from?</th>
+                <th>Going to?</th>
+                <th>Departing when?</th>
+                <th>Show flights within ± 2 days?</th>
+                <th></th>
+                <th>How many passengers?</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -34,15 +34,30 @@
                 <!--                    </select>-->
                 <!--                </th>-->
                 <th><input type="search" name="flight_id" th:value="${param.flight_id}?: null"/></th>
-                <th><input type="search" name="departureAirportOrCityOrStateSearchTerm" th:value="${param.departureAirportOrCityOrStateSearchTerm}?: null"/></th>
-                <th><input type="search" name="destinationAirportOrCityOrStateSearchTerm" th:value="${param.destinationAirportOrCityOrStateSearchTerm}?: null"/></th>
-                <th><input type="search" name="departureTimestamp" th:value="${param.departureTimestamp}?: null"/></th>
-                <th><input type="search" name="passengers" th:value="${param.passengers}?: null"/></th>
-<!--                <th></th>-->
-                <th></th>
+                <th><input type="search" placeholder="e.g. JFK or New York City or New York or United States" style="font-style:italic;"  name="departureAirportOrCityOrStateSearchTerm" th:value="${param.departureAirportOrCityOrStateSearchTerm}?: null"/></th>
+                <th><input type="search" placeholder="e.g. BEG or Belgrade or Serbia" style="font-style:italic;" name="destinationAirportOrCityOrStateSearchTerm" th:value="${param.destinationAirportOrCityOrStateSearchTerm}?: null"/></th>
+                <th><input type="datetime-local" name="departureTimestamp" th:value="${param.departureTimestamp}?: null"/></th>
+                <!--                <th></th>-->
                 <th><input type="checkbox" name="lookForSimilarTimingFlights" th:checked="${param.lookForSimilarTimingFlights != null}"/></th>
                 <th></th>
+                <th><input type="number" min="1" name="passengers" th:value="${param.passengers}?: null"/></th>
+                <th></th>
                 <th><input type="submit" value="Search"/></th>
+            </tr>
+            <tr>
+                <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+            </tr>
+            <tr>
+                <th>images</th>
+                <th>flights UID</th>
+                <th>departures</th>
+                <th>destinations</th>
+                <th>departure times</th>
+                <th>prices</th>
+                <th>durations</th>
+                <th>discounts</th>
+                <th></th>
+                <th></th>
             </tr>
             <tr th:each="iterFlight, status: ${flights}">
 <!--                <td th:value="${status.index + 1}"></td>-->

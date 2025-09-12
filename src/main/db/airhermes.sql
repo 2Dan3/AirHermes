@@ -296,6 +296,12 @@ VALUES (4, 'BEG', 'IST', 4, '2026-09-11 17:00', 120, 30000, null);
 INSERT INTO 
 flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
 VALUES (5, 'IST', 'SYD', 5, '2026-09-11 19:00', 180, 40000, null);
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (6, 'BEG', 'SVO', 1, '2026-09-11 21:00', 341, 70000, null);
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (7, 'BEG', 'SVO', 1, '2026-09-11 20:00', 325, 70000, null);
 
 INSERT INTO 
 flight_reservations (id, reservation_creation_timestamp, sum_price_of_flight_tickets, user_id) 

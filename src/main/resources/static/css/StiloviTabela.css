@@ -1,5 +1,6 @@
 table.tabela {
 	border-collapse: collapse;
+	width: 100%
 }
 
 table.tabela caption {
@@ -7,7 +8,7 @@ table.tabela caption {
 }
 
 table.tabela th, td {
-	border: 1px solid Gray;
+	border: 1px solid DodgerBlue;
 	padding: 5px;
 }
 
