@@ -1,4 +1,4 @@
--- Production v1.0 - Projekat AIRPORT:
+-- Test version for development - Projekat AIRPORT:
 
 DROP SCHEMA IF EXISTS airhermes;
 CREATE SCHEMA airhermes DEFAULT CHARACTER SET utf8;
@@ -279,29 +279,35 @@ VALUES ('RRJ', 15);
 INSERT INTO 
 discounts_standard (id, discount_coefficient, valid_until_date) 
 VALUES (1, 0.5, '2026-09-09 00:00');
+INSERT INTO 
+discounts_standard (id, discount_coefficient, valid_until_date) 
+VALUES (2, 0.2, '2026-09-09 00:00');
+INSERT INTO 
+discounts_standard (id, discount_coefficient, valid_until_date) 
+VALUES (3, 0.3, '2024-09-09 00:00');
 
 
 INSERT INTO 
 flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
-VALUES (1, 'JFK', 'BEG', 1, '2026-09-11 10:00', 360, 70000, null);
+VALUES (1, 'JFK', 'BEG', 1, '2026-09-11 10:00', 360, 70000, 1);
 INSERT INTO 
 flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
 VALUES (2, 'BEG', 'SVO', 2, '2026-09-11 17:00', 240, 40000, 1);
 INSERT INTO 
 flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
-VALUES (3, 'SVO', 'SYD', 3, '2026-09-11 22:00', 240, 50000, null);
+VALUES (3, 'SVO', 'SYD', 3, '2026-09-11 22:00', 240, 50000, 3);
 INSERT INTO 
 flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
-VALUES (4, 'BEG', 'IST', 4, '2026-09-11 17:00', 120, 30000, null);
+VALUES (4, 'BEG', 'IST', 4, '2026-09-11 17:00', 120, 30000, 2);
 INSERT INTO 
 flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
 VALUES (5, 'IST', 'SYD', 5, '2026-09-11 19:00', 180, 40000, null);
 INSERT INTO 
 flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
-VALUES (6, 'BEG', 'SVO', 1, '2026-09-11 21:00', 341, 70000, null);
+VALUES (6, 'BEG', 'SVO', 1, '2026-09-11 21:00', 341, 70000, 2);
 INSERT INTO 
 flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
-VALUES (7, 'BEG', 'SVO', 1, '2026-09-11 20:00', 325, 70000, null);
+VALUES (7, 'BEG', 'SVO', 1, '2026-09-11 20:00', 325, 70000, 2);
 
 INSERT INTO 
 flight_reservations (id, reservation_creation_timestamp, sum_price_of_flight_tickets, user_id) 

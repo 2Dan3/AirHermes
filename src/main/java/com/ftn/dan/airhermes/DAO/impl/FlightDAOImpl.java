@@ -69,6 +69,8 @@ public class FlightDAOImpl implements FlightDAO {
     @Override
     public List<Flight> find(Long flight_id, Timestamp departureTimestamp, String departureAirportOrCityOrStateSearchTerm, String destinationAirportOrCityOrStateSearchTerm, Integer passengers, Boolean lookForSimilarTimingFlights) {
 
+        final String all_discounted_flights = " WHERE f.discount_standard_id IS NOT NULL";
+
 //        String sql =
 //        "SELECT f.id, f.departure_timestamp, f.flight_duration_minutes, f.flight_ticket_price, " +
 //                "adep.airport_code_name, ades.airport_code_name, " +
@@ -161,6 +163,8 @@ public class FlightDAOImpl implements FlightDAO {
 
         if(imaArgumenata)
             sql = sql + whereSql.toString();
+        else
+            sql = sql + all_discounted_flights;
 
         sql = sql + " ORDER BY f.departure_timestamp";
         System.out.println(sql);
