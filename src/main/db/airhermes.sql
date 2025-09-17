@@ -99,21 +99,20 @@ CREATE TABLE flight_tickets (
     flight_id BIGINT,
     seat_number INT,
     flight_ticket_price INT,
-    user_id BIGINT,
---    check paranthesis
+    passenger_name VARCHAR(30),
+    passenger_surname VARCHAR(40),
+--    check or omit (9) in later versions of MySQL
     passport_number INT(9),
     flight_reservation_id BIGINT,
     PRIMARY KEY(id),
     FOREIGN KEY(flight_id) REFERENCES flights(id),
     FOREIGN KEY(flight_reservation_id) REFERENCES flight_reservations(id) 
-		 ON DELETE CASCADE, 
-	 FOREIGN KEY(user_id) REFERENCES users(id) 
-		ON DELETE CASCADE
+		 ON DELETE CASCADE
 );
 
 CREATE TABLE loyalty_cards (
     id BIGINT AUTO_INCREMENT,
-    granted_discount_coefficient DECIMAL(10, 2),
+    spent_money_unconverted_to_points DECIMAL(12, 2),
     points_collected INT,
     user_id BIGINT,
     PRIMARY KEY(id),
@@ -146,6 +145,21 @@ CREATE TABLE wish_list_of_flights (
     FOREIGN KEY(flight_id) REFERENCES flights(id)
         ON DELETE CASCADE
 );
+
+
+-- INDEXES:
+
+-- Helps with A.origin filter and A.departure_time sort/filter
+-- CREATE INDEX idx_origin_departure ON flights (origin, departure_time);
+
+-- Helps with join from A.destination to B.origin and B.departure_time filtering
+-- CREATE INDEX idx_origin_departure_duration ON flights (origin, departure_time, flight_duration_in_minutes);
+
+-- Helps with B.destination to C.origin and C.departure_time filtering
+-- (same structure as above, but ensures index is useful for both join and time filter)
+-- CREATE INDEX idx_destination_departure_duration ON flights (destination, departure_time, flight_duration_in_minutes);
+
+-- 
 
 
 INSERT INTO 
@@ -308,6 +322,20 @@ VALUES (6, 'BEG', 'SVO', 1, '2026-09-11 21:00', 341, 70000, 2);
 INSERT INTO 
 flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
 VALUES (7, 'BEG', 'SVO', 1, '2026-09-11 20:00', 325, 70000, 2);
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (8, 'RRJ', 'MAD', 3, '2026-09-11 10:00', 200, 30000, 1);
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (9, 'MAD', 'HND', 4, '2026-09-11 14:30', 310, 50000, 2);
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (10, 'RRJ', 'IST', 1, '2026-09-11 15:00', 240, 40000, 3);
+INSERT INTO 
+flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) 
+VALUES (11, 'IST', 'HND', 5, '2026-09-11 16:00', 312, 40000, null);
+
+
 
 INSERT INTO 
 flight_reservations (id, reservation_creation_timestamp, sum_price_of_flight_tickets, user_id) 
@@ -318,11 +346,11 @@ flight_flight_reservation (flight_id, flight_reservation_id)
 VALUES (2, 1);
 
 INSERT INTO 
-flight_tickets (id, flight_id, seat_number, flight_ticket_price, user_id, passport_number, flight_reservation_id) 
-VALUES (1, 2, 10, 20000, 2, 123456789, 1);
+flight_tickets (id, flight_id, seat_number, flight_ticket_price, passenger_name, passenger_surname, passport_number, flight_reservation_id) 
+VALUES (1, 2, 10, 20000, 'Marko', 'Markovic', 123456789, 1);
 INSERT INTO 
-flight_tickets (id, flight_id, seat_number, flight_ticket_price, user_id, passport_number, flight_reservation_id) 
-VALUES (2, 2, 11, 20000, 3, 987654321, 1);
+flight_tickets (id, flight_id, seat_number, flight_ticket_price, passenger_name, passenger_surname, passport_number, flight_reservation_id) 
+VALUES (2, 2, 11, 20000, 'Milica', 'B', 987654321, 1);
 
 
 INSERT INTO 

@@ -12,11 +12,26 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 @Repository
 public class FlightDAOImpl implements FlightDAO {
+
+    private final String SQL_GET_ALL_FLIGHTS_AND_REFERENCES =
+            "SELECT f.id, f.departure_timestamp, f.flight_duration_minutes, f.flight_ticket_price, " +
+            "adep.airport_code_name, ades.airport_code_name, " +
+            "ldep.id, ldep.city, ldep.state, ldep.continent, ldes.id, ldes.city, ldes.state, ldes.continent, " +
+            "av.id, av.name, av.seat_rows, av.seat_columns, " +
+            "d.id, d.discount_coefficient, d.valid_until_date " +
+            "FROM flights f " +
+            "LEFT JOIN airports adep ON adep.airport_code_name = f.airport_departure_code_name " +
+            "LEFT JOIN airports ades ON ades.airport_code_name = f.airport_destination_code_name " +
+            "LEFT JOIN airplanes av ON av.id = f.airplane_id " +
+            "LEFT JOIN locations ldep ON ldep.id = adep.location_id " +
+            "LEFT JOIN locations ldes ON ldes.id = ades.location_id " +
+            "LEFT JOIN discounts_standard d ON d.id = f.discount_standard_id";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -91,19 +106,7 @@ public class FlightDAOImpl implements FlightDAO {
 //                "AND PUTNICI <= ( (av.seat_rows * av.seat_columns) - (SELECT COUNT(ft.id) FROM flight_tickets ft WHERE ft.flight_id = f.id)
 //                 ORDER BY f.departure_timestamp";
 
-        String sql =
-                "SELECT f.id, f.departure_timestamp, f.flight_duration_minutes, f.flight_ticket_price, " +
-                        "adep.airport_code_name, ades.airport_code_name, " +
-                        "ldep.id, ldep.city, ldep.state, ldep.continent, ldes.id, ldes.city, ldes.state, ldes.continent, " +
-                        "av.id, av.name, av.seat_rows, av.seat_columns, " +
-                        "d.id, d.discount_coefficient, d.valid_until_date " +
-                        "FROM flights f " +
-                        "LEFT JOIN airports adep ON adep.airport_code_name = f.airport_departure_code_name " +
-                        "LEFT JOIN airports ades ON ades.airport_code_name = f.airport_destination_code_name " +
-                        "LEFT JOIN airplanes av ON av.id = f.airplane_id " +
-                        "LEFT JOIN locations ldep ON ldep.id = adep.location_id " +
-                        "LEFT JOIN locations ldes ON ldes.id = ades.location_id " +
-                        "LEFT JOIN discounts_standard d ON d.id = f.discount_standard_id";
+        String sql = SQL_GET_ALL_FLIGHTS_AND_REFERENCES;
 
         ArrayList<Object> listaArgumenata = new ArrayList<Object>();
 
@@ -153,7 +156,7 @@ public class FlightDAOImpl implements FlightDAO {
             listaArgumenata.add(destinationAirportOrCityOrStateSearchTerm);
         }
 
-        if(passengers != null) {;
+        if(passengers != null) {
             if(imaArgumenata)
                 whereSql.append(" AND ");
             whereSql.append("? <= ( (av.seat_rows * av.seat_columns) - (SELECT COUNT(ft.id) FROM flight_tickets ft WHERE ft.flight_id = f.id))");
@@ -167,11 +170,37 @@ public class FlightDAOImpl implements FlightDAO {
             sql = sql + all_discounted_flights;
 
         sql = sql + " ORDER BY f.departure_timestamp";
-        System.out.println(sql);
+        System.out.println("DAO find: " + sql);
 
         return jdbcTemplate.query(sql, listaArgumenata.toArray(), new FlightDAOImpl.FlightRowMapper());
     }
 
+    @Override
+    public List<Flight> findAllBy(Long[] flightIds) {
+        System.out.println(Arrays.toString(flightIds));
+        String sql = SQL_GET_ALL_FLIGHTS_AND_REFERENCES;
+
+        ArrayList<Object> listaArgumenata = new ArrayList<Object>();
+        boolean imaArgumenata = false;
+
+        StringBuffer whereSql = new StringBuffer(" WHERE ");
+
+        for (Long flightId : flightIds) {
+            if (imaArgumenata)
+                whereSql.append(" OR ");
+            whereSql.append("f.id = ?");
+            listaArgumenata.add(flightId);
+            imaArgumenata = true;
+        }
+
+        if(imaArgumenata)
+            sql = sql + whereSql.toString();
+
+        sql = sql + " ORDER BY f.departure_timestamp";
+        System.out.println("DAO findAllBy: " + sql);
+
+        return jdbcTemplate.query(sql, listaArgumenata.toArray(), new FlightRowMapper());
+    }
 
 
 }

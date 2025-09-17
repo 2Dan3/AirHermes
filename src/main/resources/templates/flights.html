@@ -78,7 +78,9 @@
                 </td>
                 <td th:inline="text" th:text="|${iterFlight.flightDurationMinutes / 60}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}h|"></td>
                 <td th:inline="text" th:text="|${iterFlight.discountStandard.discountCoefficient * 100}%|"></td>
-                <td><a th:href="|flights/details?id=${iterFlight.id}|" th:text="Tickets"></a></td>
+<!--                <td><a th:href="|flights/details?id=${iterFlight.id}|" th:text="Tickets"></a></td>-->
+<!--                todo add multiple flightIDs when connecting flights are implemented -->
+                <td><a th:href="|reservations/create?flightId=${iterFlight.id}|" th:text="Tickets"></a></td>
 
                 <td></td>
             </tr>

@@ -3,6 +3,7 @@ package com.ftn.dan.airhermes.DAO.impl;
 import com.ftn.dan.airhermes.DAO.UserDAO;
 import com.ftn.dan.airhermes.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -112,6 +112,17 @@ public class UserDAOImpl implements UserDAO {
         System.out.println(sql);
 
         return jdbcTemplate.query(sql, listaArgumenata.toArray(), new UserRowMapper());
+    }
+
+    @Override
+    public User findByID(Long id) {
+        try {
+            String sql = "SELECT id, name, surname, username, password, email, date_of_birth, registration_timestamp, admin, blocked FROM users WHERE id = ?";
+            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
+        } catch (EmptyResultDataAccessException ex) {
+            // case card is not found
+            return null;
+        }
     }
 
 }

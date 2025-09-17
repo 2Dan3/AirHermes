@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface UserDAO {
     List<User> find(String name, String surname, String username, String email, Boolean admin, Boolean blocked);
+
+    User findByID(Long id);
 }

@@ -18,4 +18,9 @@ public class DatabaseFlightService implements FlightService {
     public List<Flight> find(Long flight_id, Timestamp departureTimestamp, String departureAirportOrCityOrStateSearchTerm, String destinationAirportOrCityOrStateSearchTerm, Integer passengers, Boolean lookForSimilarTimingFlights) {
         return flightDAO.find(flight_id, departureTimestamp, departureAirportOrCityOrStateSearchTerm, destinationAirportOrCityOrStateSearchTerm, passengers, lookForSimilarTimingFlights);
     }
+
+    @Override
+    public List<Flight> findAllBy(Long[] flightIds) {
+        return flightDAO.findAllBy(flightIds);
+    }
 }
