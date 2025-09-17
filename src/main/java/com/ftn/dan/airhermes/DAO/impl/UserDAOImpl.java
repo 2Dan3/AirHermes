@@ -43,6 +43,17 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public User find(String username, String email) {
+        try {
+            String sql = "SELECT id, name, surname, username, password, email, date_of_birth, registration_timestamp, admin, blocked FROM users WHERE username = ? AND email = ?";
+            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), username, email);
+        } catch (EmptyResultDataAccessException ex) {
+            // case user is not found
+            return null;
+        }
+    }
+
+    @Override
     public List<User> find(String name, String surname, String username, String email, Boolean admin, Boolean blocked) {
         ArrayList<Object> listaArgumenata = new ArrayList<Object>();
 
@@ -120,7 +131,24 @@ public class UserDAOImpl implements UserDAO {
             String sql = "SELECT id, name, surname, username, password, email, date_of_birth, registration_timestamp, admin, blocked FROM users WHERE id = ?";
             return jdbcTemplate.queryForObject(sql, new UserRowMapper(), id);
         } catch (EmptyResultDataAccessException ex) {
-            // case card is not found
+            // case user is not found
+            return null;
+        }
+    }
+
+    @Override
+    public void save(User user) {
+        String sql = "INSERT INTO users (name, surname, username, password, email, date_of_birth, registration_timestamp, admin, blocked) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, user.getName(), user.getSurname(), user.getUsername(), user.getPassword(), user.getEmail(), user.getDateOfBirth(), user.getRegistrationTimestamp(), user.isAdmin(), user.isBlocked());
+    }
+
+    @Override
+    public User findByCredentials(String username, String password) {
+        try {
+            String sql = "SELECT id, name, surname, username, password, email, date_of_birth, registration_timestamp, admin, blocked FROM users WHERE username = ? AND password = ?";
+            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), username, password);
+        } catch (EmptyResultDataAccessException ex) {
+            // case user is not found
             return null;
         }
     }
