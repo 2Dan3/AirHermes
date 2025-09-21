@@ -33,9 +33,9 @@
     </form>
 
 <!--    <form method="post" action="">-->
-        <table class="tabela">
+        <p th:unless="${not #lists.isEmpty(reservationDTOs)}">I have made no reservations.</p>
+        <table class="tabela" th:if="${not #lists.isEmpty(reservationDTOs)}">
             <caption>My reservations:</caption>
-
             <tr>
                 <th>Flight UID</th>
                 <th>Departing from</th>
@@ -57,6 +57,52 @@
             </tr>
         </table>
 <!--    </form>-->
+
+        <p th:unless="${not #lists.isEmpty(wishlist)}">My wishlist is empty.</p>
+        <table th:if="${not #lists.isEmpty(wishlist)}">
+            <caption>My wishlist:</caption>
+
+            <tr>
+                <th></th>
+                <th>flights UID</th>
+                <th>departures</th>
+                <th>destinations</th>
+                <th>departure times</th>
+                <th>prices</th>
+                <th>durations</th>
+                <th>discounts</th>
+                <th>sold out?</th>
+                <th></th>
+            </tr>
+            <tr th:each="iterFlight, status: ${wishlist}">
+                <!--                <td th:value="${status.index + 1}"></td>-->
+                <form method="post" action="../wishlist/remove">
+                    <td><input type="submit" value="❌"/></td>
+<!--                    <td th:text="${iterFlight.id}"></td>-->
+                    <td><input type="text" th:value="|${iterFlight.id}|" name="flightId" readonly/></td>
+                </form>
+                <td th:text="|${iterFlight.airportDeparture.airportCodeName}, ${iterFlight.airportDeparture.location.city}, ${iterFlight.airportDeparture.location.state}|"></td>
+                <td th:text="|${iterFlight.airportDestination.airportCodeName}, ${iterFlight.airportDestination.location.city}, ${iterFlight.airportDestination.location.state}|"></td>
+                <td th:text="${#dates.format(iterFlight.departureTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
+
+                <!--                <td th:inline="text" th:text="|${iterFlight.flightTicketPrice}RSD|"></td>-->
+                <td th:inline="text">
+                        <span th:if="${iterFlight.discountStandard.discountCoefficient > 0.0}">
+                            <s th:text="|${iterFlight.flightTicketPrice} RSD|"></s>
+                            <span th:text="| ${(1 - iterFlight.discountStandard.discountCoefficient) * iterFlight.flightTicketPrice} RSD |"></span>
+                        </span>
+                    <span th:unless="${iterFlight.discountStandard.discountCoefficient > 0.0}"
+                          th:text="|${iterFlight.flightTicketPrice} RSD|"></span>
+                </td>
+                <td th:inline="text" th:text="|${iterFlight.flightDurationMinutes / 60}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}h|"></td>
+                <td th:inline="text" th:text="|${iterFlight.discountStandard.discountCoefficient * 100}%|"></td>
+                <!--                <td><a th:href="|flights/details?id=${iterFlight.id}|" th:text="Tickets"></a></td>-->
+                <!--                todo add multiple flightIDs when connecting flights are implemented -->
+
+                <td th:text="${iterFlight.soldOut}? '✔': '❌'"></td>
+            </tr>
+        </table>
+
 </div>
 </body>
 </html>

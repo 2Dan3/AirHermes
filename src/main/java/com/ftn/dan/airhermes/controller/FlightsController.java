@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,13 +48,6 @@ public class FlightsController {
             @RequestParam(required = false) Boolean lookForSimilarTimingFlights,
             HttpSession httpSession, HttpServletResponse response) throws IOException {
 
-//  todo
-//       User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
-//        if (loggedUser == null || !loggedUser.isAdmin()) {
-//            response.sendRedirect(baseURL);
-//            return null;
-//        }
-
 //        if (departureTimestamp!=null && departureTimestamp.trim().equals(""))
 //            departureTimestamp = null;
 
@@ -82,4 +76,22 @@ public class FlightsController {
         responsePage.addObject("flights", flights);
         return responsePage;
     }
+
+    @GetMapping(value = "/advancedSearch")
+    public ModelAndView getByID(
+            @RequestParam(required = false) Long flight_id,
+            HttpSession httpSession, HttpServletResponse response) throws IOException {
+
+        User loggedUser = (User) httpSession.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null || !loggedUser.isAdmin()) {
+            response.sendRedirect(baseURL + "flights");
+            return null;
+        }
+        List<Flight> flights = flightService.findAllBy(new Long[]{flight_id});
+
+        ModelAndView responsePage = new ModelAndView("flights");
+        responsePage.addObject("flights", flights);
+        return responsePage;
+    }
+
 }

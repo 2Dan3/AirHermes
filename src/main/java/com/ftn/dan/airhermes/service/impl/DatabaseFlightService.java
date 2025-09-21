@@ -1,7 +1,9 @@
 package com.ftn.dan.airhermes.service.impl;
 
 import com.ftn.dan.airhermes.DAO.FlightDAO;
+import com.ftn.dan.airhermes.model.dto.FlightDTO;
 import com.ftn.dan.airhermes.model.entity.Flight;
+import com.ftn.dan.airhermes.model.entity.User;
 import com.ftn.dan.airhermes.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,5 +24,10 @@ public class DatabaseFlightService implements FlightService {
     @Override
     public List<Flight> findAllBy(Long[] flightIds) {
         return flightDAO.findAllBy(flightIds);
+    }
+
+    @Override
+    public List<FlightDTO> findFlightsFromWishlist(User user) {
+        return flightDAO.findFlightsFromWishlist(user);
     }
 }

@@ -1,6 +1,7 @@
 package com.ftn.dan.airhermes.DAO.impl;
 
 import com.ftn.dan.airhermes.DAO.FlightDAO;
+import com.ftn.dan.airhermes.model.dto.FlightDTO;
 import com.ftn.dan.airhermes.model.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,10 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -202,5 +201,71 @@ public class FlightDAOImpl implements FlightDAO {
         return jdbcTemplate.query(sql, listaArgumenata.toArray(), new FlightRowMapper());
     }
 
+    @Override
+    public List<FlightDTO> findFlightsFromWishlist(User user) {
+        final String sql = "SELECT f.id, f.departure_timestamp, f.flight_duration_minutes, f.flight_ticket_price, \n" +
+                "adep.airport_code_name, ades.airport_code_name, \n" +
+                "ldep.id, ldep.city, ldep.state, ldep.continent, ldes.id, ldes.city, ldes.state, ldes.continent, \n" +
+                "av.id, av.name, av.seat_rows, av.seat_columns, \n" +
+                "d.id, d.discount_coefficient, d.valid_until_date, \n" +
+                "(SELECT ( (av.seat_rows * av.seat_columns) <= (SELECT COUNT(ft.id) FROM flight_tickets ft WHERE ft.flight_id = f.id)) ) AS flight_sold_out \n" +
+                "FROM flights f \n" +
+                "LEFT JOIN airports adep ON adep.airport_code_name = f.airport_departure_code_name \n" +
+                "LEFT JOIN airports ades ON ades.airport_code_name = f.airport_destination_code_name \n" +
+                "LEFT JOIN airplanes av ON av.id = f.airplane_id \n" +
+                "LEFT JOIN locations ldep ON ldep.id = adep.location_id \n" +
+                "LEFT JOIN locations ldes ON ldes.id = ades.location_id \n" +
+                "LEFT JOIN discounts_standard d ON d.id = f.discount_standard_id \n" +
+                "LEFT JOIN wish_list_of_flights w ON w.flight_id = f.id \n" +
+                "WHERE w.user_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{user.getId()}, new FlightDTORowMapper());
+    }
 
+    private class FlightDTORowMapper implements RowMapper<FlightDTO> {
+
+        @Override
+        public FlightDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            int index = 1;
+            Long flight_uid = rs.getLong(index++);
+            Timestamp departure_timestamp = rs.getTimestamp(index++);
+            Integer flight_duration_minutes = rs.getInt(index++);
+            Integer flight_ticket_price = rs.getInt(index++);
+
+            String airport_code_name_departure = rs.getString(index++);
+            String airport_code_name_destination = rs.getString(index++);
+
+            Long location_id_departure = rs.getLong(index++);
+            String location_city_departure = rs.getString(index++);
+            String location_state_departure = rs.getString(index++);
+            String location_continent_departure = rs.getString(index++);
+
+            Long location_id_destination = rs.getLong(index++);
+            String location_city_destination = rs.getString(index++);
+            String location_state_destination = rs.getString(index++);
+            String location_continent_destination = rs.getString(index++);
+
+            Long airplane_id = rs.getLong(index++);
+            String airplane_name = rs.getString(index++);
+            Integer seat_rows = rs.getInt(index++);
+            Integer seat_columns = rs.getInt(index++);
+
+            Long discount_id = rs.getLong(index++);
+            Double discount_coefficient = rs.getDouble(index++);
+            Timestamp valid_until_date = rs.getTimestamp(index++);
+
+            Integer sold_out = rs.getInt(index++);
+            boolean soldOut = sold_out == 1;
+
+            DiscountStandard discount = new DiscountStandard(discount_id, discount_coefficient, valid_until_date);
+            Airplane airplane = new Airplane(airplane_id, airplane_name, seat_rows, seat_columns);
+            Location locationDeparture = new Location(location_id_departure, location_city_departure, location_state_departure, location_continent_departure);
+            Location locationDestination = new Location(location_id_destination, location_city_destination, location_state_destination, location_continent_destination);
+            Airport airportDeparture = new Airport(airport_code_name_departure, locationDeparture);
+            Airport airportDestination = new Airport(airport_code_name_destination, locationDestination);
+
+            FlightDTO flightDTO = new FlightDTO(flight_uid, departure_timestamp, flight_duration_minutes, flight_ticket_price, airplane, airportDeparture, airportDestination, discount, soldOut);
+            return flightDTO;
+        }
+
+    }
 }
