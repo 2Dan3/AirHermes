@@ -8,7 +8,7 @@
 <body>
 
 <div th:fragment="centralniDiv">
-    <form method="get">
+<!--    <form method="get">-->
         <table class="tabela">
             <caption>Users</caption>
             <tr>
@@ -23,6 +23,8 @@
                 <th>blocked</th>
                 <th></th>
             </tr>
+
+            <form method="get">
             <tr>
                 <th></th>
 <!--                <th>-->
@@ -42,25 +44,37 @@
                 <th><input type="checkbox" name="blocked" th:checked="${param.blocked != null}"/></th>
                 <th><input type="submit" value="Search"/></th>
             </tr>
+            </form>
+
             <tr th:each="iterUser, status: ${users}">
                 <td th:value="${status.index + 1}"></td>
                 <td th:text="${iterUser.name}"></td>
                 <td th:text="${iterUser.surname}"></td>
                 <td th:text="${iterUser.email}"></td>
-                <td><a th:href="|users/details?username=${iterUser.username}|" th:text="${iterUser.username}"></a></td>
+                <td th:text="${iterUser.username}">
+<!--                    <a th:href="|users/profile?username=${iterUser.username}|" th:text="${iterUser.username}"></a>-->
+                </td>
 <!--                <td th:text="${iterUser.dateOfBirth}"></td>-->
                 <td th:text="${#dates.format(iterUser.dateOfBirth, 'yyyy-MM-dd')}"></td>
 <!--                <td th:text="${iterUser.registrationTimestamp}"></td>-->
                 <td th:text="${#dates.format(iterUser.registrationTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
-                <td th:text="${iterUser.admin}? 'yes': 'no'"></td>
-                <td th:text="${iterUser.blocked}? 'yes': 'no'"></td>
+                <td th:text="${iterUser.admin}? '✔': '❌'"></td>
+<!--                <td th:text="${iterUser.blocked}? '✔': '❌'"></td>-->
+                <th>
+                    <form th:id="|blockingForm${status.index}|" method="post" action="users/block">
+                    <input type="checkbox" name="blocked" th:value="${!iterUser.blocked}" th:checked="${iterUser.blocked}" th:onchange="|document.getElementById('blockingForm${status.index}').submit()|" th:disabled="${iterUser.admin}">
+                </th>
+                    <th><input type="search" name="userId" th:value="${iterUser.id}" style="display: none;"/>
+                </form></th>
                 <td></td>
             </tr>
         </table>
-    </form>
-    <ul>
-        <li><a href="users/create">Add a new user</a></li>
-    </ul>
+<!--    </form>-->
+
+
+<!--    <ul>-->
+<!--        <li><a href="users/create">Add a new user</a></li>-->
+<!--    </ul>-->
 </div>
 </body>
 </html>

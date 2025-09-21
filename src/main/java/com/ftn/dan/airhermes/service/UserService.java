@@ -23,4 +23,6 @@ public interface UserService {
     boolean updateBasicData(User user, String name, String surname, String username, String email, LocalDateTime dateOfBirth);
 
     boolean updatePassword(User user, String newPassword);
+
+    void updateBlockedStatus(User user, Boolean blocked);
 }

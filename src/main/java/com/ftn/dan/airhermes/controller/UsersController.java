@@ -59,12 +59,11 @@ public class UsersController {
             @RequestParam(required = false) Boolean blocked,
             HttpSession session, HttpServletResponse response) throws IOException {
 
-//  todo
-//        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
-//        if (loggedUser == null || !loggedUser.isAdmin()) {
-//            response.sendRedirect(baseURL);
-//            return null;
-//        }
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null || !loggedUser.isAdmin()) {
+            response.sendRedirect(baseURL + "flights");
+            return null;
+        }
 
         if (name!=null && name.trim().equals(""))
             name = null;
@@ -156,6 +155,9 @@ public class UsersController {
             User user = userService.findByCredentials(username, password);
             if (user == null) {
                 throw new Exception("Invalid credentials!");
+            }
+            if (user.isBlocked()) {
+                throw new Exception("This profile was blocked!");
             }
 
             session.setAttribute(UsersController.USER_KEY, user);
@@ -295,5 +297,30 @@ public class UsersController {
         }
     }
 
+    @PostMapping(value = "/block")
+    public void changeUserBlockedStatus(
+            @RequestParam(name = "userId") Long userId,
+            @RequestParam(name = "blocked", required = false) Boolean blocked,
+            HttpSession session, HttpServletResponse response) throws IOException {
+
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null || !loggedUser.isAdmin()) {
+            response.sendRedirect(baseURL + "flights");
+            return;
+        }
+
+        User user = userService.findByID(userId);
+        if (user == null || user.isAdmin()) {
+            response.sendRedirect(baseURL + "flights");
+            return;
+        }
+
+        if (blocked == null)
+            blocked = false;
+
+        userService.updateBlockedStatus(user, blocked);
+
+        response.sendRedirect(baseURL + "users");
+    }
 
 }

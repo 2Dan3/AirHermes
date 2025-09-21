@@ -65,4 +65,9 @@ public class DatabaseUserService implements UserService {
         user.setPassword(newPassword);
         return userDAO.updatePassword(user, user.getPassword());
     }
+
+    @Override
+    public void updateBlockedStatus(User user, Boolean blocked) {
+        userDAO.updateBlockedStatus(user, blocked);
+    }
 }

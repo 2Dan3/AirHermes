@@ -196,4 +196,14 @@ public class UserDAOImpl implements UserDAO {
         return success==0?false:true;
     }
 
+    @Override
+    public void updateBlockedStatus(User user, Boolean blocked) {
+        int success = 0;
+
+        String sql = "UPDATE users SET blocked = ? WHERE id = ?";
+        success = jdbcTemplate.update(sql, blocked, user.getId());
+
+//        return success==0?false:true;
+    }
+
 }
