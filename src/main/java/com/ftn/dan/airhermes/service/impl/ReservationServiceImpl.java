@@ -1,11 +1,14 @@
 package com.ftn.dan.airhermes.service.impl;
 
 import com.ftn.dan.airhermes.DAO.ReservationDAO;
+import com.ftn.dan.airhermes.model.dto.ReservationDTO;
 import com.ftn.dan.airhermes.model.entity.FlightReservation;
 import com.ftn.dan.airhermes.service.ReservationService;
 import com.ftn.dan.airhermes.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -30,6 +33,11 @@ public class ReservationServiceImpl implements ReservationService {
             success = ticketService.saveAll(reservationID, reservation.getIncludedFlightTickets()) > 0;
 
         return success ? 1 : 0;
+    }
+
+    @Override
+    public List<ReservationDTO> findAllWithFlightsByUserId(Long userId) {
+        return reservationDAO.findAllWithFlightsByUserId(userId);
     }
 
     private int updateTotalPrice(FlightReservation reservation, double price) {

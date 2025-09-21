@@ -1,6 +1,10 @@
 package com.ftn.dan.airhermes.controller;
 
+import com.ftn.dan.airhermes.model.dto.ReservationDTO;
+import com.ftn.dan.airhermes.model.entity.Flight;
+import com.ftn.dan.airhermes.model.entity.FlightReservation;
 import com.ftn.dan.airhermes.model.entity.User;
+import com.ftn.dan.airhermes.service.ReservationService;
 import com.ftn.dan.airhermes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,7 +23,10 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @RequestMapping(value = "/users")
@@ -28,6 +35,8 @@ public class UsersController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ReservationService reservationService;
 
     @Autowired
     ServletContext servletContext;
@@ -172,4 +181,114 @@ public class UsersController {
 //        response.sendRedirect(baseURL);
         response.sendRedirect("../../flights");
     }
+
+    @GetMapping(value="/profile")
+    public ModelAndView getProfile(@RequestParam String username,
+                                HttpSession session, HttpServletResponse response) throws IOException {
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null || (!loggedUser.isAdmin() && !loggedUser.getUsername().equals(username))) {
+            response.sendRedirect(baseURL + "users");
+            return null;
+        }
+
+        User user = userService.find(username);
+        if (user == null) {
+            response.sendRedirect(baseURL + "users");
+            return null;
+        }
+
+        List<ReservationDTO> reservationsAndFlights = reservationService.findAllWithFlightsByUserId(user.getId());
+
+        ModelAndView retval = new ModelAndView("profile");
+        retval.addObject("user", user);
+        retval.addObject("reservationDTOs", reservationsAndFlights);
+//     TODO   retval.addObject("wishlist", wishlist);
+
+        return retval;
+    }
+
+    @PostMapping(value="/edit")
+    public void edit(
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "") String surname,
+            @RequestParam(defaultValue = "") String username,
+            @RequestParam(defaultValue = "") String email,
+            @RequestParam
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateOfBirth,
+                     HttpSession session, HttpServletResponse response) throws IOException {
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null) {
+            response.sendRedirect(baseURL + "null");
+            return;
+        }
+
+        try {
+            User existingUser;
+            if ((existingUser = userService.find(username)) != null && !Objects.equals(existingUser.getUsername(), loggedUser.getUsername())) {
+                throw new Exception("Username is already in use!");
+            }
+            if ((existingUser = userService.findByEmail(email)) != null && !Objects.equals(existingUser.getEmail(), loggedUser.getEmail())) {
+                throw new Exception("Email is already in use!");
+            }
+            if (("").equals(name) || ("").equals(surname)) {
+                throw new Exception("Name and last name cannot be empty!");
+            }
+            if (dateOfBirth == null) {
+                throw new Exception("Date of birth cannot be empty!");
+            }
+
+            boolean successful = userService.updateBasicData(loggedUser, name, surname, username, email, dateOfBirth);
+            response.sendRedirect(baseURL + "users/profile?username=" + loggedUser.getUsername());
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+//            String poruka = ex.getMessage();
+////            if ("" == poruka) {
+//            if ("".equals(poruka)) {
+//                poruka = "Registration was unsuccessful!";
+//            }
+            response.reset();
+            return;
+
+//            ModelAndView retval = new ModelAndView("profile");
+//            retval.addObject("poruka", poruka);
+
+        }
+    }
+
+    @PostMapping(value = "/changePassword")
+    public void edit(@RequestParam(name = "password") String newPassword,
+                     @RequestParam(name = "repeatedPassword") String repeatedNewPassword,
+                HttpSession session, HttpServletResponse response) throws IOException {
+
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null) {
+            response.sendRedirect(baseURL + "users");
+            return;
+        }
+
+        try {
+            if (("").equals(newPassword) || !newPassword.equals(repeatedNewPassword)) {
+                throw new Exception("Password and repeated password must match and cannot be empty!");
+            }
+
+            boolean successful = userService.updatePassword(loggedUser, newPassword);
+            response.sendRedirect(baseURL + "users/profile?username=" + loggedUser.getUsername());
+
+        } catch (Exception ex) {
+//            String poruka = ex.getMessage();
+////            if ("" == poruka) {
+//            if ("".equals(poruka)) {
+//                poruka = "Registration was unsuccessful!";
+//            }
+            response.reset();
+            return;
+
+//            ModelAndView retval = new ModelAndView("profile");
+//            retval.addObject("poruka", poruka);
+
+        }
+    }
+
+
 }

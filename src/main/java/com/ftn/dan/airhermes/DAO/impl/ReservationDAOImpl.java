@@ -1,23 +1,46 @@
 package com.ftn.dan.airhermes.DAO.impl;
 
 import com.ftn.dan.airhermes.DAO.ReservationDAO;
+import com.ftn.dan.airhermes.model.dto.ReservationDTO;
 import com.ftn.dan.airhermes.model.entity.FlightReservation;
-import com.ftn.dan.airhermes.model.entity.FlightTicket;
-import com.ftn.dan.airhermes.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.*;
+import java.util.List;
 
 @Repository
 public class ReservationDAOImpl implements ReservationDAO {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private class ReservationRowMapper implements RowMapper<ReservationDTO> {
+
+        @Override
+        public ReservationDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            int index = 1;
+            Long flightId = rs.getLong(index++);
+            String airportDepartureCodeName = rs.getString(index++);
+            String airportDestinationCodeName = rs.getString(index++);
+            Timestamp flightDepartureTimestamp = rs.getTimestamp(index++);
+            Long reservationId = rs.getLong(index++);
+            Timestamp reservationCreationTimestamp = rs.getTimestamp(index++);
+            Double reservationSumPriceOfAllTickets = rs.getDouble(index++);
+            Long flightCancellationId = rs.getLong(index++);
+
+            Boolean cancelled = flightCancellationId != 0;
+            ReservationDTO reservationDTO = new ReservationDTO(flightId, airportDepartureCodeName, airportDestinationCodeName, flightDepartureTimestamp, reservationId, reservationCreationTimestamp, reservationSumPriceOfAllTickets, cancelled);
+            return reservationDTO;
+        }
+
+    }
 
     @Override
     public int updateTotalPrice(FlightReservation reservation, double price) {
@@ -69,6 +92,23 @@ public class ReservationDAOImpl implements ReservationDAO {
         }
 
         return success ? keyHolder.getKey().longValue() : null;
+    }
+
+    @Override
+    public List<ReservationDTO> findAllWithFlightsByUserId(Long userId) {
+        String sql = "SELECT f.id, f.airport_departure_code_name, f.airport_destination_code_name, f.departure_timestamp, " +
+                "r.id, r.reservation_creation_timestamp, r.sum_price_of_flight_tickets, " +
+                "c.flight_cancelled_id " +
+                "FROM flights f " +
+                "LEFT JOIN flight_flight_reservation fr " +
+                "ON f.id = fr.flight_id " +
+                "LEFT JOIN flight_reservations r " +
+                "ON r.id = fr.flight_reservation_id " +
+                "LEFT JOIN flight_cancellations c " +
+                "ON c.flight_cancelled_id = f.id " +
+                "WHERE r.user_id = ? " +
+                "ORDER BY r.reservation_creation_timestamp DESC";
+            return jdbcTemplate.query(sql, new Object[]{userId}, new ReservationRowMapper());
     }
 
 

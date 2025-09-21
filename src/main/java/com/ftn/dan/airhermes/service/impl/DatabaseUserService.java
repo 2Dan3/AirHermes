@@ -6,6 +6,8 @@ import com.ftn.dan.airhermes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,5 +38,31 @@ public class DatabaseUserService implements UserService {
     @Override
     public User findByCredentials(String username, String password) {
         return userDAO.findByCredentials(username, password);
+    }
+
+    @Override
+    public User find(String username) {
+        return userDAO.find(username);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userDAO.findByEmail(email);
+    }
+
+    @Override
+    public boolean updateBasicData(User user, String name, String surname, String username, String email, LocalDateTime dateOfBirth) {
+        user.setName(name);
+        user.setSurname(surname);
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setDateOfBirth(Timestamp.valueOf(dateOfBirth));
+        return userDAO.updateBasicData(user, user.getName(), user.getSurname(), user.getUsername(), user.getEmail(), dateOfBirth);
+    }
+
+    @Override
+    public boolean updatePassword(User user, String newPassword) {
+        user.setPassword(newPassword);
+        return userDAO.updatePassword(user, user.getPassword());
     }
 }

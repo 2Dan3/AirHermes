@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,6 +152,48 @@ public class UserDAOImpl implements UserDAO {
             // case user is not found
             return null;
         }
+    }
+
+    @Override
+    public User find(String username) {
+        try {
+            String sql = "SELECT id, name, surname, username, password, email, date_of_birth, registration_timestamp, admin, blocked FROM users WHERE username = ?";
+            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), username);
+        } catch (EmptyResultDataAccessException ex) {
+            // case user is not found
+            return null;
+        }
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        try {
+            String sql = "SELECT id, name, surname, username, password, email, date_of_birth, registration_timestamp, admin, blocked FROM users WHERE email = ?";
+            return jdbcTemplate.queryForObject(sql, new UserRowMapper(), email);
+        } catch (EmptyResultDataAccessException ex) {
+            // case user is not found
+            return null;
+        }
+    }
+
+    @Override
+    public boolean updateBasicData(User user, String name, String surname, String username, String email, LocalDateTime dateOfBirth) {
+        int success = 0;
+
+        String sql = "UPDATE users SET name = ?, surname = ?, username = ?, email = ?, date_of_birth = ? WHERE id = ?";
+        success = jdbcTemplate.update(sql, name, surname, username, email, Timestamp.valueOf(dateOfBirth), user.getId());
+
+        return success==0?false:true;
+    }
+
+    @Override
+    public boolean updatePassword(User user, String newPassword) {
+        int success = 0;
+
+        String sql = "UPDATE users SET password = ? WHERE id = ?";
+        success = jdbcTemplate.update(sql, newPassword, user.getId());
+
+        return success==0?false:true;
     }
 
 }

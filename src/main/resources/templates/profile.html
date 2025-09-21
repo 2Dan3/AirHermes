@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/StiloviForma.css"/>
+    <title>Profile</title>
+</head>
+<body>
+<div th:fragment="centralniDiv">
+<!--    <form method="post" th:action="|edit/${user.name}|">-->
+    <form method="post" action="edit">
+        <table class="forma">
+            <caption>User data</caption>
+            <tr><th>Name:</th><td><input type="text" name="name" th:value="${user.name}"/></td></tr>
+            <tr><th>Last name:</th><td><input type="text" name="surname" th:value="${user.surname}"/></td></tr>
+            <tr><th>Username:</th><td><input type="text" name="username" th:value="${user.username}"/></td></tr>
+            <tr><th>Email:</th><td><input type="email" name="email" th:value="${user.email}"/></td></tr>
+            <tr><th>Date of birth:</th><td><input type="datetime-local" name="dateOfBirth" th:value="${user.dateOfBirth}"/></td></tr>
+
+            <tr><th></th><td><input type="submit" value="Save the made changes!"/></td></tr>
+        </table>
+    </form>
+
+<!--    <form method="post" th:action="|changePassword/${user.name}|">-->
+    <form method="post" action="changePassword">
+        <table class="forma">
+            <caption>Change password</caption>
+            <tr><th>New password:</th><td><input type="password" name="password"/></td></tr>
+            <tr><th>Repeated new password:</th><td><input type="password" name="repeatedPassword"/></td></tr>
+
+            <tr><th></th><td><input type="submit" value="Save the made changes!"/></td></tr>
+        </table>
+    </form>
+
+<!--    <form method="post" action="">-->
+        <table class="tabela">
+            <caption>My reservations:</caption>
+
+            <tr>
+                <th>Flight UID</th>
+                <th>Departing from</th>
+                <th>Going to</th>
+                <th>Departing when?</th>
+                <th>Booked on</th>
+                <th>Total price</th>
+                <th>Is the flight on?</th>
+            </tr>
+            <tr th:each="iter, status: ${reservationDTOs}">
+                <td th:text="${iter.flightId}"></td>
+                <td th:text="${iter.airportDepartureCodeName}"></td>
+                <td th:text="${iter.airportDestinationCodeName}"></td>
+                <td th:text="${#dates.format(iter.flightDepartureTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${#dates.format(iter.reservationCreationTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="|${iter.reservationSumPriceOfAllTickets} RSD|"></td>
+<!--                <td th:text="${iter.cancelled}? '❌': '✔'}"></td>-->
+                <td th:text="${iter.cancelled}? 'no': 'yes'"></td>
+            </tr>
+        </table>
+<!--    </form>-->
+</div>
+</body>
+</html>
