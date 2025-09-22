@@ -103,6 +103,26 @@
             </tr>
         </table>
 
+        <table class="forma">
+            <caption>My loyalty card</caption>
+            <tr>
+                <th th:if="${loyaltyCard != null}">Points converted</th>
+                <th th:if="${loyaltyCard != null}">Unconverted money</th>
+                <th th:if="${cardStatus != null and loyaltyCard == null}">Status</th>
+                <th th:if="${loyaltyCard == null and (cardStatus == null or #strings.equals(cardStatus, 'DENIED'))}"></th>
+            </tr>
+            <tr>
+                <td th:text="${loyaltyCard.pointsCollected}" th:if="${loyaltyCard != null}"></td>
+                <td th:text="|${loyaltyCard.spentMoneyUnconvertedToPoints} RSD|" th:if="${loyaltyCard != null}"></td>
+                <td th:if="${cardStatus != null and loyaltyCard == null}" th:text="|Your request was ${cardStatus}.|"></td>
+                <td th:if="${loyaltyCard == null and (cardStatus == null or #strings.equals(cardStatus, 'DENIED'))}">
+                    <form method="post" action="../cards">
+                        <input type="submit" value="(Re)send your request!"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
 </div>
 </body>
 </html>

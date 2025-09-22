@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/StiloviTabela.css"/>
+    <title>Loyalty card requests</title>
+</head>
+<body>
+    <table class="tabela">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+        </tr>
+
+        <tr th:each="iterRequest, st: ${requests}">
+            <th th:text="${iterRequest.user.username}"></th>
+            <th th:text="${iterRequest.user.email}"></th>
+            <th>
+                <form th:id="|requestResolvingForm${st.index}|" method="post" action="cards/resolve">
+                    <select name="newStatus" th:onchange="|document.getElementById('requestResolvingForm${st.index}').submit()|" th:disabled="${iterRequest.status.name() != 'SENT'}">
+<!--                        <option th:each="status : ${T(com.ftn.dan.airhermes.model.enums.LoyaltyCardCreationRequestStatus).values()}"-->
+<!--                                th:value="${status.name()}"-->
+<!--                                th:text="${status.name()}"-->
+<!--                                th:disabled="${status.name() == 'SENT'}"-->
+<!--                                th:selected="${status.name() == iterRequest.status}">-->
+<!--                        </option>-->
+                        <!-- Show 'SENT' as selected and disabled if current status is SENT -->
+                        <option th:if="${iterRequest.status.name() == 'SENT'}"
+                                value="SENT"
+                                selected
+                                disabled>
+                            SENT
+                        </option>
+
+                        <!-- Loop only through selectable statuses -->
+                        <option th:each="status : ${T(com.ftn.dan.airhermes.model.enums.LoyaltyCardCreationRequestStatus).values()}"
+                                th:if="|${status.name() != 'SENT'}|"
+                                th:value="${status.name()}"
+                                th:text="${status.name()}"
+                                th:selected="${status.name() == iterRequest.status.name()}">
+                        </option>
+                    </select>
+                    <input type="text" name="userId" th:value="${iterRequest.user.id}" style="display: none;"/>
+                </form>
+            </th>
+        </tr>
+
+    </table>
+</body>
+</html>

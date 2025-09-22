@@ -357,9 +357,8 @@ INSERT INTO
 loyalty_card_creation_requests (user_id, status) 
 VALUES (2, 'SENT');
 
--- additional test data: 1 flight_cancellation & 3 wish_list_of_flights (may remove if we are adding values programatically anyways upon project app demonstration)
-insert into flight_cancellations(flight_cancelled_id, reason_of_cancellation) values(2, 'Airplane issues');
+-- insert into flight_cancellations(flight_cancelled_id, reason_of_cancellation) values(2, 'Airplane issues');
 
-insert into wish_list_of_flights(flight_id, user_id) values (2, 2);
-insert into wish_list_of_flights(flight_id, user_id) values (1, 2);
-insert into wish_list_of_flights(flight_id, user_id) values (3, 2);
+-- insert into wish_list_of_flights(flight_id, user_id) values (2, 2);
+-- insert into wish_list_of_flights(flight_id, user_id) values (1, 2);
+-- insert into wish_list_of_flights(flight_id, user_id) values (3, 2);

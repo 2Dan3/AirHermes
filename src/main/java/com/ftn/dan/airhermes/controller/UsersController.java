@@ -2,10 +2,9 @@ package com.ftn.dan.airhermes.controller;
 
 import com.ftn.dan.airhermes.model.dto.FlightDTO;
 import com.ftn.dan.airhermes.model.dto.ReservationDTO;
-import com.ftn.dan.airhermes.model.entity.Flight;
-import com.ftn.dan.airhermes.model.entity.FlightReservation;
-import com.ftn.dan.airhermes.model.entity.User;
+import com.ftn.dan.airhermes.model.entity.*;
 import com.ftn.dan.airhermes.service.FlightService;
+import com.ftn.dan.airhermes.service.LoyaltyCardService;
 import com.ftn.dan.airhermes.service.ReservationService;
 import com.ftn.dan.airhermes.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,8 @@ public class UsersController {
     private ReservationService reservationService;
     @Autowired
     private FlightService flightService;
+    @Autowired
+    private LoyaltyCardService loyaltyCardService;
 
     @Autowired
     ServletContext servletContext;
@@ -205,11 +206,15 @@ public class UsersController {
 
         List<ReservationDTO> reservationsAndFlights = reservationService.findAllWithFlightsByUserId(user.getId());
         List<FlightDTO> wishlist = flightService.findFlightsFromWishlist(loggedUser);
+        LoyaltyCard loyaltyCard = loyaltyCardService.findBy(user);
+        String cardStatus = loyaltyCardService.findCreationRequest(user);
 
         ModelAndView retval = new ModelAndView("profile");
         retval.addObject("user", user);
         retval.addObject("reservationDTOs", reservationsAndFlights);
         retval.addObject("wishlist", wishlist);
+        retval.addObject("loyaltyCard", loyaltyCard);
+        retval.addObject("cardStatus", cardStatus);
 
         return retval;
     }
