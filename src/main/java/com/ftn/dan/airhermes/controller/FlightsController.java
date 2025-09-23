@@ -137,4 +137,45 @@ public class FlightsController {
         return responsePage;
     }
 
+    @GetMapping(value = "/cancel")
+    public ModelAndView getFlightCancellationForm(
+            @RequestParam(name = "flightId") Long flightID,
+            HttpSession session, HttpServletResponse response) throws IOException {
+
+        Flight flight;
+        if (flightID == null || (flight = flightService.findAllBy(new Long[]{flightID}).get(0)) == null) {
+            response.sendRedirect(baseURL + "flights");
+            return null;
+        }
+
+        ModelAndView mov = new ModelAndView("cancelFlight");
+        mov.addObject("flight", flight);
+        return mov;
+    }
+
+    @PostMapping(value = "/cancel")
+    public ModelAndView cancelFlight(
+            @RequestParam(name = "flightId") Long flightID,
+            @RequestParam(name = "reason") String reasonOfCancellation,
+            HttpSession session, HttpServletResponse response) throws IOException {
+
+        ModelAndView mov = new ModelAndView("cancelFlight");
+
+        Flight flight;
+        if (flightID == null || (flight = flightService.findAllBy(new Long[]{flightID}).get(0)) == null) {
+            response.sendRedirect(baseURL + "flights");
+            return null;
+        }
+
+        try {
+            flightService.cancelFlight(flight, reasonOfCancellation);
+            response.sendRedirect(baseURL + "flights");
+            return null;
+        }catch (Exception e) {
+            mov.addObject("error", e.getMessage());
+            mov.addObject("flight", flight);
+            return mov;
+        }
+    }
+
 }

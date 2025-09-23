@@ -24,14 +24,16 @@ public class FlightDAOImpl implements FlightDAO {
             "adep.airport_code_name, ades.airport_code_name, " +
             "ldep.id, ldep.city, ldep.state, ldep.continent, ldes.id, ldes.city, ldes.state, ldes.continent, " +
             "av.id, av.name, av.seat_rows, av.seat_columns, " +
-            "d.id, d.discount_coefficient, d.valid_until_date " +
+            "d.id, d.discount_coefficient, d.valid_until_date, " +
+            "c.flight_cancelled_id " +
             "FROM flights f " +
             "LEFT JOIN airports adep ON adep.airport_code_name = f.airport_departure_code_name " +
             "LEFT JOIN airports ades ON ades.airport_code_name = f.airport_destination_code_name " +
             "LEFT JOIN airplanes av ON av.id = f.airplane_id " +
             "LEFT JOIN locations ldep ON ldep.id = adep.location_id " +
             "LEFT JOIN locations ldes ON ldes.id = ades.location_id " +
-            "LEFT JOIN discounts_standard d ON d.id = f.discount_standard_id";
+            "LEFT JOIN discounts_standard d ON d.id = f.discount_standard_id " +
+            "LEFT JOIN flight_cancellations c ON c.flight_cancelled_id = f.id ";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -84,33 +86,13 @@ public class FlightDAOImpl implements FlightDAO {
     @Override
     public List<Flight> find(Long flight_id, Timestamp departureTimestamp, String departureAirportOrCityOrStateSearchTerm, String destinationAirportOrCityOrStateSearchTerm, Integer passengers, Boolean lookForSimilarTimingFlights) {
 
-        final String all_discounted_flights = " WHERE f.discount_standard_id IS NOT NULL";
-
-//        String sql =
-//        "SELECT f.id, f.departure_timestamp, f.flight_duration_minutes, f.flight_ticket_price, " +
-//                "adep.airport_code_name, ades.airport_code_name, " +
-//                "ldep.id, ldep.city, ldep.state, ldep.continent, ldes.id, ldes.city, ldes.state, ldes.continent, " +
-//                "av.id, av.name, av.seat_rows, av.seat_columns, " +
-//                "d.id, d.discount_coefficient, d.valid_until_date " +
-//                "FROM flights f " +
-//                "LEFT JOIN airports adep ON adep.airport_code_name = f.airport_departure_code_name " +
-//                "LEFT JOIN airports ades ON ades.airport_code_name = f.airport_destination_code_name " +
-//                "LEFT JOIN airplanes av ON av.id = f.airplane_id " +
-//                "LEFT JOIN locations ldep ON ldep.id = adep.location_id " +
-//                "LEFT JOIN locations ldes ON ldes.id = ades.location_id " +
-//                "LEFT JOIN discounts_standard d ON d.id = f.discount_standard_id" +
-//                " WHERE " +
-//                "f.departure_timestamp >= TIMESTAMP_MIN AND f.departure_timestamp <= TIMESTAMP_MAX " +
-//                "AND (adep.airport_code_name LIKE %SearchTerm1% OR ldep.city LIKE %SearchTerm1% OR ldep.state LIKE %SearchTerm1%) " +
-//                "AND (ades.airport_code_name LIKE %SearchTerm2% OR ldes.city LIKE %SearchTerm2% OR ldes.state LIKE %SearchTerm2%) " +
-//                "AND PUTNICI <= ( (av.seat_rows * av.seat_columns) - (SELECT COUNT(ft.id) FROM flight_tickets ft WHERE ft.flight_id = f.id)
-//                 ORDER BY f.departure_timestamp";
+        final String all_discounted_flights = " WHERE f.discount_standard_id IS NOT NULL AND c.flight_cancelled_id IS NULL";
 
         String sql = SQL_GET_ALL_FLIGHTS_AND_REFERENCES;
 
         ArrayList<Object> listaArgumenata = new ArrayList<Object>();
 
-        StringBuffer whereSql = new StringBuffer(" WHERE ");
+        StringBuffer whereSql = new StringBuffer(" WHERE c.flight_cancelled_id IS NULL AND ");
         boolean imaArgumenata = false;
 
         if(departureTimestamp != null) {
@@ -183,15 +165,20 @@ public class FlightDAOImpl implements FlightDAO {
         ArrayList<Object> listaArgumenata = new ArrayList<Object>();
         boolean imaArgumenata = false;
 
-        StringBuffer whereSql = new StringBuffer(" WHERE ");
+        StringBuffer whereSql = new StringBuffer(" WHERE c.flight_cancelled_id IS NULL ");
 
         for (Long flightId : flightIds) {
             if (imaArgumenata)
                 whereSql.append(" OR ");
+            else
+                whereSql.append(" AND ( ");
             whereSql.append("f.id = ?");
             listaArgumenata.add(flightId);
             imaArgumenata = true;
         }
+
+        if (flightIds.length != 0)
+            whereSql.append(" ) ");
 
         if(imaArgumenata)
             sql = sql + whereSql.toString();
@@ -226,7 +213,7 @@ public class FlightDAOImpl implements FlightDAO {
     public List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax) {
         ArrayList<Object> listaArgumenata = new ArrayList<Object>();
 
-        StringBuffer whereSql = new StringBuffer(" WHERE ");
+        StringBuffer whereSql = new StringBuffer(" WHERE c.flight_cancelled_id IS NULL AND ");
         boolean imaArgumenata = false;
 
         String sql = "SELECT " +
@@ -234,7 +221,8 @@ public class FlightDAOImpl implements FlightDAO {
                 "    f.departure_timestamp AS departure_time, " +
                 "    (av.seat_rows*av.seat_columns) AS seats_total, " +
                 "    tickets.ticket_count AS seats_sold, " +
-                "    tickets.ticket_prices_total AS total_flight_revenue " +
+                "    tickets.ticket_prices_total AS total_flight_revenue, " +
+                "    c.flight_cancelled_id " +
                 "FROM flights f " +
                 "LEFT JOIN " +
                 "airplanes av " +
@@ -247,7 +235,9 @@ public class FlightDAOImpl implements FlightDAO {
                 "FROM flight_tickets ft " +
                 "    GROUP BY ft.flight_id) " +
                 "    AS tickets " +
-                "ON tickets.fl_id = f.id";
+                "ON tickets.fl_id = f.id " +
+                "LEFT JOIN flight_cancellations c " +
+                "ON c.flight_cancelled_id = f.id";
 
         if(timestampMin != null) {
             if(imaArgumenata)
@@ -269,6 +259,12 @@ public class FlightDAOImpl implements FlightDAO {
 
         System.out.println("DAO reports: " + sql);
         return jdbcTemplate.query(sql, listaArgumenata.toArray(), new ReportDTORowMapper());
+    }
+
+    @Override
+    public void cancelFlight(Flight flight, String reasonOfCancellation) {
+        String sql = "INSERT INTO flight_cancellations (flight_cancelled_id, reason_of_cancellation) VALUES (?, ?)";
+        jdbcTemplate.update(sql, flight.getId(), reasonOfCancellation);
     }
 
     private class ReportDTORowMapper implements RowMapper<ReportDTO> {

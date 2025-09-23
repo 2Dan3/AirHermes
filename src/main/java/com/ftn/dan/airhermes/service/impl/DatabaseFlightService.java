@@ -6,16 +6,21 @@ import com.ftn.dan.airhermes.model.dto.ReportDTO;
 import com.ftn.dan.airhermes.model.entity.Flight;
 import com.ftn.dan.airhermes.model.entity.User;
 import com.ftn.dan.airhermes.service.FlightService;
+import com.ftn.dan.airhermes.service.LoyaltyCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class DatabaseFlightService implements FlightService {
     @Autowired
     private FlightDAO flightDAO;
+    @Autowired
+    private LoyaltyCardService loyaltyCardService;
 
     @Override
     public List<Flight> find(Long flight_id, Timestamp departureTimestamp, String departureAirportOrCityOrStateSearchTerm, String destinationAirportOrCityOrStateSearchTerm, Integer passengers, Boolean lookForSimilarTimingFlights) {
@@ -35,5 +40,21 @@ public class DatabaseFlightService implements FlightService {
     @Override
     public List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax) {
         return flightDAO.findFlightsAndRevenueForInterval(timestampMin, timestampMax);
+    }
+
+    @Transactional
+    @Override
+    public void cancelFlight(Flight flight, String reasonOfCancellation) throws Exception {
+        LocalDateTime now = LocalDateTime.now();
+	LocalDateTime departure = flight.getDepartureTimestamp().toLocalDateTime();
+	LocalDateTime deadline = departure.minusHours(1);
+
+	if (now.isBefore(deadline)) {
+            flightDAO.cancelFlight(flight, reasonOfCancellation);
+            loyaltyCardService.compensateReservationMaker(flight);
+        }
+        else {
+            throw new Exception("It is too late to cancel the upcoming flight.");
+        }
     }
 }

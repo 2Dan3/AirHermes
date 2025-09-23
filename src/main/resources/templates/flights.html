@@ -95,7 +95,7 @@
 <!--                todo add multiple flightIDs when connecting flights are implemented -->
                 <td><a th:href="|reservations/create?flightId=${iterFlight.id}|" th:text="Tickets"></a></td>
 
-                <td></td>
+                <td><a th:if="${session.loggedUser != null and session.loggedUser.admin}" th:href="|flights/cancel?flightId=${iterFlight.id}|">❌ Cancel this flight ❌</a></td>
             </tr>
         </table>
 <!--    </form>-->

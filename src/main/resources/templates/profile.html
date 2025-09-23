@@ -52,8 +52,7 @@
                 <td th:text="${#dates.format(iter.flightDepartureTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
                 <td th:text="${#dates.format(iter.reservationCreationTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
                 <td th:text="|${iter.reservationSumPriceOfAllTickets} RSD|"></td>
-<!--                <td th:text="${iter.cancelled}? '❌': '✔'}"></td>-->
-                <td th:text="${iter.cancelled}? 'no': 'yes'"></td>
+                <td th:text="${iter.cancelled}? '❌': '✅'"></td>
             </tr>
         </table>
 <!--    </form>-->
@@ -99,7 +98,7 @@
                 <!--                <td><a th:href="|flights/details?id=${iterFlight.id}|" th:text="Tickets"></a></td>-->
                 <!--                todo add multiple flightIDs when connecting flights are implemented -->
 
-                <td th:text="${iterFlight.soldOut}? '✔': '❌'"></td>
+                <td th:text="${iterFlight.soldOut}? '✅': '❌'"></td>
             </tr>
         </table>
 

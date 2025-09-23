@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/StiloviForma.css"/>
+    <title>Flight cancellation</title>
+</head>
+<body>
+    <div th:fragment="centralniDiv">
+        <form method="post" action="cancel">
+            <table class="forma">
+                <caption>Cancel the selected flight:</caption>
+                <tr>
+                    <th>Reason of cancellation:</th>
+                    <td>
+                        <input type="text" name="flightId" th:value="${flight.id}" style="display:none;"/>
+                        <input type="text" name="reason"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input type="submit" value="Save your changes"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <p class="greska" th:text="${error}"></p>
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.ftn.dan.airhermes.DAO;
 
+import com.ftn.dan.airhermes.model.entity.Flight;
 import com.ftn.dan.airhermes.model.entity.LoyaltyCard;
 import com.ftn.dan.airhermes.model.entity.LoyaltyCardCreationRequest;
 import com.ftn.dan.airhermes.model.entity.User;
@@ -20,4 +21,6 @@ public interface LoyaltyCardDAO {
     void save(LoyaltyCard loyaltyCard);
 
     List<LoyaltyCardCreationRequest> findAll();
+
+    void compensateReservationMaker(Flight flight);
 }

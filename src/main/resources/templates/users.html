@@ -58,7 +58,7 @@
                 <td th:text="${#dates.format(iterUser.dateOfBirth, 'yyyy-MM-dd')}"></td>
 <!--                <td th:text="${iterUser.registrationTimestamp}"></td>-->
                 <td th:text="${#dates.format(iterUser.registrationTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
-                <td th:text="${iterUser.admin}? '✔': '❌'"></td>
+                <td th:text="${iterUser.admin}? '✅': '❌'"></td>
 <!--                <td th:text="${iterUser.blocked}? '✔': '❌'"></td>-->
                 <th>
                     <form th:id="|blockingForm${status.index}|" method="post" action="users/block">

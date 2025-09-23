@@ -1,6 +1,7 @@
 package com.ftn.dan.airhermes.service.impl;
 
 import com.ftn.dan.airhermes.DAO.LoyaltyCardDAO;
+import com.ftn.dan.airhermes.model.entity.Flight;
 import com.ftn.dan.airhermes.model.entity.LoyaltyCard;
 import com.ftn.dan.airhermes.model.entity.LoyaltyCardCreationRequest;
 import com.ftn.dan.airhermes.model.entity.User;
@@ -56,5 +57,10 @@ public class LoyaltyCardServiceImpl implements LoyaltyCardService {
     @Override
     public List<LoyaltyCardCreationRequest> findAll() {
         return loyaltyCardDAO.findAll();
+    }
+
+    @Override
+    public void compensateReservationMaker(Flight flight) {
+        loyaltyCardDAO.compensateReservationMaker(flight);
     }
 }

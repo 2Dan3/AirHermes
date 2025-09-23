@@ -2,6 +2,7 @@ package com.ftn.dan.airhermes.DAO.impl;
 
 import com.ftn.dan.airhermes.DAO.LoyaltyCardDAO;
 import com.ftn.dan.airhermes.DAO.UserDAO;
+import com.ftn.dan.airhermes.model.entity.Flight;
 import com.ftn.dan.airhermes.model.entity.LoyaltyCard;
 import com.ftn.dan.airhermes.model.entity.LoyaltyCardCreationRequest;
 import com.ftn.dan.airhermes.model.entity.User;
@@ -113,5 +114,19 @@ public class LoyaltyCardDAOImpl implements LoyaltyCardDAO {
     public List<LoyaltyCardCreationRequest> findAll() {
         String sql = "SELECT user_id, status FROM loyalty_card_creation_requests";
         return jdbcTemplate.query(sql, new RequestRowMapper());
+    }
+
+    @Override
+    public void compensateReservationMaker(Flight flight) {
+        final String sql =
+                "UPDATE loyalty_cards " +
+                "SET points_collected = points_collected + 5 " +
+                "WHERE user_id IN (" +
+                "  SELECT u.id " +
+                "  FROM users u" +
+                "  INNER JOIN flight_reservations r ON u.id = r.user_id " +
+                "  INNER JOIN flight_flight_reservation fr ON r.id = fr.flight_reservation_id " +
+                "  WHERE fr.flight_id = ?)";
+        jdbcTemplate.update(sql, flight.getId());
     }
 }

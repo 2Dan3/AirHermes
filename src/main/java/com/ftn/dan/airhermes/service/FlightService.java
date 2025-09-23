@@ -16,4 +16,6 @@ public interface FlightService {
     List<FlightDTO> findFlightsFromWishlist(User user);
 
     List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax);
+
+    void cancelFlight(Flight flight, String reasonOfCancellation) throws Exception;
 }
