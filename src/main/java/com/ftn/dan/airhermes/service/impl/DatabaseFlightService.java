@@ -2,6 +2,7 @@ package com.ftn.dan.airhermes.service.impl;
 
 import com.ftn.dan.airhermes.DAO.FlightDAO;
 import com.ftn.dan.airhermes.model.dto.FlightDTO;
+import com.ftn.dan.airhermes.model.dto.ReportDTO;
 import com.ftn.dan.airhermes.model.entity.Flight;
 import com.ftn.dan.airhermes.model.entity.User;
 import com.ftn.dan.airhermes.service.FlightService;
@@ -29,5 +30,10 @@ public class DatabaseFlightService implements FlightService {
     @Override
     public List<FlightDTO> findFlightsFromWishlist(User user) {
         return flightDAO.findFlightsFromWishlist(user);
+    }
+
+    @Override
+    public List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax) {
+        return flightDAO.findFlightsAndRevenueForInterval(timestampMin, timestampMax);
     }
 }

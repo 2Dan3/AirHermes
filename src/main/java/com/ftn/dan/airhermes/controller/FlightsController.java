@@ -1,5 +1,6 @@
 package com.ftn.dan.airhermes.controller;
 
+import com.ftn.dan.airhermes.model.dto.ReportDTO;
 import com.ftn.dan.airhermes.model.entity.Flight;
 import com.ftn.dan.airhermes.model.entity.User;
 import com.ftn.dan.airhermes.service.FlightService;
@@ -91,6 +92,48 @@ public class FlightsController {
 
         ModelAndView responsePage = new ModelAndView("flights");
         responsePage.addObject("flights", flights);
+        return responsePage;
+    }
+
+    @GetMapping(value = "/report")
+    public ModelAndView getRevenueReportForInterval(
+            @RequestParam(required = false, name = "timestampMin")
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime rawParamLocalDateTimeMin,
+            @RequestParam(required = false, name = "timestampMax")
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime rawParamLocalDateTimeMax,
+            HttpSession httpSession, HttpServletResponse response) throws IOException {
+
+        User loggedUser = (User) httpSession.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null || !loggedUser.isAdmin()) {
+            response.sendRedirect(baseURL + "flights");
+            return null;
+        }
+
+        Timestamp timestampMin = null;
+        if (rawParamLocalDateTimeMin != null)
+            timestampMin = Timestamp.valueOf(rawParamLocalDateTimeMin);
+
+        Timestamp timestampMax = null;
+        if(rawParamLocalDateTimeMax != null)
+            timestampMax = Timestamp.valueOf(rawParamLocalDateTimeMax);
+
+        ModelAndView responsePage = new ModelAndView("report");
+
+        if (timestampMin == null && timestampMax == null)
+            return responsePage;
+
+        List<ReportDTO> bookedFlights = flightService.findFlightsAndRevenueForInterval(timestampMin, timestampMax);
+
+        Long totalTicketsSold = 0L;
+        Double totalRevenue = 0.0;
+        for (ReportDTO bookedFlight : bookedFlights) {
+            totalTicketsSold += bookedFlight.getSeatsSold();
+            totalRevenue += bookedFlight.getFlightRevenue();
+        }
+
+        responsePage.addObject("flights", bookedFlights);
+        responsePage.addObject("totalTicketsSold", totalTicketsSold);
+        responsePage.addObject("totalRevenue", totalRevenue);
         return responsePage;
     }
 

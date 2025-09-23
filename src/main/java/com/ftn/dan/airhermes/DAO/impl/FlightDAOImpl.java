@@ -2,6 +2,7 @@ package com.ftn.dan.airhermes.DAO.impl;
 
 import com.ftn.dan.airhermes.DAO.FlightDAO;
 import com.ftn.dan.airhermes.model.dto.FlightDTO;
+import com.ftn.dan.airhermes.model.dto.ReportDTO;
 import com.ftn.dan.airhermes.model.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -203,22 +204,87 @@ public class FlightDAOImpl implements FlightDAO {
 
     @Override
     public List<FlightDTO> findFlightsFromWishlist(User user) {
-        final String sql = "SELECT f.id, f.departure_timestamp, f.flight_duration_minutes, f.flight_ticket_price, \n" +
-                "adep.airport_code_name, ades.airport_code_name, \n" +
-                "ldep.id, ldep.city, ldep.state, ldep.continent, ldes.id, ldes.city, ldes.state, ldes.continent, \n" +
-                "av.id, av.name, av.seat_rows, av.seat_columns, \n" +
-                "d.id, d.discount_coefficient, d.valid_until_date, \n" +
-                "(SELECT ( (av.seat_rows * av.seat_columns) <= (SELECT COUNT(ft.id) FROM flight_tickets ft WHERE ft.flight_id = f.id)) ) AS flight_sold_out \n" +
-                "FROM flights f \n" +
-                "LEFT JOIN airports adep ON adep.airport_code_name = f.airport_departure_code_name \n" +
-                "LEFT JOIN airports ades ON ades.airport_code_name = f.airport_destination_code_name \n" +
-                "LEFT JOIN airplanes av ON av.id = f.airplane_id \n" +
-                "LEFT JOIN locations ldep ON ldep.id = adep.location_id \n" +
-                "LEFT JOIN locations ldes ON ldes.id = ades.location_id \n" +
-                "LEFT JOIN discounts_standard d ON d.id = f.discount_standard_id \n" +
-                "LEFT JOIN wish_list_of_flights w ON w.flight_id = f.id \n" +
+        final String sql = "SELECT f.id, f.departure_timestamp, f.flight_duration_minutes, f.flight_ticket_price, " +
+                "adep.airport_code_name, ades.airport_code_name, " +
+                "ldep.id, ldep.city, ldep.state, ldep.continent, ldes.id, ldes.city, ldes.state, ldes.continent, " +
+                "av.id, av.name, av.seat_rows, av.seat_columns, " +
+                "d.id, d.discount_coefficient, d.valid_until_date, " +
+                "(SELECT ( (av.seat_rows * av.seat_columns) <= (SELECT COUNT(ft.id) FROM flight_tickets ft WHERE ft.flight_id = f.id)) ) AS flight_sold_out " +
+                "FROM flights f " +
+                "LEFT JOIN airports adep ON adep.airport_code_name = f.airport_departure_code_name " +
+                "LEFT JOIN airports ades ON ades.airport_code_name = f.airport_destination_code_name " +
+                "LEFT JOIN airplanes av ON av.id = f.airplane_id " +
+                "LEFT JOIN locations ldep ON ldep.id = adep.location_id " +
+                "LEFT JOIN locations ldes ON ldes.id = ades.location_id " +
+                "LEFT JOIN discounts_standard d ON d.id = f.discount_standard_id " +
+                "LEFT JOIN wish_list_of_flights w ON w.flight_id = f.id " +
                 "WHERE w.user_id = ?";
         return jdbcTemplate.query(sql, new Object[]{user.getId()}, new FlightDTORowMapper());
+    }
+
+    @Override
+    public List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax) {
+        ArrayList<Object> listaArgumenata = new ArrayList<Object>();
+
+        StringBuffer whereSql = new StringBuffer(" WHERE ");
+        boolean imaArgumenata = false;
+
+        String sql = "SELECT " +
+                "f.id AS flight_id, " +
+                "    f.departure_timestamp AS departure_time, " +
+                "    (av.seat_rows*av.seat_columns) AS seats_total, " +
+                "    tickets.ticket_count AS seats_sold, " +
+                "    tickets.ticket_prices_total AS total_flight_revenue " +
+                "FROM flights f " +
+                "LEFT JOIN " +
+                "airplanes av " +
+                "ON av.id = f.airplane_id " +
+                "LEFT JOIN " +
+                "(SELECT " +
+                "COUNT(ft.id) AS ticket_count, " +
+                "        SUM(ft.flight_ticket_price) AS ticket_prices_total, " +
+                "        ft.flight_id AS fl_id " +
+                "FROM flight_tickets ft " +
+                "    GROUP BY ft.flight_id) " +
+                "    AS tickets " +
+                "ON tickets.fl_id = f.id";
+
+        if(timestampMin != null) {
+            if(imaArgumenata)
+                whereSql.append(" AND ");
+            whereSql.append("f.departure_timestamp >= ?");
+            imaArgumenata = true;
+            listaArgumenata.add(timestampMin);
+        }
+        if(timestampMax != null) {
+            if(imaArgumenata)
+                whereSql.append(" AND ");
+            whereSql.append("f.departure_timestamp <= ?");
+            imaArgumenata = true;
+            listaArgumenata.add(timestampMax);
+        }
+
+        if(imaArgumenata)
+            sql = sql + whereSql.toString();
+
+        System.out.println("DAO reports: " + sql);
+        return jdbcTemplate.query(sql, listaArgumenata.toArray(), new ReportDTORowMapper());
+    }
+
+    private class ReportDTORowMapper implements RowMapper<ReportDTO> {
+
+        @Override
+        public ReportDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            int index = 1;
+            Long flight_uid = rs.getLong(index++);
+            Timestamp departure_timestamp = rs.getTimestamp(index++);
+            Long flight_seats_total = rs.getLong(index++);
+            Long flight_tickets_sold = rs.getLong(index++);
+            Double total_flight_revenue = rs.getDouble(index++);
+
+            ReportDTO reportDTO = new ReportDTO(flight_uid, departure_timestamp, flight_seats_total, flight_tickets_sold, total_flight_revenue);
+            return reportDTO;
+        }
     }
 
     private class FlightDTORowMapper implements RowMapper<FlightDTO> {

@@ -1,6 +1,7 @@
 package com.ftn.dan.airhermes.DAO;
 
 import com.ftn.dan.airhermes.model.dto.FlightDTO;
+import com.ftn.dan.airhermes.model.dto.ReportDTO;
 import com.ftn.dan.airhermes.model.entity.Flight;
 import com.ftn.dan.airhermes.model.entity.User;
 
@@ -14,4 +15,6 @@ public interface FlightDAO {
     List<Flight> findAllBy(Long[] flightIds);
 
     List<FlightDTO> findFlightsFromWishlist(User user);
+
+    List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax);
 }
