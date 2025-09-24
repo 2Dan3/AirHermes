@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -265,6 +266,26 @@ public class FlightDAOImpl implements FlightDAO {
     public void cancelFlight(Flight flight, String reasonOfCancellation) {
         String sql = "INSERT INTO flight_cancellations (flight_cancelled_id, reason_of_cancellation) VALUES (?, ?)";
         jdbcTemplate.update(sql, flight.getId(), reasonOfCancellation);
+    }
+
+    @Override
+    public void save(Long flightID, String airportDepartureCodeName, String airportDestinationCodeName, Long airplaneID, LocalDateTime departureLocalDateTime, Integer flightDurationMinutes, Integer flightTicketPrice, Long discountStandardID) {
+        String sql = "INSERT INTO flights (id, airport_departure_code_name, airport_destination_code_name, airplane_id, departure_timestamp, flight_duration_minutes, flight_ticket_price, discount_standard_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, flightID, airportDepartureCodeName, airportDestinationCodeName, airplaneID, Timestamp.valueOf(departureLocalDateTime), flightDurationMinutes, flightTicketPrice, discountStandardID);
+    }
+
+    @Override
+    public void update(Long flightID, String airportDepartureCodeName, String airportDestinationCodeName, Long airplaneID, LocalDateTime departureLocalDateTime, Integer flightDurationMinutes, Integer flightTicketPrice, Long discountStandardID) {
+        String sql = "UPDATE flights SET airport_departure_code_name = ?, airport_destination_code_name = ?, airplane_id = ?, departure_timestamp = ?, flight_duration_minutes = ?, flight_ticket_price = ?, discount_standard_id = ? WHERE id = ?";
+        int success = jdbcTemplate.update(sql, airportDepartureCodeName, airportDestinationCodeName, airplaneID, Timestamp.valueOf(departureLocalDateTime), flightDurationMinutes, flightTicketPrice, discountStandardID, flightID);
+//        return success == 0?false:true;
+    }
+
+    @Override
+    public void delete(Long id) {
+        String sql = "DELETE FROM flights WHERE id = ?";
+        int success = jdbcTemplate.update(sql, id);
+//        return success == 0?false:true;
     }
 
     private class ReportDTORowMapper implements RowMapper<ReportDTO> {

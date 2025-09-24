@@ -89,18 +89,20 @@
                 <span th:unless="${iterFlight.discountStandard.discountCoefficient > 0.0}"
                       th:text="|${iterFlight.flightTicketPrice} RSD|"></span>
                 </td>
-                <td th:inline="text" th:text="|${iterFlight.flightDurationMinutes / 60}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}h|"></td>
+                <td>
+                    <input readonly type="time" th:value="|${#numbers.formatInteger(iterFlight.flightDurationMinutes / 60, 2)}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}|"/>
+                </td>
                 <td th:inline="text" th:text="|${iterFlight.discountStandard.discountCoefficient * 100}%|"></td>
 <!--                <td><a th:href="|flights/details?id=${iterFlight.id}|" th:text="Tickets"></a></td>-->
 <!--                todo add multiple flightIDs when connecting flights are implemented -->
                 <td><a th:href="|reservations/create?flightId=${iterFlight.id}|" th:text="Tickets"></a></td>
 
-                <td><a th:if="${session.loggedUser != null and session.loggedUser.admin}" th:href="|flights/cancel?flightId=${iterFlight.id}|">❌ Cancel this flight ❌</a></td>
+                <td><a th:if="${session.loggedUser != null and session.loggedUser.admin}" th:href="|flights/setup?flightId=${iterFlight.id}|">📝 Edit this flight</a></td>
             </tr>
         </table>
 <!--    </form>-->
     <ul th:if="${session.loggedUser != null and session.loggedUser.admin}">
-        <li><a href="flights/create">Add a new flight</a></li>
+        <li><a href="flights/setup">Add a new flight</a></li>
     </ul>
 </div>
 </body>

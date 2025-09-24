@@ -11,4 +11,6 @@ public interface ReservationService {
     int saveReservationAndTickets(FlightReservation reservation, Long[] flightIDs);
 
     List<ReservationDTO> findAllWithFlightsByUserId(Long userId);
+
+    boolean existsForFlight(Long flightId);
 }

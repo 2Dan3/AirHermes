@@ -5,6 +5,14 @@ public class Location {
     private String city, state, continent;
     private String imagePath;
 
+    public Location(Long locationId, String city, String state, String continent, String imagePath) {
+        this.id = locationId;
+        this.city = city;
+        this.state = state;
+        this.continent = continent;
+        this.imagePath = imagePath;
+    }
+
     public Long getId() {
         return id;
     }

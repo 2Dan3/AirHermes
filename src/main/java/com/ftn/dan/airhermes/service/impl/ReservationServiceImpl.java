@@ -40,6 +40,11 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationDAO.findAllWithFlightsByUserId(userId);
     }
 
+    @Override
+    public boolean existsForFlight(Long flightId) {
+        return reservationDAO.existsReservationForFlight(flightId);
+    }
+
     private int updateTotalPrice(FlightReservation reservation, double price) {
         return reservationDAO.updateTotalPrice(reservation, price);
     }

@@ -11,4 +11,6 @@ public interface ReservationDAO {
     Long save(FlightReservation reservation, Long[] flightIDs);
 
     List<ReservationDTO> findAllWithFlightsByUserId(Long userId);
+
+    boolean existsReservationForFlight(Long flightID);
 }

@@ -4,7 +4,6 @@ import com.ftn.dan.airhermes.DAO.ReservationDAO;
 import com.ftn.dan.airhermes.model.dto.ReservationDTO;
 import com.ftn.dan.airhermes.model.entity.FlightReservation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -111,5 +110,9 @@ public class ReservationDAOImpl implements ReservationDAO {
             return jdbcTemplate.query(sql, new Object[]{userId}, new ReservationRowMapper());
     }
 
-
+    @Override
+    public boolean existsReservationForFlight(Long flightID) {
+        final String sql = "SELECT EXISTS (SELECT fr.flight_reservation_id FROM flight_flight_reservation fr WHERE fr.flight_id = ?) AS 'exists';";
+        return jdbcTemplate.queryForObject(sql, Integer.class, flightID) == 0 ? false : true;
+    }
 }

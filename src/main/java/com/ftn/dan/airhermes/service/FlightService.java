@@ -6,6 +6,7 @@ import com.ftn.dan.airhermes.model.entity.Flight;
 import com.ftn.dan.airhermes.model.entity.User;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface FlightService {
@@ -18,4 +19,12 @@ public interface FlightService {
     List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax);
 
     void cancelFlight(Flight flight, String reasonOfCancellation) throws Exception;
+
+    void save(Long flightID, String airportDepartureCodeName, String airportDestinationCodeName, Long airplaneID, LocalDateTime departureLocalDateTime, Integer flightDurationMinutes, Integer flightTicketPrice, Long discountStandardID);
+
+    void updateFlight(Flight flight, String airportDepartureCodeName, String airportDestinationCodeName, Long airplaneID, LocalDateTime departureLocalDateTime, Integer flightDurationMinutes, Integer flightTicketPrice, Long discountStandardID);
+
+    void deleteFlight(Flight flight);
+
+    Integer parseMinutes(String formattedHoursAndMinutes);
 }

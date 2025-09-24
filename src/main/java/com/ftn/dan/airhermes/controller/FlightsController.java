@@ -1,8 +1,10 @@
 package com.ftn.dan.airhermes.controller;
 
 import com.ftn.dan.airhermes.model.dto.ReportDTO;
-import com.ftn.dan.airhermes.model.entity.Flight;
-import com.ftn.dan.airhermes.model.entity.User;
+import com.ftn.dan.airhermes.model.entity.*;
+import com.ftn.dan.airhermes.service.AirplaneService;
+import com.ftn.dan.airhermes.service.AirportService;
+import com.ftn.dan.airhermes.service.DiscountService;
 import com.ftn.dan.airhermes.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,6 +32,12 @@ public class FlightsController {
 
     @Autowired
     private FlightService flightService;
+    @Autowired
+    private AirplaneService airplaneService;
+    @Autowired
+    private AirportService airportService;
+    @Autowired
+    private DiscountService discountService;
 
     @Autowired
     private ServletContext servletContext;
@@ -176,6 +184,85 @@ public class FlightsController {
             mov.addObject("flight", flight);
             return mov;
         }
+    }
+
+    @GetMapping(value = "/setup")
+    public ModelAndView setupFlightPage(
+            @RequestParam(required = false, name = "flightId") Long flightID,
+            HttpSession session, HttpServletResponse response) throws IOException {
+
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null || !loggedUser.isAdmin()) {
+            response.sendRedirect(baseURL + "flights");
+            return null;
+        }
+
+        ModelAndView mov = new ModelAndView("setupFlight");
+
+        Flight flight;
+        if (flightID != null && (flight = flightService.findAllBy(new Long[]{flightID}).get(0)) != null) {
+            mov.addObject("flight", flight);
+        }
+
+        List<Airport> allAirports = airportService.findAll();
+        List<Airplane> allAirplanes = airplaneService.findAll();
+        List<DiscountStandard> allDiscounts = discountService.findAll();
+
+        mov.addObject("airports", allAirports);
+        mov.addObject("airplanes", allAirplanes);
+        mov.addObject("discounts", allDiscounts);
+
+        return mov;
+    }
+
+    @PostMapping(value = "/setup")
+    public void setupFlightCreateEdit(
+            @RequestParam(name = "flightId") Long flightID,
+            @RequestParam(name = "airportDeparture") String airportDepartureCodeName,
+            @RequestParam(name = "airportDestination") String airportDestinationCodeName,
+            @RequestParam(name = "airplaneId") Long airplaneID,
+            @RequestParam(name = "departureTimestamp")
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime departureLocalDateTime,
+            @RequestParam(name = "flightDurationMinutes") String rawflightDurationMinutes,
+            @RequestParam(name = "flightTicketPrice") Integer flightTicketPrice,
+            @RequestParam(name = "discountStandardId") Long discountStandardID,
+
+            HttpSession session, HttpServletResponse response) throws IOException {
+
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null || !loggedUser.isAdmin()) {
+            response.sendRedirect(baseURL + "flights");
+            return;
+        }
+
+        Integer flightDurationMinutes = flightService.parseMinutes(rawflightDurationMinutes);
+
+        List<Flight> flight = flightService.findAllBy(new Long[]{flightID});
+        if (!flight.isEmpty())
+            flightService.updateFlight(flight.get(0), airportDepartureCodeName, airportDestinationCodeName, airplaneID, departureLocalDateTime, flightDurationMinutes, flightTicketPrice, discountStandardID);
+        else
+            flightService.save(flightID, airportDepartureCodeName, airportDestinationCodeName, airplaneID, departureLocalDateTime, flightDurationMinutes, flightTicketPrice, discountStandardID);
+
+        response.sendRedirect(baseURL + "flights");
+    }
+
+    @PostMapping(value = "/delete")
+    public void deleteFlight(
+            @RequestParam(name = "flightId") Long flightID,
+            HttpSession session, HttpServletResponse response) throws IOException {
+
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null || !loggedUser.isAdmin()) {
+            response.sendRedirect(baseURL + "flights");
+            return;
+        }
+
+        Flight flight = flightService.findAllBy(new Long[]{flightID}).get(0);
+        if (flight == null)
+            return;
+
+        flightService.deleteFlight(flight);
+        response.sendRedirect(baseURL + "flights");
     }
 
 }
