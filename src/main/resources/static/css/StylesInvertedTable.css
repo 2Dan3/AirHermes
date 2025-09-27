@@ -8,6 +8,9 @@ table {
 
 }
 
+img {
+    max-width: 80px;
+}
 
 table caption {
 	font-size: 16pt

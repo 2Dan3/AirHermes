@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DiscountDAO {
     List<DiscountStandard> findAll();
+
+    void save(DiscountStandard discount);
 }

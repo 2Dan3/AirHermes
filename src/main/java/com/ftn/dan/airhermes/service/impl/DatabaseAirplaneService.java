@@ -18,4 +18,9 @@ public class DatabaseAirplaneService implements AirplaneService {
     public List<Airplane> findAll() {
         return airplaneDAO.findAll();
     }
+
+    @Override
+    public void save(Airplane airplane) {
+        airplaneDAO.save(airplane);
+    }
 }

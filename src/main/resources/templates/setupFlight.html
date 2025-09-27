@@ -1,64 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<!--<html th:replace="fragments/base.html :: layout(centralniDiv)">-->
 <head>
     <meta charset="UTF-8">
-<!--    <link rel="stylesheet" type="text/css" href="../css/StiloviTabela.css"/>-->
-<!--    <link rel="stylesheet" type="text/css" href="../css/StiloviForma.css"/>-->
     <link rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
+    <script src="../js/flightSetup.js"></script>
     <title>Flight data</title>
 </head>
 <body>
 <div th:fragment="centralniDiv">
-    <!--    <form method="get">-->
 
-        <table class="inverted">
-<!--        <caption>Flights</caption>-->
-        <!--            <form method="get">-->
-<!--        <tr>-->
-<!--            <th><p th:if="${session.loggedUser != null and session.loggedUser.admin}">What is the Flight UID?</p></th>-->
-<!--            <th></th>-->
-<!--            <th>Departing from?</th>-->
-<!--            <th>Going to?</th>-->
-<!--            <th>Departing when?</th>-->
-<!--            <th>Show flights within ± 2 days?</th>-->
-<!--            <th></th>-->
-<!--            <th>How many passengers?</th>-->
-<!--            <th></th>-->
-<!--            <th></th>-->
-<!--        </tr>-->
-
-<!--        <tr>-->
-<!--            <th th:unless="${session.loggedUser != null and session.loggedUser.admin}"></th>-->
-
-            <!--                <th>-->
-            <!--                    <select name="pol">-->
-            <!--                        <option value="">odaberi</option>-->
-            <!--                        <option value="muški" th:selected="${#strings.equals(param.pol, 'muški')}">muški</option>-->
-            <!--                        <option value="ženski" th:selected="${#strings.equals(param.pol, 'ženski')}">ženski</option>-->
-            <!--                    </select>-->
-            <!--                </th>-->
-<!--            <form method="get" action="flights/advancedSearch">-->
-<!--                <th><input th:if="${session.loggedUser != null and session.loggedUser.admin}" type="search" name="flight_id" th:value="${param.flight_id}?: null"/></th>-->
-<!--                <th th:if="${session.loggedUser != null and session.loggedUser.admin}"><input type="submit" value="Search by UID"/></th>-->
-<!--        </form>-->
-
-<!--        <form method="get">-->
-<!--                <th><input type="search" placeholder="e.g. JFK or New York City or New York or United States" style="font-style:italic;"  name="departureAirportOrCityOrStateSearchTerm" th:value="${param.departureAirportOrCityOrStateSearchTerm}?: null"/></th>-->
-<!--                <th><input type="search" placeholder="e.g. BEG or Belgrade or Serbia" style="font-style:italic;" name="destinationAirportOrCityOrStateSearchTerm" th:value="${param.destinationAirportOrCityOrStateSearchTerm}?: null"/></th>-->
-<!--                <th><input type="datetime-local" name="departureTimestamp" th:value="${param.departureTimestamp}?: null"/></th>-->
-<!--                &lt;!&ndash;                <th></th>&ndash;&gt;-->
-<!--                <th><input type="checkbox" name="lookForSimilarTimingFlights" th:checked="${param.lookForSimilarTimingFlights != null}"/></th>-->
-<!--                <th></th>-->
-<!--                <th><input type="number" min="1" name="passengers" th:value="${param.passengers}?: null"/></th>-->
-<!--                <th></th>-->
-<!--                <th><input type="submit" value="Filter by criteria"/></th>-->
-<!--            </form>-->
-<!--        </tr>-->
-        <!--            </form>-->
-
-<!--        <tr>-->
-<!--            <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>-->
-<!--        </tr>-->
+        <table id="tableFlights">
         <tr>
             <th>Flight UID</th>
             <th id="th_airplane">Airplane</th>
@@ -72,14 +24,10 @@
             <th></th>
             <th></th>
         </tr>
-<!--        <tr th:each="iterFlight, status: ${flights}">-->
         <tr>
-            <!--                <td th:value="${status.index + 1}"></td>-->
             <form id="formSetup" method="post" action="setup">
-                <!--                    <td th:text="${iterFlight.id}"></td>-->
                 <td><input type="text" th:value="${flight!=null}? ${flight.id} : null" name="flightId" th:readonly="${flight != null and flight.id != null}" required/></td>
-<!--                <td><input th:if="${session.loggedUser != null}" type="submit" value="Add to wishlist ✔"/></td>-->
-<!--            </form>-->
+
                 <td>
                     <select name="airplaneId" required>
                         <option value="" onclick="" disabled>Define a new airplane</option>
@@ -94,7 +42,6 @@
                         <option th:each="airport: ${airports}" th:value="${airport.airportCodeName}" th:text="|${airport.airportCodeName}, ${airport.location.city}, ${airport.location.state}, ${airport.location.continent}|" th:selected="${flight != null and flight.airportDeparture.airportCodeName == airport.airportCodeName}"></option>
                     </select>
                 </td>
-    <!--            <td th:text="|${iterFlight.airportDestination.airportCodeName}, ${iterFlight.airportDestination.location.city}, ${iterFlight.airportDestination.location.state}|"></td>-->
                 <td>
                     <select name="airportDestination" required>
                         <option value="" onclick="" disabled>Define a new airport</option>
@@ -119,22 +66,6 @@
                         <option th:each="discount: ${discounts}" th:value="${discount.id}" th:text="|${discount.discountCoefficient * 100}% until ${#dates.format(discount.validUntilDate, 'yyyy-MM-dd HH:mm')}|" th:selected="${flight != null and flight.discountStandard != null and flight.discountStandard.id == discount.id}"></option>
                     </select>
                 </td>
-
-            <!--                <td th:inline="text" th:text="|${iterFlight.flightTicketPrice}RSD|"></td>-->
-<!--            <td th:inline="text">-->
-<!--                <span th:if="${iterFlight.discountStandard.discountCoefficient > 0.0}">-->
-<!--                    <s th:text="|${iterFlight.flightTicketPrice} RSD|"></s>-->
-<!--                    <span th:text="| ${(1 - iterFlight.discountStandard.discountCoefficient) * iterFlight.flightTicketPrice} RSD |"></span>-->
-<!--                </span>-->
-<!--                <span th:unless="${iterFlight.discountStandard.discountCoefficient > 0.0}"-->
-<!--                      th:text="|${iterFlight.flightTicketPrice} RSD|"></span>-->
-<!--            </td>-->
-<!--            <td th:inline="text" th:text="|${iterFlight.flightDurationMinutes / 60}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}h|"></td>-->
-<!--            <td th:inline="text" th:text="|${iterFlight.discountStandard.discountCoefficient * 100}%|"></td>-->
-<!--            &lt;!&ndash;                <td><a th:href="|flights/details?id=${iterFlight.id}|" th:text="Tickets"></a></td>&ndash;&gt;-->
-<!--            <td><a th:href="|reservations/create?flightId=${iterFlight.id}|" th:text="Tickets"></a></td>-->
-
-
                 <td>
 
                         <input type="submit" value="Save"/>
@@ -158,10 +89,13 @@
             </tr>
         </table>
 
-    <!--    </form>-->
-<!--    <ul th:if="${session.loggedUser != null and session.loggedUser.admin}">-->
-<!--        <li><a href="flights/create">Add a new flight</a></li>-->
-<!--    </ul>-->
+<!--    TODO -->
+    <div th:replace="~{fragments/airplanes.html :: layout(~{::title},~{::link},~{::script})}"></div>
+    <div th:replace="~{fragments/discounts.html :: layout(~{::title},~{::link},~{::script})}"></div>
+<!--    <div th:replace="~{fragments/airports.html :: layout(~{::title},~{::link},~{::script})}"></div>-->
+    <div th:replace="~{fragments/airports.html :: (~{::allLocations})}"></div>
+<!--    <div th:replace="~{fragments/airports.html :: (${allLocations})}"></div>-->
+
 </div>
 </body>
 </html>

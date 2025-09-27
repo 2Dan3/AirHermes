@@ -14,6 +14,7 @@
             <caption>Flights</caption>
 <!--            <form method="get">-->
             <tr>
+                <th></th>
                 <th><p th:if="${session.loggedUser != null and session.loggedUser.admin}">What is the Flight UID?</p></th>
                 <th></th>
                 <th>Departing from?</th>
@@ -26,6 +27,7 @@
                 <th></th>
             </tr>
             <tr>
+                <th></th>
                 <th th:unless="${session.loggedUser != null and session.loggedUser.admin}"></th>
                 <!--                <th>-->
                 <!--                    <select name="pol">-->
@@ -54,9 +56,10 @@
 <!--            </form>-->
 
             <tr>
-                <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
             </tr>
             <tr>
+                <th>Image</th>
                 <th>flights UID</th>
                 <th></th>
                 <th>departures</th>
@@ -69,6 +72,7 @@
                 <th></th>
             </tr>
             <tr th:each="iterFlight, status: ${flights}">
+                <td><img th:src="@{${iterFlight.airportDestination.location.imagePath}}" th:alt="${iterFlight.airportDestination.location.imagePath}"/></td>
 <!--                <td th:value="${status.index + 1}"></td>-->
                 <form method="post" action="wishlist">
 <!--                    <td th:text="${iterFlight.id}"></td>-->
@@ -92,7 +96,7 @@
                 <td>
                     <input readonly type="time" th:value="|${#numbers.formatInteger(iterFlight.flightDurationMinutes / 60, 2)}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}|"/>
                 </td>
-                <td th:inline="text" th:text="|${iterFlight.discountStandard.discountCoefficient * 100}%|"></td>
+                <td th:inline="text" th:text="|${#numbers.formatInteger(iterFlight.discountStandard.discountCoefficient * 100, 2)}%|"></td>
 <!--                <td><a th:href="|flights/details?id=${iterFlight.id}|" th:text="Tickets"></a></td>-->
 <!--                todo add multiple flightIDs when connecting flights are implemented -->
                 <td><a th:href="|reservations/create?flightId=${iterFlight.id}|" th:text="Tickets"></a></td>

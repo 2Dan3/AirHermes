@@ -40,4 +40,12 @@ public class AirplaneDAOImpl implements AirplaneDAO {
                         "FROM airplanes av";
         return jdbcTemplate.query(sql, new AirplaneRowMapper());
     }
+
+    @Override
+    public void save(Airplane airplane) {
+        final String sql =
+                "INSERT INTO airplanes (name, seat_rows, seat_columns) " +
+                "VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, airplane.getName(), airplane.getSeatRows(), airplane.getSeatColumns());
+    }
 }

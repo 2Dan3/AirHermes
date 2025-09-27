@@ -28,3 +28,7 @@ table.tabela tr:nth-child(even) {
 table.tabela input[type="search"] {
 	width: 100%;
 }
+
+img {
+    max-width: 80px;
+}

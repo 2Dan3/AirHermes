@@ -18,4 +18,9 @@ public class DatabaseAirportService implements AirportService {
     public List<Airport> findAll() {
         return airportDAO.findAll();
     }
+
+    @Override
+    public void save(String codeName, Long locationID) {
+        airportDAO.save(codeName, locationID);
+    }
 }

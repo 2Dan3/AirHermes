@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface AirplaneService {
     List<Airplane> findAll();
+
+    void save(Airplane airplane);
 }

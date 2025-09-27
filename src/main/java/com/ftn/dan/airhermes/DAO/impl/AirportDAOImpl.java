@@ -45,4 +45,12 @@ public class AirportDAOImpl implements AirportDAO {
                 "JOIN locations l ON l.id = a.location_id";
         return jdbcTemplate.query(sql, new AirportRowMapper());
     }
+
+    @Override
+    public void save(String codeName, Long locationID) {
+        final String sql =
+                "INSERT INTO airports (airport_code_name, location_id) " +
+                "VALUES (?, ?)";
+        jdbcTemplate.update(sql, codeName, locationID);
+    }
 }

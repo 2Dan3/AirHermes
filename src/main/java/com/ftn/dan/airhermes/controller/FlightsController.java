@@ -2,10 +2,7 @@ package com.ftn.dan.airhermes.controller;
 
 import com.ftn.dan.airhermes.model.dto.ReportDTO;
 import com.ftn.dan.airhermes.model.entity.*;
-import com.ftn.dan.airhermes.service.AirplaneService;
-import com.ftn.dan.airhermes.service.AirportService;
-import com.ftn.dan.airhermes.service.DiscountService;
-import com.ftn.dan.airhermes.service.FlightService;
+import com.ftn.dan.airhermes.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -34,6 +31,8 @@ public class FlightsController {
     private FlightService flightService;
     @Autowired
     private AirplaneService airplaneService;
+    @Autowired
+    private LocationService locationService;
     @Autowired
     private AirportService airportService;
     @Autowired
@@ -204,10 +203,12 @@ public class FlightsController {
             mov.addObject("flight", flight);
         }
 
+        List<Location> allLocations = locationService.findAll();
         List<Airport> allAirports = airportService.findAll();
         List<Airplane> allAirplanes = airplaneService.findAll();
         List<DiscountStandard> allDiscounts = discountService.findAll();
 
+        mov.addObject("allLocations", allLocations);
         mov.addObject("airports", allAirports);
         mov.addObject("airplanes", allAirplanes);
         mov.addObject("discounts", allDiscounts);

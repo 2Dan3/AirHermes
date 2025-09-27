@@ -39,4 +39,12 @@ public class DiscountDAOImpl implements DiscountDAO {
                 "FROM discounts_standard d";
         return jdbcTemplate.query(sql, new DiscountRowMapper());
     }
+
+    @Override
+    public void save(DiscountStandard discount) {
+        final String sql =
+                "INSERT INTO discounts_standard (discount_coefficient, valid_until_date) " +
+                "VALUES (?, ?)";
+        jdbcTemplate.update(sql, discount.getDiscountCoefficient(), discount.getValidUntilDate());
+    }
 }

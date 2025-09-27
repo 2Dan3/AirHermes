@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface AirportService {
     List<Airport> findAll();
+
+    void save(String codeName, Long locationID);
 }

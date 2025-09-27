@@ -18,4 +18,9 @@ public class DatabaseDiscountService implements DiscountService {
     public List<DiscountStandard> findAll() {
         return discountDAO.findAll();
     }
+
+    @Override
+    public void save(DiscountStandard discount) {
+        discountDAO.save(discount);
+    }
 }

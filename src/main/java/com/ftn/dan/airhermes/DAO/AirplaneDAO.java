@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface AirplaneDAO {
     List<Airplane> findAll();
+
+    void save(Airplane airplane);
 }

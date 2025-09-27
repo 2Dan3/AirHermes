@@ -23,7 +23,8 @@ public class FlightDAOImpl implements FlightDAO {
     private final String SQL_GET_ALL_FLIGHTS_AND_REFERENCES =
             "SELECT f.id, f.departure_timestamp, f.flight_duration_minutes, f.flight_ticket_price, " +
             "adep.airport_code_name, ades.airport_code_name, " +
-            "ldep.id, ldep.city, ldep.state, ldep.continent, ldes.id, ldes.city, ldes.state, ldes.continent, " +
+            "ldep.id, ldep.city, ldep.state, ldep.continent, ldep.image_path, " +
+            "ldes.id, ldes.city, ldes.state, ldes.continent, ldes.image_path, " +
             "av.id, av.name, av.seat_rows, av.seat_columns, " +
             "d.id, d.discount_coefficient, d.valid_until_date, " +
             "c.flight_cancelled_id " +
@@ -56,11 +57,13 @@ public class FlightDAOImpl implements FlightDAO {
             String location_city_departure = rs.getString(index++);
             String location_state_departure = rs.getString(index++);
             String location_continent_departure = rs.getString(index++);
+            String imagePathDeparture = rs.getString(index++);
 
             Long location_id_destination = rs.getLong(index++);
             String location_city_destination = rs.getString(index++);
             String location_state_destination = rs.getString(index++);
             String location_continent_destination = rs.getString(index++);
+            String imagePathDestination = rs.getString(index++);
 
             Long airplane_id = rs.getLong(index++);
             String airplane_name = rs.getString(index++);
@@ -73,8 +76,8 @@ public class FlightDAOImpl implements FlightDAO {
 
             DiscountStandard discount = new DiscountStandard(discount_id, discount_coefficient, valid_until_date);
             Airplane airplane = new Airplane(airplane_id, airplane_name, seat_rows, seat_columns);
-            Location locationDeparture = new Location(location_id_departure, location_city_departure, location_state_departure, location_continent_departure);
-            Location locationDestination = new Location(location_id_destination, location_city_destination, location_state_destination, location_continent_destination);
+            Location locationDeparture = new Location(location_id_departure, location_city_departure, location_state_departure, location_continent_departure, imagePathDeparture);
+            Location locationDestination = new Location(location_id_destination, location_city_destination, location_state_destination, location_continent_destination, imagePathDestination);
             Airport airportDeparture = new Airport(airport_code_name_departure, locationDeparture);
             Airport airportDestination = new Airport(airport_code_name_destination, locationDestination);
 

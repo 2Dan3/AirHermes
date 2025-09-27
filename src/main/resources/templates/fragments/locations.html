@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html th:fragment="layout(title, links, scripts)" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:replace="${links}" rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
+    <title th:replace="${title}">Locations</title>
+    <script th:replace="${scripts}"></script>
+</head>
+<body>
+<div th:fragment="mainDivLocations(locations)" id="mainDivLocations">
+    <table>
+        <caption>Locations</caption>
+        <tr>
+            <th></th>
+            <th>City</th>
+            <th>State</th>
+            <th>Continent</th>
+            <th></th>
+        </tr>
+        <tr th:each="iterLocation: ${locations}">
+
+            <td><img th:alt="${iterLocation.imagePath}" th:src="@{${iterLocation.imagePath}}"/></td>
+            <td th:text="${iterLocation.city}"></td>
+            <td th:text="${iterLocation.state}"></td>
+            <td th:text="${iterLocation.continent}"></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <div th:fragment="formDivLocations" id="formDivLocations">
+                <form method="post" action="locations" enctype="multipart/form-data">
+                    <td><input type="file" accept="image/*" name="imageFile"/></td>
+                    <td><input type="text" name="city" required/></td>
+                    <td><input type="text" name="state" required/></td>
+                    <td><input type="text" name="continent" required/></td>
+                    <td><input type="submit" value="Save new destination"/></td>
+                </form>
+            </div>
+        </tr>
+    </table>
+    <p class="greska" th:text="${errorMessage}"></p>
+</div>
+</body>
+</html>
