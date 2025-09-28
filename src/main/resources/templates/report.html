@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/StiloviTabela.css"/>
-    <title>Flights and revenue</title>
+    <title th:text="#{data.flightsAndRevenue}"></title>
 </head>
 <body>
 <div th:fragment="centralniDiv">
     <table class="tabela">
-        <caption>Flights revenue report</caption>
+        <caption th:text="#{data.flightsAndRevenue}"></caption>
         <tr>
 <!--            <th></th>-->
             <th></th>
             <th></th>
-            <th>From</th>
-            <th>Until</th>
+            <th th:text="#{data.timeFrom}"></th>
+            <th th:text="#{data.timeUntil}"></th>
             <th></th>
         </tr>
         <tr>
@@ -24,23 +24,23 @@
             <form method="get">
                 <th><input type="datetime-local" name="timestampMin" th:value="${param.timestampMin}?: null"/></th>
                 <th><input type="datetime-local" name="timestampMax" th:value="${param.timestampMax}?: null"/></th>
-                <th><input type="submit" value="Generate the report"/></th>
+                <th><input type="submit" th:value="#{action.report}"/></th>
             </form>
         </tr>
         <tr>
 <!--            <th></th>-->
-            <th>Flight UID</th>
-            <th>Departure time</th>
-            <th>Seats total</th>
-            <th>Tickets sold</th>
-            <th>Flight revenue</th>
+            <th th:text="#{data.flightId}"></th>
+            <th th:text="#{data.departureTime}"></th>
+            <th th:text="#{data.seatsTotal}"></th>
+            <th th:text="#{data.ticketsSold}"></th>
+            <th th:text="#{data.flightsAndRevenue}"></th>
         </tr>
         <tr th:each="iterFlight, status: ${flights}">
             <td th:text="${iterFlight.flightId}"></td>
             <td th:text="${#dates.format(iterFlight.departureTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
             <td th:text="${iterFlight.seatsTotal}"></td>
             <td th:text="${iterFlight.seatsSold}"></td>
-            <td th:text="|${iterFlight.flightRevenue} RSD|"></td>
+            <td th:text="|${iterFlight.flightRevenue} #{currency}|"></td>
         </tr>
         <tr>
             <td style="font-weight: bold;">Total:</td>

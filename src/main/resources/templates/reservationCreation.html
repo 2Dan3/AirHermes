@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/StiloviTabela.css"/>
-    <title>Reservations</title>
+    <title th:text="#{data.myReservations}"></title>
 </head>
 <body>
 
@@ -11,7 +11,7 @@
 <div th:fragment="centralniDiv">
 
         <table class="tabela">
-            <caption>Flight(s)</caption>
+            <caption th:text="#{data.flights}"></caption>
 <!--            <tr>-->
 <!--                <th></th>-->
 <!--                <th><input type="search" name="flight_id" th:value="${param.flight_id}?: null"/></th>-->
@@ -31,13 +31,13 @@
 <!--            todo import this part of Flights Table as a fragment-->
             <tr>
                 <th></th>
-                <th>flights UID</th>
-                <th>departures</th>
-                <th>destinations</th>
-                <th>departure times</th>
-                <th>prices</th>
-                <th>durations</th>
-                <th>discounts</th>
+                <th th:text="#{data.flightId}"></th>
+                <th th:text="#{data.departures}"></th>
+                <th th:text="#{data.destinations}"></th>
+                <th th:text="#{data.departureTime}"></th>
+                <th th:text="#{data.price}"></th>
+                <th th:text="#{data.duration}"></th>
+                <th th:text="#{data.discounts}"></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -52,13 +52,13 @@
                 <!--                <td th:inline="text" th:text="|${iterFlight.flightTicketPrice}RSD|"></td>-->
                 <td th:inline="text">
                 <span th:if="${iterFlight.discountStandard.discountCoefficient > 0.0}">
-                    <s th:text="|${iterFlight.flightTicketPrice} RSD|"></s>
-                    <span th:text="| ${(1 - iterFlight.discountStandard.discountCoefficient) * iterFlight.flightTicketPrice} RSD |"></span>
+                    <s th:text="|${iterFlight.flightTicketPrice} #{currency}|"></s>
+                    <span th:text="| ${(1 - iterFlight.discountStandard.discountCoefficient) * iterFlight.flightTicketPrice} #{currency} |"></span>
                 </span>
                     <span th:unless="${iterFlight.discountStandard.discountCoefficient > 0.0}"
-                          th:text="|${iterFlight.flightTicketPrice} RSD|"></span>
+                          th:text="|${iterFlight.flightTicketPrice} #{currency}|"></span>
                 </td>
-                <td th:inline="text" th:text="|${iterFlight.flightDurationMinutes / 60}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}h|"></td>
+                <td th:inline="text" th:text="|${iterFlight.flightDurationMinutes / 60}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}#{data.hour}|"></td>
                 <td th:inline="text" th:text="|${iterFlight.discountStandard.discountCoefficient * 100}%|"></td>
                 <td></td>
                 <td></td>
@@ -71,7 +71,7 @@
 
         <ul>
             <li>
-                <input type="submit" value="Make the reservation!"/>
+                <input type="submit" th:value="#{action.reserve}"/>
 <!--                <a th:href="|make|" th:text="|Make the reservation!|"></a>-->
             </li>
         </ul>
@@ -79,17 +79,17 @@
         <table class="table-ticket">
 <!--            <caption>Ticket 1</caption>-->
             <tr>
-                <th>Passenger name</th>
-                <th>Passenger last name</th>
-                <th>Passenger passport num.</th>
-                <th>Airplane seat</th>
+                <th th:text="#{data.passengerName}"></th>
+                <th th:text="#{data.passengerLastName}"></th>
+                <th th:text="#{data.passportNumber}"></th>
+                <th th:text="#{data.airplaneSeatNumber}"></th>
                 <th></th>
             </tr>
             <tr>
-                <th><input type="text" name="passengerName"></th>
-                <th><input type="text" name="passengerSurname"></th>
-                <th><input type="number" name="passportNumber" minlength="9" maxlength="9"></th>
-                <th><input type="text" name="seatNumber" style="enabled: false;"></th>
+                <th><input type="text" name="passengerName" required></th>
+                <th><input type="text" name="passengerSurname" required></th>
+                <th><input type="number" name="passportNumber" minlength="9" maxlength="9" required></th>
+                <th><input type="text" name="seatNumber" style="enabled: false;" required></th>
             </tr>
             <tr>
                 <th><input type="text" name="passengerName"></th>
@@ -109,9 +109,9 @@
                     with a "remove" button on each-->
     </form>
     <ul>
-        <li>
+        <li th:text="#{action.addPassenger}">
 <!--            <a href="reservations/make">-->
-                Add another passenger.
+<!--                Add another passenger.-->
 <!--            </a>-->
         </li>
     </ul>

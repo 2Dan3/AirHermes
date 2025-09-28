@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/StiloviTabela.css"/>
-    <title>Users</title>
+    <title th:text="#{data.users}"></title>
 </head>
 <body>
 
 <div th:fragment="centralniDiv">
 <!--    <form method="get">-->
         <table class="tabela">
-            <caption>Users</caption>
+            <caption th:text="#{data.users}"></caption>
             <tr>
-                <th>ord. num.</th>
-                <th>name</th>
-                <th>surname</th>
-                <th>email</th>
-                <th>username</th>
-                <th>date of birth</th>
-                <th>registered on</th>
-                <th>admin</th>
-                <th>blocked</th>
+                <th></th>
+                <th th:text="#{data.nameOfPerson}"></th>
+                <th th:text="#{data.lastName}"></th>
+                <th th:text="#{data.email}"></th>
+                <th th:text="#{data.username}"></th>
+                <th th:text="#{data.dateOfBirth}"></th>
+                <th th:text="#{data.registeredOn}"></th>
+                <th th:text="#{data.admin}"></th>
+                <th th:text="#{data.blocked}"></th>
                 <th></th>
             </tr>
 
@@ -42,7 +42,7 @@
                 <th></th>
                 <th><input type="checkbox" name="admin" th:checked="${param.admin != null}"/></th>
                 <th><input type="checkbox" name="blocked" th:checked="${param.blocked != null}"/></th>
-                <th><input type="submit" value="Search"/></th>
+                <th><input type="submit" th:value="#{action.search}"/></th>
             </tr>
             </form>
 

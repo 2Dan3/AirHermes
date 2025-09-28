@@ -5,21 +5,21 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
     <script src="../js/flightSetup.js"></script>
-    <title>Flight data</title>
+    <title th:text="#{data.flightData}"></title>
 </head>
 <body>
 <div th:fragment="centralniDiv">
 
         <table id="tableFlights">
         <tr>
-            <th>Flight UID</th>
-            <th id="th_airplane">Airplane</th>
-            <th>Departures</th>
-            <th>Destinations</th>
-            <th>Departure time</th>
-            <th>Price</th>
-            <th>Duration</th>
-            <th>Discount</th>
+            <th th:text="#{data.flightId}"></th>
+            <th th:text="#{data.airplane}" id="th_airplane"></th>
+            <th th:text="#{data.departures}"></th>
+            <th th:text="#{data.destinations}"></th>
+            <th th:text="#{data.departureTime}"></th>
+            <th th:text="#{data.price}"></th>
+            <th th:text="#{data.duration}"></th>
+            <th th:text="#{data.discount}"></th>
             <th></th>
             <th></th>
             <th></th>
@@ -30,21 +30,21 @@
 
                 <td>
                     <select name="airplaneId" required>
-                        <option value="" onclick="" disabled>Define a new airplane</option>
+                        <option value="" onclick="" disabled th:text="#{action.defineAirplane}"></option>
                         <option value="" disabled selected></option>
                         <option th:each="airplane: ${airplanes}" th:value="${airplane.id}" th:text="|${airplane.name}, ${airplane.seatRows} * ${airplane.seatColumns}|" th:selected="${flight!=null and flight.airplane.id == airplane.id}"></option>
                     </select>
                 </td>
                 <td>
                     <select name="airportDeparture" required>
-                        <option value="" onclick="" disabled>Define a new airport</option>
+                        <option value="" onclick="" disabled th:text="#{action.defineAirport}"></option>
                         <option value="" disabled selected></option>
                         <option th:each="airport: ${airports}" th:value="${airport.airportCodeName}" th:text="|${airport.airportCodeName}, ${airport.location.city}, ${airport.location.state}, ${airport.location.continent}|" th:selected="${flight != null and flight.airportDeparture.airportCodeName == airport.airportCodeName}"></option>
                     </select>
                 </td>
                 <td>
                     <select name="airportDestination" required>
-                        <option value="" onclick="" disabled>Define a new airport</option>
+                        <option value="" onclick="" disabled th:text="#{action.defineAirport}"></option>
                         <option value="" disabled selected></option>
                         <option th:each="airport: ${airports}" th:value="${airport.airportCodeName}" th:text="|${airport.airportCodeName}, ${airport.location.city}, ${airport.location.state}, ${airport.location.continent}|" th:selected="${flight != null and flight.airportDestination.airportCodeName == airport.airportCodeName}"></option>
                     </select>
@@ -61,28 +61,28 @@
                 </td>
                 <td>
                     <select name="discountStandardId">
-                        <option value="" onclick="" disabled>Define a new discount</option>
-                        <option value="" selected>No discount</option>
+                        <option value="" onclick="" disabled th:text="#{action.defineDiscount}"></option>
+                        <option value="" selected th:text="#{data.noDiscount}"></option>
                         <option th:each="discount: ${discounts}" th:value="${discount.id}" th:text="|${discount.discountCoefficient * 100}% until ${#dates.format(discount.validUntilDate, 'yyyy-MM-dd HH:mm')}|" th:selected="${flight != null and flight.discountStandard != null and flight.discountStandard.id == discount.id}"></option>
                     </select>
                 </td>
                 <td>
 
-                        <input type="submit" value="Save"/>
+                        <input type="submit" th:value="#{action.save}"/>
 
                 </td>
             </form>
                 <td th:if="${flight != null}">
                     <form id="formCancel" method="get" action="cancel">
                         <input type="text" th:value="${flight!=null}? ${flight.id} : null" name="flightId" style="display:none;"/>
-                        <input type="submit" value="Cancel this flight"/>
+                        <input type="submit" th:value="#{action.cancelFlight}"/>
                     </form>
                 </td>
 
                 <td th:if="${flight != null}">
                     <form id="formDelete" method="post" action="delete">
                         <input type="text" th:value="${flight!=null}? ${flight.id} : null" name="flightId" style="display:none;"/>
-                        <input type="submit" value="Delete"/>
+                        <input type="submit" th:value="#{action.delete}"/>
                     </form>
                 </td>
 

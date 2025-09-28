@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <link th:replace="${links}" rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
-    <title th:replace="${title}">Airplanes</title>
+    <title th:text="#{data.airplanes}" th:replace="${title}"></title>
     <script th:replace="${scripts}"></script>
 </head>
 <body>
     <div th:fragment="mainDivAirplanes" id="mainDivAirplanes">
         <table>
-            <caption>Airplanes</caption>
+            <caption th:text="#{data.airplanes}"></caption>
             <tr>
-                <th>Name</th>
-                <th>Seat rows</th>
-                <th>Seat columns</th>
+                <th th:text="#{data.nameOfThing}"></th>
+                <th th:text="#{data.seatRows}"></th>
+                <th th:text="#{data.seatColumns}"></th>
                 <th></th>
             </tr>
             <tr th:each="iterAirplane: ${airplanes}">

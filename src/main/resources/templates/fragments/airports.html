@@ -6,15 +6,15 @@
 <!--    <title th:replace="${title}">Discounts</title>-->
 <!--    <script th:replace="${scripts}"></script>-->
     <link rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
-    <title>Discounts</title>
+    <title th:text="#{data.discounts}"></title>
 </head>
 <body>
 <div th:fragment="mainDivAirports(allLocations)" id="mainDivAirports">
     <table>
-        <caption>Airports</caption>
+        <caption th:text="#{data.airports}"></caption>
         <tr>
-            <th>Airport code name</th>
-            <th>Location</th>
+            <th th:text="#{data.airportCodeName}"></th>
+            <th th:text="#{data.location}"></th>
             <th></th>
         </tr>
         <tr th:each="iterAirport: ${airports}">
@@ -29,12 +29,12 @@
                 <td><input type="text" minlength="3" maxlength="3" name="codeName" required/></td>
                 <td>
                     <select name="locationId" required>
-                        <option value="" onclick="" disabled>Define a new location</option>
+                        <option value="" onclick="" disabled th:text="#{action.defineLocation}"></option>
                         <option th:each="iterLocation: ${allLocations}" th:value="${iterLocation.id}" th:text="|${iterLocation.city}, ${iterLocation.state}, ${iterLocation.continent}|"></option>
                     </select>
 <!--                    <p th:if="${#lists.isEmpty(allLocations)}">"allLocations isEmpty.</p>-->
                 </td>
-                <td><input type="submit" value="Save new airport"/></td>
+                <td><input type="submit" th:value="#{action.saveAirport}"/></td>
             </form>
         </tr>
     </table>

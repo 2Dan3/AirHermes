@@ -9,10 +9,10 @@
 <body>
 <div th:fragment="mainDivDiscounts" id="mainDivDiscounts">
     <table>
-        <caption>Discounts</caption>
+        <caption th:text="#{data.discounts}"></caption>
         <tr>
-            <th>Percentage</th>
-            <th>Expires on</th>
+            <th th:text="#{data.percentage}"></th>
+            <th th:text="#{data.expires}"></th>
             <th></th>
         </tr>
         <tr th:each="iterDiscount: ${discounts}">
@@ -27,7 +27,7 @@
             <form method="post" action="airhermes/discounts">
                 <td><input type="number" min="1" max="100" name="coefficient" required/><span>%</span></td>
                 <td><input type="datetime-local" name="validUntilDate" required/></td>
-                <td><input type="submit" value="Save new discount"/></td>
+                <td><input type="submit" th:value="#{action.saveDiscount}"/></td>
             </form>
         </tr>
     </table>

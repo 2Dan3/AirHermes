@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <link th:replace="${links}" rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
-    <title th:replace="${title}">Locations</title>
+    <title th:text="#{data.locations}" th:replace="${title}"></title>
     <script th:replace="${scripts}"></script>
 </head>
 <body>
 <div th:fragment="mainDivLocations(locations)" id="mainDivLocations">
     <table>
-        <caption>Locations</caption>
+        <caption th:text="#{data.locations}"></caption>
         <tr>
             <th></th>
-            <th>City</th>
-            <th>State</th>
-            <th>Continent</th>
+            <th th:text="#{data.city}"></th>
+            <th th:text="#{data.state}"></th>
+            <th th:text="#{data.continent}"></th>
             <th></th>
         </tr>
         <tr th:each="iterLocation: ${locations}">
 
-            <td><img th:alt="${iterLocation.imagePath}" th:src="@{${iterLocation.imagePath}}"/></td>
+            <td><img th:alt="${iterLocation.city}" th:src="@{${iterLocation.imagePath}}"/></td>
             <td th:text="${iterLocation.city}"></td>
             <td th:text="${iterLocation.state}"></td>
             <td th:text="${iterLocation.continent}"></td>

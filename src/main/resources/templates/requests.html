@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/StiloviTabela.css"/>
-    <title>Loyalty card requests</title>
+    <title th:text="#{data.cardRequests}"></title>
 </head>
 <body>
     <table class="tabela">
         <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Status</th>
+            <th th:text="#{data.username}"></th>
+            <th th:text="#{data.email}"></th>
+            <th th:text="#{data.status}"></th>
         </tr>
 
         <tr th:each="iterRequest, st: ${requests}">
@@ -29,16 +29,17 @@
                         <option th:if="${iterRequest.status.name() == 'SENT'}"
                                 value="SENT"
                                 selected
-                                disabled>
-                            SENT
+                                disabled th:text="#{SENT}">
+
                         </option>
 
                         <!-- Loop only through selectable statuses -->
                         <option th:each="status : ${T(com.ftn.dan.airhermes.model.enums.LoyaltyCardCreationRequestStatus).values()}"
                                 th:if="|${status.name() != 'SENT'}|"
                                 th:value="${status.name()}"
-                                th:text="${status.name()}"
+                                th:text="${#messages.msg(status.name())}"
                                 th:selected="${status.name() == iterRequest.status.name()}">
+<!--                            th:text="${status.name()}"-->
                         </option>
                     </select>
                     <input type="text" name="userId" th:value="${iterRequest.user.id}" style="display: none;"/>

@@ -3,47 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/StiloviForma.css"/>
-    <title>Profile</title>
+    <title th:text="#{data.profile}"></title>
 </head>
 <body>
 <div th:fragment="centralniDiv">
 <!--    <form method="post" th:action="|edit/${user.name}|">-->
     <form method="post" action="edit">
         <table class="forma">
-            <caption>User data</caption>
-            <tr><th>Name:</th><td><input type="text" name="name" th:value="${user.name}"/></td></tr>
-            <tr><th>Last name:</th><td><input type="text" name="surname" th:value="${user.surname}"/></td></tr>
-            <tr><th>Username:</th><td><input type="text" name="username" th:value="${user.username}"/></td></tr>
-            <tr><th>Email:</th><td><input type="email" name="email" th:value="${user.email}"/></td></tr>
-            <tr><th>Date of birth:</th><td><input type="datetime-local" name="dateOfBirth" th:value="${user.dateOfBirth}"/></td></tr>
+            <caption th:text="#{data.userData}"></caption>
+            <tr><th th:text="#{data.nameOfPerson}"></th><td><input type="text" name="name" th:value="${user.name}"/></td></tr>
+            <tr><th th:text="#{data.lastName}"></th><td><input type="text" name="surname" th:value="${user.surname}"/></td></tr>
+            <tr><th th:text="#{data.username}"></th><td><input type="text" name="username" th:value="${user.username}"/></td></tr>
+            <tr><th th:text="#{data.email}"></th><td><input type="email" name="email" th:value="${user.email}"/></td></tr>
+            <tr><th th:text="#{data.dateOfBirth}"></th><td><input type="datetime-local" name="dateOfBirth" th:value="${user.dateOfBirth}"/></td></tr>
 
-            <tr><th></th><td><input type="submit" value="Save the made changes!"/></td></tr>
+            <tr><th></th><td><input type="submit" th:value="#{action.saveChanges}"/></td></tr>
         </table>
     </form>
 
 <!--    <form method="post" th:action="|changePassword/${user.name}|">-->
     <form method="post" action="changePassword">
         <table class="forma">
-            <caption>Change password</caption>
-            <tr><th>New password:</th><td><input type="password" name="password"/></td></tr>
-            <tr><th>Repeated new password:</th><td><input type="password" name="repeatedPassword"/></td></tr>
+            <caption th:text="#{data.changePassword}"></caption>
+            <tr><th th:text="#{data.passwordNew}"></th><td><input type="password" name="password"/></td></tr>
+            <tr><th th:text="#{data.passwordRepeated}"></th><td><input type="password" name="repeatedPassword"/></td></tr>
 
-            <tr><th></th><td><input type="submit" value="Save the made changes!"/></td></tr>
+            <tr><th></th><td><input type="submit" th:value="#{action.saveChanges}"/></td></tr>
         </table>
     </form>
 
 <!--    <form method="post" action="">-->
-        <p th:unless="${not #lists.isEmpty(reservationDTOs)}">I have made no reservations.</p>
+        <p th:unless="${not #lists.isEmpty(reservationDTOs)}" th:text="#{message.noReservations}"></p>
         <table class="tabela" th:if="${not #lists.isEmpty(reservationDTOs)}">
-            <caption>My reservations:</caption>
+            <caption th:text="#{data.myReservations}"></caption>
             <tr>
-                <th>Flight UID</th>
-                <th>Departing from</th>
-                <th>Going to</th>
-                <th>Departing when?</th>
-                <th>Booked on</th>
-                <th>Total price</th>
-                <th>Is the flight on?</th>
+                <th th:text="#{data.flightId}"></th>
+                <th th:text="#{data.departureLocation}"></th>
+                <th th:text="#{data.destinationLocation}"></th>
+                <th th:text="#{data.departureTime}"></th>
+                <th th:text="#{data.bookedTime}"></th>
+                <th th:text="#{data.totalPrice}"></th>
+                <th th:text="#{data.flightOn}"></th>
             </tr>
             <tr th:each="iter, status: ${reservationDTOs}">
                 <td th:text="${iter.flightId}"></td>
@@ -57,20 +57,20 @@
         </table>
 <!--    </form>-->
 
-        <p th:unless="${not #lists.isEmpty(wishlist)}">My wishlist is empty.</p>
+        <p th:unless="${not #lists.isEmpty(wishlist)}" th:text="#{message.noWishes}"></p>
         <table th:if="${not #lists.isEmpty(wishlist)}">
-            <caption>My wishlist:</caption>
+            <caption th:text="#{data.myWishlist}"></caption>
 
             <tr>
                 <th></th>
-                <th>flights UID</th>
-                <th>departures</th>
-                <th>destinations</th>
-                <th>departure times</th>
-                <th>prices</th>
-                <th>durations</th>
-                <th>discounts</th>
-                <th>sold out?</th>
+                <th th:text="#{data.flightId}"></th>
+                <th th:text="#{data.departures}"></th>
+                <th th:text="#{data.destinations}"></th>
+                <th th:text="#{data.departureTime}"></th>
+                <th th:text="#{data.price}"></th>
+                <th th:text="#{data.duration}"></th>
+                <th th:text="#{data.discount}"></th>
+                <th th:text="#{data.soldOut}"></th>
                 <th></th>
             </tr>
             <tr th:each="iterFlight, status: ${wishlist}">
@@ -87,11 +87,11 @@
                 <!--                <td th:inline="text" th:text="|${iterFlight.flightTicketPrice}RSD|"></td>-->
                 <td th:inline="text">
                         <span th:if="${iterFlight.discountStandard.discountCoefficient > 0.0}">
-                            <s th:text="|${iterFlight.flightTicketPrice} RSD|"></s>
-                            <span th:text="| ${(1 - iterFlight.discountStandard.discountCoefficient) * iterFlight.flightTicketPrice} RSD |"></span>
+                            <s th:text="|${iterFlight.flightTicketPrice} #{currency}|"></s>
+                            <span th:text="| ${(1 - iterFlight.discountStandard.discountCoefficient) * iterFlight.flightTicketPrice} #{currency} |"></span>
                         </span>
                     <span th:unless="${iterFlight.discountStandard.discountCoefficient > 0.0}"
-                          th:text="|${iterFlight.flightTicketPrice} RSD|"></span>
+                          th:text="|${iterFlight.flightTicketPrice} #{currency}|"></span>
                 </td>
                 <td th:inline="text" th:text="|${iterFlight.flightDurationMinutes / 60}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}h|"></td>
                 <td th:inline="text" th:text="|${iterFlight.discountStandard.discountCoefficient * 100}%|"></td>
@@ -103,20 +103,20 @@
         </table>
 
         <table class="forma">
-            <caption>My loyalty card</caption>
+            <caption th:text="#{data.myCard}"></caption>
             <tr>
-                <th th:if="${loyaltyCard != null}">Points converted</th>
-                <th th:if="${loyaltyCard != null}">Unconverted money</th>
-                <th th:if="${cardStatus != null and loyaltyCard == null}">Status</th>
+                <th th:if="${loyaltyCard != null}" th:text="#{data.pointsConverted}"></th>
+                <th th:if="${loyaltyCard != null}" th:text="#{data.moneyUnconverted}"></th>
+                <th th:if="${cardStatus != null and loyaltyCard == null}" th:text="#{data.status}"></th>
                 <th th:if="${loyaltyCard == null and (cardStatus == null or #strings.equals(cardStatus, 'DENIED'))}"></th>
             </tr>
             <tr>
                 <td th:text="${loyaltyCard.pointsCollected}" th:if="${loyaltyCard != null}"></td>
-                <td th:text="|${loyaltyCard.spentMoneyUnconvertedToPoints} RSD|" th:if="${loyaltyCard != null}"></td>
-                <td th:if="${cardStatus != null and loyaltyCard == null}" th:text="|Your request was ${cardStatus}.|"></td>
+                <td th:text="|${loyaltyCard.spentMoneyUnconvertedToPoints} #{currency}|" th:if="${loyaltyCard != null}"></td>
+                <td th:if="${cardStatus != null and loyaltyCard == null}" th:text="|#{message.requestStatus} ${#messages.msg(cardStatus)}.|"></td>
                 <td th:if="${loyaltyCard == null and (cardStatus == null or #strings.equals(cardStatus, 'DENIED'))}">
                     <form method="post" action="../cards">
-                        <input type="submit" value="(Re)send your request!"/>
+                        <input type="submit" th:value="#{action.requestCard}"/>
                     </form>
                 </td>
             </tr>

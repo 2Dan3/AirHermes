@@ -12,14 +12,14 @@
     <header th:fragment="header" id="navContent">
 
         <th:block th:if="${session.loggedUser != null and session.loggedUser.admin}">
-            <a th:href="@{/airplanes}">Airplanes</a>
-            <a th:href="@{/locations}">Locations</a>
-            <a th:href="@{/airports}">Airports</a>
-            <a th:href="@{/discounts}">Discounts</a>
-            <a th:href="@{/flights/report}">Reports</a>
+            <a th:href="@{/airplanes}" th:text="#{data.airplanes}"></a>
+            <a th:href="@{/locations}" th:text="#{data.locations}"></a>
+            <a th:href="@{/airports}" th:text="#{data.airports}"></a>
+            <a th:href="@{/discounts}" th:text="#{data.discounts}"></a>
+            <a th:href="@{/flights/report}" th:text="#{data.reports}"></a>
         </th:block>
 
-        <a th:href="@{/flights}">Flights</a>
+        <a th:href="@{/flights}" th:text="#{data.flights}"></a>
 
         <div class="floatRight">
             (<span th:text="${#locale}"></span>)
@@ -35,12 +35,12 @@
         </div>
 
         <th:block th:if="${session.loggedUser != null}">
-            <a class="floatRight" th:href="@{/users/logout}">Sign out</a>
+            <a class="floatRight" th:href="@{/users/logout}" th:text="#{data.logout}"></a>
             <a class="floatRight" th:href="@{/users/profile(username=${session.loggedUser.username})}" th:text="|${session.loggedUser.username}'s profile|"></a>
-            <a class="floatRight" th:href="@{/users/shoppingCart}">Shopping cart</a>
+            <a class="floatRight" th:href="@{/users/shoppingCart}" th:text="#{data.cart}"></a>
         </th:block>
 
-        <a class="floatRight" th:href="@{/users/login}" th:unless="${session.loggedUser != null}">Sign in</a>
+        <a class="floatRight" th:href="@{/users/login}" th:unless="${session.loggedUser != null}" th:text="#{data.login}"></a>
 
     </header>
 </body>
