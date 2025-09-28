@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/header.css">
+    <script src="webjars/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/locale.js"></script>
+    <title>Header</title>
+</head>
+<body>
+
+    <header th:fragment="header" id="navContent">
+
+        <th:block th:if="${session.loggedUser != null and session.loggedUser.admin}">
+            <a th:href="@{/airplanes}">Airplanes</a>
+            <a th:href="@{/locations}">Locations</a>
+            <a th:href="@{/airports}">Airports</a>
+            <a th:href="@{/discounts}">Discounts</a>
+            <a th:href="@{/flights/report}">Reports</a>
+        </th:block>
+
+        <a th:href="@{/flights}">Flights</a>
+
+        <div class="floatRight">
+            (<span th:text="${#locale}"></span>)
+            <span th:text="#{lang.change}"></span>:
+            <select id="locales" name="locales" th:with="language=${#locale.language}">
+                <option value=""></option>
+                <option value="en" th:text="#{lang.eng}" th:selected="${#strings.equals(language,'en')}"></option>
+                <option value="sr" th:text="#{lang.sr}" th:selected="${#strings.equals(language,'sr')}"></option>
+                <option value="ru" th:text="#{lang.ru}" th:selected="${#strings.equals(language,'ru')}"></option>
+                <option value="de" th:text="#{lang.de}" th:selected="${#strings.equals(language,'de')}"></option>
+                <option value="fr" th:text="#{lang.fr}" th:selected="${#strings.equals(language,'fr')}"></option>
+            </select>
+        </div>
+
+        <th:block th:if="${session.loggedUser != null}">
+            <a class="floatRight" th:href="@{/users/logout}">Sign out</a>
+            <a class="floatRight" th:href="@{/users/profile(username=${session.loggedUser.username})}" th:text="|${session.loggedUser.username}'s profile|"></a>
+            <a class="floatRight" th:href="@{/users/shoppingCart}">Shopping cart</a>
+        </th:block>
+
+        <a class="floatRight" th:href="@{/users/login}" th:unless="${session.loggedUser != null}">Sign in</a>
+
+    </header>
+</body>
+</html>
