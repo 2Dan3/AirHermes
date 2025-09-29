@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html th:fragment="layout(title, links, scripts, content)" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+<!--  todo  check line -->
+    <base th:href="@{/}">
+    <script src="js/locale.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/header.css">
+    <link rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
+<!-- todo stilovitabela, stiloviforma css link -->
+    <title th:replace="${title}"></title>
+
+    <!-- additional links -->
+    <th:block th:replace="${links}" />
+    <!-- additional js scripts -->
+    <th:block th:replace="${scripts}" />
+
+</head>
+<body>
+
+  <header id="navContent" th:replace="~{fragments/header.html :: header}"></header>
+
+  <div th:replace="${content}"></div>
+
+</body>
+</html>

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/StiloviTabela.css"/>
-    <title th:text="#{data.myReservations}"></title>
+    <link th:fragment="link" rel="stylesheet" type="text/css" href="../css/StiloviTabela.css"/>
+    <title th:fragment="title" th:text="#{data.myReservations}"></title>
+    <script th:fragment="script" src=""></script>
 </head>
 <body>
 
-<!--todo <div th:fragment="centralniDiv2">-->
 <div th:fragment="centralniDiv">
 
         <table class="tabela">

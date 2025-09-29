@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <!--<html th:replace="fragments/base.html :: layout(centralniDiv)">-->
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
+    <link th:fragment="link" rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
     <script src="../js/flightSetup.js"></script>
-    <title th:text="#{data.flightData}"></title>
+    <title th:fragment="title" th:text="#{data.flightData}"></title>
+    <script th:fragment="script" src=""></script>
 </head>
 <body>
 <div th:fragment="centralniDiv">
