@@ -18,3 +18,9 @@
 .floatRight {
     float: right;
 }
+
+
+input[type="submit"] {
+    background-color: lightgrey;
+    border: 1px solid lightorange;
+}

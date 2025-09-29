@@ -17,7 +17,7 @@ table caption {
 }
 
 table th, td {
-	border: 1px solid DodgerBlue;
+	border: 1px solid gray;
 }
 
 table th {
@@ -43,4 +43,9 @@ table input[type="radio"] {
 
 p.greska {
 	color: red;
+}
+
+input[type="submit"] {
+    background-color: lightgrey;
+    border: 1px solid lightorange;
 }

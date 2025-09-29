@@ -8,7 +8,7 @@ table.tabela caption {
 }
 
 table.tabela th, td {
-	border: 1px solid DodgerBlue;
+
 	padding: 5px;
 }
 
@@ -35,4 +35,9 @@ img {
 
 a {
     text-decoration: none;
+}
+
+input[type="submit"] {
+    background-color: lightgrey;
+    border: 1px solid lightorange;
 }

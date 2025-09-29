@@ -40,3 +40,8 @@ table.forma input[type="radio"] {
 p.greska {
 	color: red;
 }
+
+input[type="submit"] {
+    background-color: lightgrey;
+    border: 1px solid lightorange;
+}
