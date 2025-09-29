@@ -195,49 +195,49 @@ VALUES (5, 'ATR 72', 18, 4);
 
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (1, 'Belgrade', 'Serbia', 'Europe', 'iwdaojd');
+VALUES (1, 'Belgrade', 'Serbia', 'Europe', 'uploads/serbia_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (2, 'Zagreb', 'Croatia', 'Europe', 'iwdaojd');
+VALUES (2, 'Zagreb', 'Croatia', 'Europe', 'uploads/croatia_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (3, 'Toronto', 'Ontario, Canada', 'North America', 'iwdaojd');
+VALUES (3, 'Toronto', 'Ontario, Canada', 'North America', 'uploads/canada_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (4, 'New York City', 'New York, United States', 'North America', 'iwdaojd');
+VALUES (4, 'New York City', 'New York, United States', 'North America', 'uploads/usa_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (5, 'London', 'England, United Kingdom', 'Europe', 'iwdaojd');
+VALUES (5, 'London', 'England, United Kingdom', 'Europe', 'uploads/uk_icon.jpeg');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (6, 'Moscow', 'Russia', 'Europe', 'iwdaojd');
+VALUES (6, 'Moscow', 'Russia', 'Europe', 'uploads/russia_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (7, 'Istanbul', 'Turkey', 'Europe', 'iwdaojd');
+VALUES (7, 'Istanbul', 'Turkey', 'Europe', 'uploads/turkey_icon.jpeg');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (8, 'Warsaw', 'Poland', 'Europe', 'iwdaojd');
+VALUES (8, 'Warsaw', 'Poland', 'Europe', 'uploads/poland_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (9, 'Rome', 'Lazio, Italy', 'Europe', 'iwdaojd');
+VALUES (9, 'Rome', 'Lazio, Italy', 'Europe', 'uploads/italy_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (10, 'Milan', 'Lombardy, Italy', 'Europe', 'iwdaojd');
+VALUES (10, 'Milan', 'Lombardy, Italy', 'Europe', 'uploads/italy_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (11, 'Madrid', 'Spain', 'Europe', 'iwdaojd');
+VALUES (11, 'Madrid', 'Spain', 'Europe', 'uploads/spain_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (12, 'Tokyo', 'Honshu, Japan', 'Asia', 'iwdaojd');
+VALUES (12, 'Tokyo', 'Honshu, Japan', 'Asia', 'uploads/japan_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (13, 'Antanànarìvo', 'Madagascar', 'Africa', 'iwdaojd');
+VALUES (13, 'Antanànarìvo', 'Madagascar', 'Africa', 'uploads/madagascar_icon.png');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (14, 'Sydney', 'Australia', 'Australia', 'iwdaojd');
+VALUES (14, 'Sydney', 'Australia', 'Australia', 'uploads/australia_icon.jpg');
 INSERT INTO 
 locations (id, city, state, continent, image_path) 
-VALUES (15, 'Rio de Janeiro', 'Brazil', 'South America', 'iwdaojd');
+VALUES (15, 'Rio de Janeiro', 'Brazil', 'South America', 'uploads/brazil_icon.png');
 
 
 INSERT INTO 
