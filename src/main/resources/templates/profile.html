@@ -27,6 +27,7 @@
             <caption th:text="#{data.changePassword}"></caption>
             <tr><th th:text="#{data.passwordNew}"></th><td><input type="password" name="password"/></td></tr>
             <tr><th th:text="#{data.passwordRepeated}"></th><td><input type="password" name="repeatedPassword"/></td></tr>
+            <p class="greska" th:if="${poruka != null}" th:text="${#messages.msg(poruka)}"></p>
 
             <tr><th></th><td><input type="submit" th:value="#{action.saveChanges}"/></td></tr>
         </table>
@@ -38,8 +39,8 @@
             <caption th:text="#{data.myReservations}"></caption>
             <tr>
                 <th th:text="#{data.flightId}"></th>
-                <th th:text="#{data.departureLocation}"></th>
-                <th th:text="#{data.destinationLocation}"></th>
+                <th th:text="#{data.departures}"></th>
+                <th th:text="#{data.destinations}"></th>
                 <th th:text="#{data.departureTime}"></th>
                 <th th:text="#{data.bookedTime}"></th>
                 <th th:text="#{data.totalPrice}"></th>
@@ -69,7 +70,7 @@
                 <th th:text="#{data.departureTime}"></th>
                 <th th:text="#{data.price}"></th>
                 <th th:text="#{data.duration}"></th>
-                <th th:text="#{data.discount}"></th>
+                <th th:text="#{data.discounts}"></th>
                 <th th:text="#{data.soldOut}"></th>
                 <th></th>
             </tr>

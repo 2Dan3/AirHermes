@@ -24,10 +24,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/users")
@@ -101,24 +98,25 @@ public class UsersController {
             @RequestParam String repeatedPassword,
             @RequestParam
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")LocalDateTime dateOfBirth,
-            HttpSession session, HttpServletResponse response) throws IOException {
+            HttpSession session, HttpServletResponse response, Locale locale) throws IOException {
 
+//        Locale locale = LocaleContextHolder.getLocale();
         try {
             User existingUser = userService.find(username, email);
             if (existingUser != null) {
-                throw new Exception("Username / email already exists!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.usernameEmailExist"));
             }
             if (("").equals(username) || ("").equals(email) || ("").equals(password)) {
-                throw new Exception("Username, email and password are required!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.credentialsRequired"));
             }
             if (!password.equals(repeatedPassword)) {
-                throw new Exception("Repeated password does not match!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.repeatPasswordMatch"));
             }
             if (("").equals(name) || ("").equals(surname)) {
-                throw new Exception("Name and last name are required!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.namesRequired"));
             }
             if (dateOfBirth == null) {
-                throw new Exception("Date of birth is required!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.birthRequired"));
             }
 
             User user = new User(null, name, surname, username, password, email, Timestamp.valueOf(dateOfBirth), Timestamp.valueOf(LocalDateTime.now()), false, false);
@@ -131,7 +129,7 @@ public class UsersController {
             String poruka = ex.getMessage();
 //            if ("" == poruka) {
             if ("".equals(poruka)) {
-                poruka = "Registration was unsuccessful!";
+                poruka = ResourceBundle.getBundle("messages.messages", locale).getString("errors.registrationSuccess");
             }
 
             ModelAndView retval = new ModelAndView("register");
@@ -151,14 +149,14 @@ public class UsersController {
     public ModelAndView postLogin(
             @RequestParam String username,
             @RequestParam String password,
-            HttpSession session, HttpServletResponse response) throws IOException {
+            HttpSession session, HttpServletResponse response, Locale locale) throws IOException {
         try {
             User user = userService.findByCredentials(username, password);
             if (user == null) {
-                throw new Exception("Invalid credentials!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.credentialsValid"));
             }
             if (user.isBlocked()) {
-                throw new Exception("This profile was blocked!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.profileBlocked"));
             }
 
             session.setAttribute(UsersController.USER_KEY, user);
@@ -171,7 +169,7 @@ public class UsersController {
             String poruka = ex.getMessage();
 //            if ("" == poruka) {
             if ("".equals(poruka)) {
-                poruka = "Sign in was unsuccessful!";
+                poruka = ResourceBundle.getBundle("messages.messages", locale).getString("errors.loginSuccess");
             }
 
             ModelAndView retval = new ModelAndView("login");
@@ -227,7 +225,7 @@ public class UsersController {
             @RequestParam(defaultValue = "") String email,
             @RequestParam
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime dateOfBirth,
-                     HttpSession session, HttpServletResponse response) throws IOException {
+                     HttpSession session, HttpServletResponse response, Locale locale) throws IOException {
         User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
         if (loggedUser == null) {
             response.sendRedirect(baseURL + "null");
@@ -237,16 +235,16 @@ public class UsersController {
         try {
             User existingUser;
             if ((existingUser = userService.find(username)) != null && !Objects.equals(existingUser.getUsername(), loggedUser.getUsername())) {
-                throw new Exception("Username is already in use!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.usernameAvailable"));
             }
             if ((existingUser = userService.findByEmail(email)) != null && !Objects.equals(existingUser.getEmail(), loggedUser.getEmail())) {
-                throw new Exception("Email is already in use!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.emailAvailable"));
             }
-            if (("").equals(name) || ("").equals(surname)) {
-                throw new Exception("Name and last name cannot be empty!");
+            if (("").equals(name.trim()) || ("").equals(surname.trim())) {
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.namesRequired"));
             }
             if (dateOfBirth == null) {
-                throw new Exception("Date of birth cannot be empty!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.birthRequired"));
             }
 
             boolean successful = userService.updateBasicData(loggedUser, name, surname, username, email, dateOfBirth);
@@ -259,7 +257,7 @@ public class UsersController {
 //            if ("".equals(poruka)) {
 //                poruka = "Registration was unsuccessful!";
 //            }
-            response.reset();
+            response.sendRedirect(baseURL + "users/profile?username=" + loggedUser.getUsername());
             return;
 
 //            ModelAndView retval = new ModelAndView("profile");
@@ -271,7 +269,7 @@ public class UsersController {
     @PostMapping(value = "/changePassword")
     public void edit(@RequestParam(name = "password") String newPassword,
                      @RequestParam(name = "repeatedPassword") String repeatedNewPassword,
-                HttpSession session, HttpServletResponse response) throws IOException {
+                HttpSession session, HttpServletResponse response, Locale locale) throws IOException {
 
         User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
         if (loggedUser == null) {
@@ -281,7 +279,7 @@ public class UsersController {
 
         try {
             if (("").equals(newPassword) || !newPassword.equals(repeatedNewPassword)) {
-                throw new Exception("Password and repeated password must match and cannot be empty!");
+                throw new Exception(ResourceBundle.getBundle("messages.messages", locale).getString("errors.passwordsMatchingAndProvided"));
             }
 
             boolean successful = userService.updatePassword(loggedUser, newPassword);
@@ -293,9 +291,8 @@ public class UsersController {
 //            if ("".equals(poruka)) {
 //                poruka = "Registration was unsuccessful!";
 //            }
-            response.reset();
+            response.sendRedirect(baseURL + "users/profile?username=" + loggedUser.getUsername());
             return;
-
 //            ModelAndView retval = new ModelAndView("profile");
 //            retval.addObject("poruka", poruka);
 
