@@ -2,14 +2,17 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="css/header.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}">
     <script src="webjars/jquery/3.2.1/jquery.min.js"></script>
-    <script src="js/locale.js"></script>
+<!--    <script th:src="@{js/locale.js}"></script>-->
+    <th:block th:replace="${scr}">
+
+    </th:block>
     <title>Header</title>
 </head>
 <body>
 
-    <header th:fragment="header" id="navContent">
+    <header th:fragment="header(scr)" id="navContent">
 
         <th:block th:if="${session.loggedUser != null and session.loggedUser.admin}">
             <a th:href="@{/airplanes}" th:text="#{data.airplanes}"></a>

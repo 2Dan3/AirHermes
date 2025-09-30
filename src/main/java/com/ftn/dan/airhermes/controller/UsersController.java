@@ -162,7 +162,7 @@ public class UsersController {
             session.setAttribute(UsersController.USER_KEY, user);
 
 //            response.sendRedirect(baseURL);
-            response.sendRedirect("../flights");
+            response.sendRedirect(baseURL + "flights");
             return null;
 
         } catch (Exception ex) {
@@ -184,7 +184,7 @@ public class UsersController {
         session.invalidate();
 
 //        response.sendRedirect(baseURL);
-        response.sendRedirect("../flights");
+        response.sendRedirect(baseURL + "flights");
     }
 
     @GetMapping(value="/profile")
@@ -228,7 +228,7 @@ public class UsersController {
                      HttpSession session, HttpServletResponse response, Locale locale) throws IOException {
         User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
         if (loggedUser == null) {
-            response.sendRedirect(baseURL + "null");
+            response.sendRedirect(baseURL + "users/profile?username=" + loggedUser.getUsername());
             return;
         }
 

@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
 <!--  todo  check line -->
     <base th:href="@{/}">
-    <script src="js/locale.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/header.css">
-    <link rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
+    <th:block th:fragment="scr">
+        <script src="webjars/jquery/3.2.1/jquery.min.js"></script>
+        <script th:src="@{/js/locale.js}"></script>
+    </th:block>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/StylesInvertedTable.css}"/>
 <!-- todo stilovitabela, stiloviforma css link -->
     <title th:replace="${title}"></title>
 
@@ -18,7 +21,7 @@
 </head>
 <body>
 
-  <header id="navContent" th:replace="~{fragments/header.html :: header}"></header>
+  <header id="navContent" th:replace="~{fragments/header.html :: header(~{::scr})}"></header>
 
   <div th:replace="${content}"></div>
 

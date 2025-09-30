@@ -2,7 +2,7 @@
 <html th:fragment="layout(title, links, scripts)" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link th:replace="${links}" rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
+    <link th:replace="${links}" rel="stylesheet" type="text/css" th:href="@{/css/StylesInvertedTable.css}"/>
     <title th:replace="${title}">Discounts</title>
     <script th:replace="${scripts}"></script>
 </head>
@@ -24,7 +24,7 @@
         </tr>
 
         <tr>
-            <form method="post" action="airhermes/discounts">
+            <form method="post" th:action="@{/discounts}">
                 <td><input type="number" min="1" max="100" name="coefficient" required/><span>%</span></td>
                 <td><input type="datetime-local" name="validUntilDate" required/></td>
                 <td><input type="submit" th:value="#{action.saveDiscount}"/></td>

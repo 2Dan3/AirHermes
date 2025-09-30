@@ -2,7 +2,7 @@
 <html th:fragment="layout(title, links, scripts)" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link th:replace="${links}" rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
+    <link th:replace="${links}" rel="stylesheet" type="text/css" th:href="@{/css/StylesInvertedTable.css}"/>
     <title th:text="#{data.airplanes}" th:replace="${title}"></title>
     <script th:replace="${scripts}"></script>
 </head>
@@ -25,7 +25,7 @@
             </tr>
 
             <tr>
-                <form method="post" action="airhermes/airplanes">
+                <form method="post" th:action="@{/airplanes}">
                     <td><input type="text" name="name" required/></td>
                     <td><input type="number" min="1" name="seatRows" required/></td>
                     <td><input type="number" min="1" name="seatColumns" required/></td>

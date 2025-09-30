@@ -2,14 +2,14 @@
 <html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link th:fragment="link" rel="stylesheet" type="text/css" href="../css/StiloviForma.css"/>
+    <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StiloviForma.css}"/>
     <title th:fragment="title" th:text="#{data.profile}"></title>
     <script th:fragment="script" src=""></script>
 </head>
 <body>
 <div th:fragment="centralniDiv">
 <!--    <form method="post" th:action="|edit/${user.name}|">-->
-    <form method="post" action="edit">
+    <form method="post" th:action="@{/users/edit}">
         <table class="forma">
             <caption th:text="#{data.userData}"></caption>
             <tr><th th:text="#{data.nameOfPerson}"></th><td><input type="text" name="name" th:value="${user.name}"/></td></tr>
@@ -23,7 +23,7 @@
     </form>
 
 <!--    <form method="post" th:action="|changePassword/${user.name}|">-->
-    <form method="post" action="changePassword">
+    <form method="post" th:action="@{/users/changePassword}">
         <table class="forma">
             <caption th:text="#{data.changePassword}"></caption>
             <tr><th th:text="#{data.passwordNew}"></th><td><input type="password" name="password"/></td></tr>
@@ -77,7 +77,7 @@
             </tr>
             <tr th:each="iterFlight, status: ${wishlist}">
                 <!--                <td th:value="${status.index + 1}"></td>-->
-                <form method="post" action="../wishlist/remove">
+                <form method="post" th:action="@{/wishlist/remove}">
                     <td><input type="submit" value="❌"/></td>
 <!--                    <td th:text="${iterFlight.id}"></td>-->
                     <td><input type="text" th:value="|${iterFlight.id}|" name="flightId" readonly/></td>
@@ -117,7 +117,7 @@
                 <td th:text="|${loyaltyCard.spentMoneyUnconvertedToPoints} #{currency}|" th:if="${loyaltyCard != null}"></td>
                 <td th:if="${cardStatus != null and loyaltyCard == null}" th:text="|#{message.requestStatus} ${#messages.msg(cardStatus)}.|"></td>
                 <td th:if="${loyaltyCard == null and (cardStatus == null or #strings.equals(cardStatus, 'DENIED'))}">
-                    <form method="post" action="../cards">
+                    <form method="post" th:action="@{/cards}">
                         <input type="submit" th:value="#{action.requestCard}"/>
                     </form>
                 </td>

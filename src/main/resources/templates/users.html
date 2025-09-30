@@ -2,7 +2,7 @@
 <html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link th:fragment="link" rel="stylesheet" type="text/css" href="css/StiloviTabela.css"/>
+    <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StiloviTabela.css}"/>
     <title th:fragment="title" th:text="#{data.users}"></title>
     <script th:fragment="script" src=""></script>
 </head>
@@ -25,7 +25,7 @@
                 <th></th>
             </tr>
 
-            <form method="get">
+            <form method="get" th:action="@{/users}">
             <tr>
                 <th></th>
 <!--                <th>-->
@@ -62,7 +62,7 @@
                 <td th:text="${iterUser.admin}? '✅': '❌'"></td>
 <!--                <td th:text="${iterUser.blocked}? '✔': '❌'"></td>-->
                 <th>
-                    <form th:id="|blockingForm${status.index}|" method="post" action="users/block">
+                    <form th:id="|blockingForm${status.index}|" method="post" th:action="@{/users/block}">
                     <input type="checkbox" name="blocked" th:value="${!iterUser.blocked}" th:checked="${iterUser.blocked}" th:onchange="|document.getElementById('blockingForm${status.index}').submit()|" th:disabled="${iterUser.admin}">
                 </th>
                     <th><input type="search" name="userId" th:value="${iterUser.id}" style="display: none;"/>

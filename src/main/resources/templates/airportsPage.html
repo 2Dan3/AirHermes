@@ -2,7 +2,7 @@
 <html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link th:fragment="link" rel="stylesheet" type="text/css" href="css/StylesInvertedTable.css"/>
+    <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StylesInvertedTable.css}"/>
     <title th:fragment="title" th:text="#{data.airports}"></title>
     <script th:fragment="script" src=""></script>
 </head>

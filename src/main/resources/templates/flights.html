@@ -2,13 +2,13 @@
 <html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:fragment="link">
-        <link rel="stylesheet" type="text/css" href="css/StiloviTabela.css"/>
-        <link rel="stylesheet" type="text/css" href="css/header.css">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/StiloviTabela.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}">
     </th:block>
 
     <th:block th:fragment="script">
         <script src="webjars/jquery/3.2.1/jquery.min.js"></script>
-        <script src="js/locale.js"></script>
+<!--        <script th:src="@{/js/locale.js}"></script>-->
     </th:block>
 
     <title th:fragment="title" th:text="#{data.flights}"></title>
@@ -44,12 +44,12 @@
                     <!--                        <option value="ženski" th:selected="${#strings.equals(param.pol, 'ženski')}">ženski</option>-->
                     <!--                    </select>-->
                     <!--                </th>-->
-                    <form method="get" action="flights/advancedSearch">
+                    <form method="get" th:action="@{/flights/advancedSearch}">
                     <th><input th:if="${session.loggedUser != null and session.loggedUser.admin}" type="search" name="flight_id" th:value="${param.flight_id}?: null"/></th>
                     <th th:if="${session.loggedUser != null and session.loggedUser.admin}"><input type="submit" th:value="#{action.searchId}"/></th>
                     </form>
 
-                    <form method="get">
+                    <form method="get" th:action="@{/flights}">
                     <th><input type="search" th:placeholder="#{search.locationSuggestion}" style="font-style:italic;"  name="departureAirportOrCityOrStateSearchTerm" th:value="${param.departureAirportOrCityOrStateSearchTerm}?: null"/></th>
                     <th><input type="search" th:placeholder="#{search.locationSuggestion}" style="font-style:italic;" name="destinationAirportOrCityOrStateSearchTerm" th:value="${param.destinationAirportOrCityOrStateSearchTerm}?: null"/></th>
                     <th><input type="datetime-local" name="departureTimestamp" th:value="${param.departureTimestamp}?: null"/></th>
@@ -82,7 +82,7 @@
                 <tr th:each="iterFlight, status: ${flights}">
                     <td><img th:src="@{${iterFlight.airportDestination.location.imagePath}}" th:alt="${iterFlight.airportDestination.location.city}"/></td>
     <!--                <td th:value="${status.index + 1}"></td>-->
-                    <form method="post" action="wishlist">
+                    <form method="post" th:action="@{/wishlist}">
     <!--                    <td th:text="${iterFlight.id}"></td>-->
                         <td><input type="text" th:value="${iterFlight.id}" name="flightId" readonly/></td>
                         <td><input th:if="${session.loggedUser != null}" type="submit" th:value="#{action.addWishlist}"/></td>
@@ -114,7 +114,7 @@
             </table>
     <!--    </form>-->
         <ul th:if="${session.loggedUser != null and session.loggedUser.admin}">
-            <li><a href="flights/setup" th:text="#{action.addFlight}"></a></li>
+            <li><a th:href="@{/flights/setup}" th:text="#{action.addFlight}"></a></li>
         </ul>
     </div>
 </body>

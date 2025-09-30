@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/StiloviForma.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/StiloviForma.css}"/>
     <title th:text="#{data.register}"></title>
 </head>
 <body>
 <div th:fragment="centralniDiv">
-    <form method="post" action="register">
+    <form method="post" th:action="@{/users/register}">
         <table class="forma">
             <caption th:text="#{data.register}"></caption>
             <tr><th th:text="#{data.nameOfPerson}"></th><td><input type="text" name="name"/></td></tr>
@@ -22,7 +22,7 @@
         </table>
     </form>
     <p class="greska" th:text="${poruka}"></p>
-    <ul><li><a href="login" th:text="#{action.toLogin}"></a></li></ul>
+    <ul><li><a th:href="@{/users/login}" th:text="#{action.toLogin}"></a></li></ul>
 </div>
 </body>
 </html>

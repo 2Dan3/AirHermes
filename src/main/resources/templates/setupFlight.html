@@ -3,8 +3,8 @@
 <!--<html th:replace="fragments/base.html :: layout(centralniDiv)">-->
 <head>
     <meta charset="UTF-8">
-    <link th:fragment="link" rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
-    <script src="../js/flightSetup.js"></script>
+    <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StylesInvertedTable.css}"/>
+    <script th:src="@{/js/flightSetup.js}"></script>
     <title th:fragment="title" th:text="#{data.flightData}"></title>
     <script th:fragment="script" src=""></script>
 </head>
@@ -26,7 +26,7 @@
             <th></th>
         </tr>
         <tr>
-            <form id="formSetup" method="post" action="setup">
+            <form id="formSetup" method="post" th:action="@{/flights/setup}">
                 <td><input type="text" th:value="${flight!=null}? ${flight.id} : null" name="flightId" th:readonly="${flight != null and flight.id != null}" required/></td>
 
                 <td>
@@ -74,14 +74,14 @@
                 </td>
             </form>
                 <td th:if="${flight != null}">
-                    <form id="formCancel" method="get" action="cancel">
+                    <form id="formCancel" method="get" th:action="@{/flights/cancel}">
                         <input type="text" th:value="${flight!=null}? ${flight.id} : null" name="flightId" style="display:none;"/>
                         <input type="submit" th:value="#{action.cancelFlight}"/>
                     </form>
                 </td>
 
                 <td th:if="${flight != null}">
-                    <form id="formDelete" method="post" action="delete">
+                    <form id="formDelete" method="post" th:action="@{/flights/delete}">
                         <input type="text" th:value="${flight!=null}? ${flight.id} : null" name="flightId" style="display:none;"/>
                         <input type="submit" th:value="#{action.delete}"/>
                     </form>

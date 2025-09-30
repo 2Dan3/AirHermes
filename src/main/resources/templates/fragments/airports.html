@@ -5,7 +5,7 @@
 <!--    <link th:replace="${links}" rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>-->
 <!--    <title th:replace="${title}">Discounts</title>-->
 <!--    <script th:replace="${scripts}"></script>-->
-    <link rel="stylesheet" type="text/css" href="../css/StylesInvertedTable.css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/StylesInvertedTable.css}"/>
     <title th:text="#{data.discounts}"></title>
 </head>
 <body>
@@ -25,7 +25,7 @@
         </tr>
 
         <tr>
-            <form method="post" action="airports">
+            <form method="post" th:action="@{/airports}">
                 <td><input type="text" minlength="3" maxlength="3" name="codeName" required/></td>
                 <td>
                     <select name="locationId" required>
