@@ -8,9 +8,9 @@
 
     <th:block th:fragment="script">
         <script src="webjars/jquery/3.2.1/jquery.min.js"></script>
+        <script th:src="@{/js/flightSort.js}"></script>
 <!--        <script th:src="@{/js/locale.js}"></script>-->
     </th:block>
-
     <title th:fragment="title" th:text="#{data.flights}"></title>
 </head>
 <body>
@@ -22,7 +22,17 @@
                 <caption th:text="#{data.flights}"></caption>
     <!--            <form method="get">-->
                 <tr>
-                    <th></th>
+                    <th>
+                        <select name="sort" id="sort">
+                            <option value="airport_departure_code_name-asc" th:text="|#{data.departures} #{sort.asc}|" th:selected="${#strings.equals(sort,'airport_departure_code_name-asc')}"></option>
+                            <option value="airport_departure_code_name-desc" th:text="|#{data.departures} #{sort.desc}|" th:selected="${#strings.equals(sort,'airport_departure_code_name-desc')}"></option>
+                            <option value="airport_destination_code_name-asc" th:text="|#{data.destinations} #{sort.asc}|" th:selected="${#strings.equals(sort,'airport_destination_code_name-asc')}"></option>
+                            <option value="airport_destination_code_name-desc" th:text="|#{data.destinations} #{sort.desc}|" th:selected="${#strings.equals(sort,'airport_destination_code_name-desc')}"></option>
+                            <option value="departure_timestamp-asc" th:text="|#{data.departureTime} #{sort.asc}|" th:selected="${#strings.equals(sort,'departure_timestamp-asc')}"></option>
+                            <option value="departure_timestamp-desc" th:text="|#{data.departureTime} #{sort.desc}|" th:selected="${#strings.equals(sort,'departure_timestamp-desc')}"></option>
+                            <!--                        <option value="en" th:text="#{lang.eng}" th:selected="${#strings.equals(language,'en')}"></option>-->
+                        </select>
+                    </th>
                     <th><p th:if="${session.loggedUser != null and session.loggedUser.admin}" th:text="#{search.flightId}"></p></th>
                     <th></th>
                     <th th:text="#{search.departureLocation}"></th>

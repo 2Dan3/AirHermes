@@ -83,26 +83,25 @@
                 <th th:text="#{data.passengerLastName}"></th>
                 <th th:text="#{data.passportNumber}"></th>
                 <th th:text="#{data.airplaneSeatNumber}"></th>
-                <th></th>
             </tr>
             <tr>
                 <th><input type="text" name="passengerName" required></th>
                 <th><input type="text" name="passengerSurname" required></th>
                 <th><input type="number" name="passportNumber" minlength="9" maxlength="9" required></th>
-                <th><input type="text" name="seatNumber" style="enabled: false;" required></th>
+                <th><input type="text" name="seatNumber" readonly required></th>
             </tr>
-            <tr>
-                <th><input type="text" name="passengerName"></th>
-                <th><input type="text" name="passengerSurname"></th>
-                <th><input type="number" name="passportNumber" minlength="9" maxlength="9"></th>
-                <th><input type="text" name="seatNumber" style="enabled: false;"></th>
-            </tr>
-            <tr>
-                <th><input type="text" name="passengerName"></th>
-                <th><input type="text" name="passengerSurname"></th>
-                <th><input type="number" name="passportNumber" minlength="9" maxlength="9"></th>
-                <th><input type="text" name="seatNumber" style="enabled: false;"></th>
-            </tr>
+<!--            <tr>-->
+<!--                <th><input type="text" name="passengerName"></th>-->
+<!--                <th><input type="text" name="passengerSurname"></th>-->
+<!--                <th><input type="number" name="passportNumber" minlength="9" maxlength="9"></th>-->
+<!--                <th><input type="text" name="seatNumber" ></th>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th><input type="text" name="passengerName"></th>-->
+<!--                <th><input type="text" name="passengerSurname"></th>-->
+<!--                <th><input type="number" name="passportNumber" minlength="9" maxlength="9"></th>-->
+<!--                <th><input type="text" name="seatNumber" ></th>-->
+<!--            </tr>-->
         </table>
 
 <!--        todo onClick insert more of these "tables" into form or remove existing ones

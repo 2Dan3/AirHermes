@@ -88,7 +88,7 @@ public class FlightDAOImpl implements FlightDAO {
     }
 
     @Override
-    public List<Flight> find(Long flight_id, Timestamp departureTimestamp, String departureAirportOrCityOrStateSearchTerm, String destinationAirportOrCityOrStateSearchTerm, Integer passengers, Boolean lookForSimilarTimingFlights) {
+    public List<Flight> find(Long flight_id, Timestamp departureTimestamp, String departureAirportOrCityOrStateSearchTerm, String destinationAirportOrCityOrStateSearchTerm, Integer passengers, Boolean lookForSimilarTimingFlights, String sortAndDirection) {
 
         final String all_discounted_flights = " WHERE f.discount_standard_id IS NOT NULL AND c.flight_cancelled_id IS NULL";
 
@@ -155,8 +155,10 @@ public class FlightDAOImpl implements FlightDAO {
         else
             sql = sql + all_discounted_flights;
 
-        sql = sql + " ORDER BY f.departure_timestamp";
+        sql = sql + " ORDER BY " + sortAndDirection;
+//        listaArgumenata.add(sortAndDirection);
         System.out.println("DAO find: " + sql);
+//        System.out.println(listaArgumenata.get(listaArgumenata.size()-1));
 
         return jdbcTemplate.query(sql, listaArgumenata.toArray(), new FlightDAOImpl.FlightRowMapper());
     }
@@ -214,7 +216,7 @@ public class FlightDAOImpl implements FlightDAO {
     }
 
     @Override
-    public List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax) {
+    public List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax, String sortAndDirection) {
         ArrayList<Object> listaArgumenata = new ArrayList<Object>();
 
         StringBuffer whereSql = new StringBuffer(" WHERE c.flight_cancelled_id IS NULL AND ");
@@ -260,6 +262,8 @@ public class FlightDAOImpl implements FlightDAO {
 
         if(imaArgumenata)
             sql = sql + whereSql.toString();
+
+        sql = sql + " ORDER BY " + sortAndDirection;
 
         System.out.println("DAO reports: " + sql);
         return jdbcTemplate.query(sql, listaArgumenata.toArray(), new ReportDTORowMapper());

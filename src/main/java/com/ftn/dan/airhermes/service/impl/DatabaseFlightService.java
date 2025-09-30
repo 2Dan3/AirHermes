@@ -26,8 +26,8 @@ public class DatabaseFlightService implements FlightService {
     private ReservationService reservationService;
 
     @Override
-    public List<Flight> find(Long flight_id, Timestamp departureTimestamp, String departureAirportOrCityOrStateSearchTerm, String destinationAirportOrCityOrStateSearchTerm, Integer passengers, Boolean lookForSimilarTimingFlights) {
-        return flightDAO.find(flight_id, departureTimestamp, departureAirportOrCityOrStateSearchTerm, destinationAirportOrCityOrStateSearchTerm, passengers, lookForSimilarTimingFlights);
+    public List<Flight> find(Long flight_id, Timestamp departureTimestamp, String departureAirportOrCityOrStateSearchTerm, String destinationAirportOrCityOrStateSearchTerm, Integer passengers, Boolean lookForSimilarTimingFlights, String sortAndDirection) {
+        return flightDAO.find(flight_id, departureTimestamp, departureAirportOrCityOrStateSearchTerm, destinationAirportOrCityOrStateSearchTerm, passengers, lookForSimilarTimingFlights, sortAndDirection);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class DatabaseFlightService implements FlightService {
     }
 
     @Override
-    public List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax) {
-        return flightDAO.findFlightsAndRevenueForInterval(timestampMin, timestampMax);
+    public List<ReportDTO> findFlightsAndRevenueForInterval(Timestamp timestampMin, Timestamp timestampMax, String sortAndDirection) {
+        return flightDAO.findFlightsAndRevenueForInterval(timestampMin, timestampMax, sortAndDirection);
     }
 
     @Transactional

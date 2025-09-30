@@ -16,8 +16,8 @@ public class DatabaseUserService implements UserService {
     private UserDAO userDAO;
 
     @Override
-    public List<User> find(String name, String surname, String username, String email, Boolean admin, Boolean blocked) {
-        return userDAO.find(name, surname, username, email, admin, blocked);
+    public List<User> find(String name, String surname, String username, String email, Boolean admin, Boolean blocked, String sortAndDirection) {
+        return userDAO.find(name, surname, username, email, admin, blocked, sortAndDirection);
     }
 
     @Override

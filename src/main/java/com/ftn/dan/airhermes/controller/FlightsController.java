@@ -54,6 +54,7 @@ public class FlightsController {
             @RequestParam(required = false) String destinationAirportOrCityOrStateSearchTerm,
             @RequestParam(required = false) Integer passengers,
             @RequestParam(required = false) Boolean lookForSimilarTimingFlights,
+            @RequestParam(defaultValue = "departure_timestamp-asc", name = "sort") String sortAndDirection,
             HttpSession httpSession, HttpServletResponse response) throws IOException {
 
 //        if (departureTimestamp!=null && departureTimestamp.trim().equals(""))
@@ -78,10 +79,11 @@ public class FlightsController {
         if (destinationAirportOrCityOrStateSearchTerm!=null && destinationAirportOrCityOrStateSearchTerm.trim().equals(""))
             destinationAirportOrCityOrStateSearchTerm = null;
 
-        List<Flight> flights = flightService.find(flight_id, departureTimestamp, departureAirportOrCityOrStateSearchTerm, destinationAirportOrCityOrStateSearchTerm, passengers, lookForSimilarTimingFlights);
+        List<Flight> flights = flightService.find(flight_id, departureTimestamp, departureAirportOrCityOrStateSearchTerm, destinationAirportOrCityOrStateSearchTerm, passengers, lookForSimilarTimingFlights, sortAndDirection.replace('-', ' '));
 
         ModelAndView responsePage = new ModelAndView("flights");
         responsePage.addObject("flights", flights);
+        responsePage.addObject("sort", sortAndDirection);
         return responsePage;
     }
 
@@ -108,6 +110,7 @@ public class FlightsController {
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime rawParamLocalDateTimeMin,
             @RequestParam(required = false, name = "timestampMax")
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime rawParamLocalDateTimeMax,
+            @RequestParam(defaultValue = "flight_id-asc", name = "sort") String sortAndDirection,
             HttpSession httpSession, HttpServletResponse response) throws IOException {
 
         User loggedUser = (User) httpSession.getAttribute(UsersController.USER_KEY);
@@ -129,7 +132,7 @@ public class FlightsController {
         if (timestampMin == null && timestampMax == null)
             return responsePage;
 
-        List<ReportDTO> bookedFlights = flightService.findFlightsAndRevenueForInterval(timestampMin, timestampMax);
+        List<ReportDTO> bookedFlights = flightService.findFlightsAndRevenueForInterval(timestampMin, timestampMax, sortAndDirection.replace('-', ' '));
 
         Long totalTicketsSold = 0L;
         Double totalRevenue = 0.0;

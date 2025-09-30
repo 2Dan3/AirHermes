@@ -55,6 +55,7 @@ public class UsersController {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) Boolean admin,
             @RequestParam(required = false) Boolean blocked,
+            @RequestParam(defaultValue = "username-asc", name = "sort") String sortAndDirection,
             HttpSession session, HttpServletResponse response) throws IOException {
 
         User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
@@ -75,7 +76,7 @@ public class UsersController {
         if (email!=null && email.trim().equals(""))
             email = null;
 
-        List<User> users = userService.find(name, surname, username, email, admin, blocked);
+        List<User> users = userService.find(name, surname, username, email, admin, blocked, sortAndDirection.replace('-', ' '));
 
         ModelAndView mov = new ModelAndView("users");
         mov.addObject("users", users);

@@ -55,7 +55,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> find(String name, String surname, String username, String email, Boolean admin, Boolean blocked) {
+    public List<User> find(String name, String surname, String username, String email, Boolean admin, Boolean blocked, String sortAndDirection) {
         ArrayList<Object> listaArgumenata = new ArrayList<Object>();
 
         String sql = "SELECT id, name, surname, username, password, email, date_of_birth, registration_timestamp, admin, blocked FROM users ";
@@ -118,9 +118,9 @@ public class UserDAOImpl implements UserDAO {
 
 
         if(imaArgumenata)
-            sql=sql + whereSql.toString()+" ORDER BY username";
-        else
-            sql=sql + " ORDER BY username";
+            sql = sql + whereSql.toString();
+
+        sql = sql + " ORDER BY " + sortAndDirection;
         System.out.println(sql);
 
         return jdbcTemplate.query(sql, listaArgumenata.toArray(), new UserRowMapper());
