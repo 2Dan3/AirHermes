@@ -7,5 +7,7 @@ import java.util.List;
 public interface DiscountDAO {
     List<DiscountStandard> findAll();
 
-    void save(DiscountStandard discount);
+    Long save(DiscountStandard discount);
+
+    DiscountStandard findByID(Long id);
 }

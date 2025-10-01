@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <link th:replace="${links}" rel="stylesheet" type="text/css" th:href="@{/css/StylesInvertedTable.css}"/>
     <title th:replace="${title}">Discounts</title>
-    <script th:replace="${scripts}"></script>
+
+    <script src="webjars/jquery/3.2.1/jquery.min.js"></script>
+    <script th:src="@{/js/discounts.js}"></script>
+
+    <th:block th:replace="${scripts}">
+
+    </th:block>
 </head>
 <body>
 <div th:fragment="mainDivDiscounts" id="mainDivDiscounts">
-    <table>
+    <table id="discountsViewTable">
         <caption th:text="#{data.discounts}"></caption>
         <tr>
             <th th:text="#{data.percentage}"></th>
@@ -18,20 +24,23 @@
         <tr th:each="iterDiscount: ${discounts}">
 
 
-            <td th:text="|${#numbers.formatInteger(iterDiscount.discountCoefficient * 100, 1)}%|"></td>
-            <td th:text="${iterDiscount.validUntilDate}"></td>
+<!--            <td th:text="|${#numbers.formatInteger(iterDiscount.discountCoefficient * 100, 1)}%|"></td>-->
+<!--            <td th:text="${iterDiscount.validUntilDate}"></td>-->
+            <td></td>
+            <td></td>
             <td></td>
         </tr>
 
         <tr>
-            <form method="post" th:action="@{/discounts}">
-                <td><input type="number" min="1" max="100" name="coefficient" required/><span>%</span></td>
+<!--            <form id="discountAddForm" method="post" th:action="@{/discounts}">-->
+            <form id="discountAddForm">
+                <td><input type="number" min="1" max="99" name="coefficient" required/><span>%</span></td>
                 <td><input type="datetime-local" name="validUntilDate" required/></td>
                 <td><input type="submit" th:value="#{action.saveDiscount}"/></td>
             </form>
         </tr>
     </table>
-    <p class="greska" th:text="${errorMessage}"></p>
+    <p id="greskaPopust" class="greska" th:text="${errorMessage}"></p>
 </div>
 </body>
 </html>

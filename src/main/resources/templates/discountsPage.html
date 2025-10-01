@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StylesInvertedTable.css}"/>
     <title th:fragment="title" th:text="#{data.discounts}"></title>
-    <script th:fragment="script" src=""></script>
+    <th:block th:fragment="script">
+        <script src="webjars/jquery/3.2.1/jquery.min.js"></script>
+<!--        <script th:src="@{/js/discounts.js}"></script>-->
+    </th:block>
 </head>
 <body>
-    <div th:fragment="centralniDiv" th:replace="~{fragments/discounts.html :: mainDivDiscounts}"></div>
+    <div th:fragment="centralniDiv" th:replace="~{fragments/discounts.html :: layout(~{::title},~{::link},~{::script})}"></div>
+
 </body>
 </html>
