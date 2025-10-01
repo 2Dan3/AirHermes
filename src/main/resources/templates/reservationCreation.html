@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StiloviTabela.css}"/>
     <title th:fragment="title" th:text="#{data.myReservations}"></title>
-    <script th:fragment="script" src=""></script>
+    <script th:fragment="script" th:src="@{/js/reservationCreation.js}"></script>
 </head>
 <body>
 
@@ -65,18 +65,18 @@
             </tr>
         </table>
 
-    <form method="post" class="ticket" th:action="@{/reservations/make}">
+    <form method="post" class="ticket" th:action="@{reservations/make}">
 
         <input th:each="iterFlight, status: ${flights}" style="visibility: hidden;" type="search" name="flightId" th:value="${iterFlight.id}"/>
 
         <ul>
             <li>
-                <input type="submit" th:value="#{action.reserve}"/>
+                <input type="submit" th:value="#{data.cart}"/>
 <!--                <a th:href="|make|" th:text="|Make the reservation!|"></a>-->
             </li>
         </ul>
 
-        <table class="table-ticket">
+        <table class="table-ticket" id="ticketsTable">
 <!--            <caption>Ticket 1</caption>-->
             <tr>
                 <th th:text="#{data.passengerName}"></th>
@@ -84,12 +84,27 @@
                 <th th:text="#{data.passportNumber}"></th>
                 <th th:text="#{data.airplaneSeatNumber}"></th>
             </tr>
-            <tr>
-                <th><input type="text" name="passengerName" required></th>
-                <th><input type="text" name="passengerSurname" required></th>
-                <th><input type="number" name="passportNumber" minlength="9" maxlength="9" required></th>
-                <th><input type="text" name="seatNumber" readonly required></th>
-            </tr>
+<!--            <tr>-->
+<!--                <th><input type="text" name="passengerName" required></th>-->
+<!--                <th><input type="text" name="passengerSurname" required></th>-->
+<!--                <th><input type="number" name="passportNumber" minlength="9" maxlength="9" required></th>-->
+<!--                <th><input type="text" name="seatNumber" readonly required></th>-->
+<!--            </tr>-->
+
+<!--            <tr id="passenger1">&ndash;&gt;-->
+<!--&lt;!&ndash;                <th th:text="$"></th>&ndash;&gt;-->
+<!--                <th><input type="text" name="passengerName" required></th>-->
+<!--                <th><input type="text" name="passengerSurname" required></th>-->
+<!--                <th><input type="number" name="passportNumber" minlength="9" maxlength="9" required></th>-->
+<!--                <th><input type="text" name="seatNumber" readonly required></th>-->
+
+<!--                <th th:each="itFlight, status: ${flights}">-->
+<!--                    <button type="button" th:value="|${itFlight.airportDeparture.airportCodeName} -> ${itFlight.airportDestination.airportCodeName} 💺✈|" onclick="chooseSeat('passenger1, itFlight.id')"></button>-->
+<!--                </th>-->
+
+<!--                <th><button type="button" value="❌" onclick="removePassenger('passenger1')"></button></th>-->
+<!--            </tr>-->
+
 <!--            <tr>-->
 <!--                <th><input type="text" name="passengerName"></th>-->
 <!--                <th><input type="text" name="passengerSurname"></th>-->
@@ -107,13 +122,14 @@
 <!--        todo onClick insert more of these "tables" into form or remove existing ones
                     with a "remove" button on each-->
     </form>
-    <ul>
-        <li th:text="#{action.addPassenger}">
+<!--    <ul>-->
+<!--        <li th:text="#{action.addPassenger}">-->
 <!--            <a href="reservations/make">-->
 <!--                Add another passenger.-->
 <!--            </a>-->
-        </li>
-    </ul>
+            <button type="button" id="addPassengerButton" th:text="#{action.addPassenger}"></button>
+<!--        </li>-->
+<!--    </ul>-->
 </div>
 
 </body>

@@ -107,7 +107,8 @@ public class ReservationController {
             return null;
         }
 
-        List<Flight> flights = flightService.findAllBy(flightIds);
+//        List<Flight> flights = flightService.findAllBy(flightIds);
+        List<Flight> flights = flightService.findByID(flightIds);
 
         ModelAndView retval = new ModelAndView("reservationCreation");
         retval.addObject("flights", flights);
@@ -187,4 +188,6 @@ public class ReservationController {
 
         response.sendRedirect(baseURL + "flights");
     }
+
+
 }
