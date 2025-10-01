@@ -79,7 +79,7 @@
             </ul>
             <ul>
                 <li>
-                    <input type="number" name="loyaltyPointsToUse" min="0" th:value="${cart.loyaltyPointsToUse}"/>
+                    <input type="number" name="loyaltyPointsToUse" min="0" th:value="${cart.loyaltyPointsToUse?: 0}"/>
                     <!--                <a th:href="|make|" th:text="|Make the reservation!|"></a>-->
                 </li>
             </ul>
