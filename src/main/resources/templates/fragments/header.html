@@ -42,7 +42,7 @@
         <th:block th:if="${session.loggedUser != null}">
             <a class="floatRight" th:href="@{/users/logout}" th:text="#{data.logout}"></a>
             <a class="floatRight" th:href="@{/users/profile(username=${session.loggedUser.username})}" th:text="#{user.profile(${session.loggedUser.username})}"></a>
-            <a class="floatRight" th:href="@{/users/shoppingCart}" th:text="#{data.cart}"></a>
+            <a class="floatRight" th:href="@{/reservations/cart}" th:text="#{data.cart}"></a>
         </th:block>
 
         <a class="floatRight" th:href="@{/users/login}" th:unless="${session.loggedUser != null}" th:text="#{data.login}"></a>

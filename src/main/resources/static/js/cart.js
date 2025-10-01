@@ -115,9 +115,11 @@ function addPassengerRow(removable) {
 $(document).ready(
                 function() {
 
+//                    num = getIdOfLastRowInTable()...
+
                     table = document.getElementById('ticketsTable');
 
-                    addPassengerRow(false);
+//                    addPassengerRow(false);
 
                     document.getElementById('addPassengerButton').onclick = (event) => addPassengerRow(true);
 

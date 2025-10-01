@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StiloviTabela.css}"/>
+    <title th:fragment="title" th:text="#{data.cart}"></title>
+    <script th:fragment="script" th:src="@{/js/cart.js}"></script>
+</head>
+<body>
+
+<div th:fragment="centralniDiv">
+
+    <th:block th:if="${not #lists.isEmpty(flights)}">
+
+        <table class="tabela">
+            <caption th:text="#{data.flights}"></caption>
+            <!--            <tr>-->
+            <!--                <th></th>-->
+            <!--                <th><input type="search" name="flight_id" th:value="${param.flight_id}?: null"/></th>-->
+            <!--                <th><input type="search" placeholder="e.g. JFK or New York City or New York or United States" style="font-style:italic;"  name="departureAirportOrCityOrStateSearchTerm" th:value="${param.departureAirportOrCityOrStateSearchTerm}?: null"/></th>-->
+            <!--                <th><input type="search" placeholder="e.g. BEG or Belgrade or Serbia" style="font-style:italic;" name="destinationAirportOrCityOrStateSearchTerm" th:value="${param.destinationAirportOrCityOrStateSearchTerm}?: null"/></th>-->
+            <!--                <th><input type="datetime-local" name="departureTimestamp" th:value="${param.departureTimestamp}?: null"/></th>-->
+            <!--                &lt;!&ndash;                <th></th>&ndash;&gt;-->
+            <!--                <th><input type="checkbox" name="lookForSimilarTimingFlights" th:checked="${param.lookForSimilarTimingFlights != null}"/></th>-->
+            <!--                <th></th>-->
+            <!--                <th><input type="number" min="1" name="passengers" th:value="${param.passengers}?: null"/></th>-->
+            <!--                <th></th>-->
+            <!--                <th><input type="submit" value="Search"/></th>-->
+            <!--            </tr>-->
+            <!--            <tr>-->
+            <!--                <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>-->
+            <!--            </tr>-->
+            <!--             import this part of Flights Table as a fragment-->
+            <tr>
+                <th></th>
+                <th th:text="#{data.flightId}"></th>
+                <th th:text="#{data.departures}"></th>
+                <th th:text="#{data.destinations}"></th>
+                <th th:text="#{data.departureTime}"></th>
+                <th th:text="#{data.price}"></th>
+                <th th:text="#{data.duration}"></th>
+                <th th:text="#{data.discounts}"></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr th:each="iterFlight, status: ${flights}">
+                <!--                <td th:value="${status.index + 1}"></td>-->
+                <td></td>
+                <td th:text="${iterFlight.id}"></td>
+                <td th:text="|${iterFlight.airportDeparture.airportCodeName}, ${iterFlight.airportDeparture.location.city}, ${iterFlight.airportDeparture.location.state}|"></td>
+                <td th:text="|${iterFlight.airportDestination.airportCodeName}, ${iterFlight.airportDestination.location.city}, ${iterFlight.airportDestination.location.state}|"></td>
+                <td th:text="${#dates.format(iterFlight.departureTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
+
+                <!--                <td th:inline="text" th:text="|${iterFlight.flightTicketPrice}RSD|"></td>-->
+                <td th:inline="text">
+                    <span th:if="${iterFlight.discountStandard.discountCoefficient > 0.0}">
+                        <s th:text="|${iterFlight.flightTicketPrice} #{currency}|"></s>
+                        <span th:text="| ${(1 - iterFlight.discountStandard.discountCoefficient) * iterFlight.flightTicketPrice} #{currency} |"></span>
+                    </span>
+                    <span th:unless="${iterFlight.discountStandard.discountCoefficient > 0.0}"
+                          th:text="|${iterFlight.flightTicketPrice} #{currency}|"></span>
+                </td>
+                <td th:inline="text" th:text="|${iterFlight.flightDurationMinutes / 60}:${#numbers.formatInteger(iterFlight.flightDurationMinutes % 60, 2)}#{data.hour}|"></td>
+                <td th:inline="text" th:text="|${iterFlight.discountStandard.discountCoefficient * 100}%|"></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <form method="post" class="ticket" th:action="@{reservations/make}">
+
+            <input th:each="iterFlight, status: ${flights}" style="visibility: hidden;" type="search" name="flightId" th:value="${iterFlight.id}"/>
+
+            <ul>
+                <li>
+                    <input type="submit" th:value="#{action.reserve}"/>
+                    <!--                <a th:href="|make|" th:text="|Make the reservation!|"></a>-->
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <input type="number" name="loyaltyPointsToUse" min="0" th:value="${cart.loyaltyPointsToUse}"/>
+                    <!--                <a th:href="|make|" th:text="|Make the reservation!|"></a>-->
+                </li>
+            </ul>
+
+            <table class="table-ticket" id="ticketsTable">
+                <!--            <caption>Ticket 1</caption>-->
+                <tr>
+                    <th th:text="#{data.passengerName}"></th>
+                    <th th:text="#{data.passengerLastName}"></th>
+                    <th th:text="#{data.passportNumber}"></th>
+                    <th th:text="#{data.airplaneSeatNumber}"></th>
+                </tr>
+
+<!--                <tr>-->
+<!--                    <th><input type="text" name="passengerName" required></th>-->
+<!--                    <th><input type="text" name="passengerSurname" required></th>-->
+<!--                    <th><input type="number" name="passportNumber" minlength="9" maxlength="9" required></th>-->
+<!--                    <th><input type="text" name="seatNumber" required></th>-->
+
+<!--                    <th><button type="button">Seats on Flight</button></th>-->
+<!--                </tr>-->
+
+                <tr th:each="iterTicket, status: ${cart.passengerNames}" th:id="|pass${status.index+1}|">
+                    <th><input type="text" name="passengerName" required th:value="${cart.passengerNames[status.index]}"></th>
+                    <th><input type="text" name="passengerSurname" required th:value="${cart.passengerSurnames[status.index]}"></th>
+                    <th><input type="number" name="passportNumber" minlength="9" maxlength="9" required th:value="${cart.passportNumbers[status.index]}"></th>
+                    <th><input type="text" name="seatNumber" required th:value="${cart.seatNumbers[status.index]}"></th>
+
+                    <th><button type="button">Seats on Flight</button></th>
+                    <th th:unless="${status.index == 0}"><button type="button" th:onclick="|removePassenger('pass${status.index+1}')|">❌</button></th>
+                </tr>
+
+                <!--            <tr id="passenger1">&ndash;&gt;-->
+                <!--&lt;!&ndash;                <th th:text="$"></th>&ndash;&gt;-->
+                <!--                <th><input type="text" name="passengerName" required></th>-->
+                <!--                <th><input type="text" name="passengerSurname" required></th>-->
+                <!--                <th><input type="number" name="passportNumber" minlength="9" maxlength="9" required></th>-->
+                <!--                <th><input type="text" name="seatNumber" readonly required></th>-->
+
+                <!--                <th th:each="itFlight, status: ${flights}">-->
+                <!--                    <button type="button" th:value="|${itFlight.airportDeparture.airportCodeName} -> ${itFlight.airportDestination.airportCodeName} 💺✈|" onclick="chooseSeat('passenger1, itFlight.id')"></button>-->
+                <!--                </th>-->
+
+                <!--                <th><button type="button" value="❌" onclick="removePassenger('passenger1')"></button></th>-->
+                <!--            </tr>-->
+
+                <!--            <tr>-->
+                <!--                <th><input type="text" name="passengerName"></th>-->
+                <!--                <th><input type="text" name="passengerSurname"></th>-->
+                <!--                <th><input type="number" name="passportNumber" minlength="9" maxlength="9"></th>-->
+                <!--                <th><input type="text" name="seatNumber" ></th>-->
+                <!--            </tr>-->
+                <!--            <tr>-->
+                <!--                <th><input type="text" name="passengerName"></th>-->
+                <!--                <th><input type="text" name="passengerSurname"></th>-->
+                <!--                <th><input type="number" name="passportNumber" minlength="9" maxlength="9"></th>-->
+                <!--                <th><input type="text" name="seatNumber" ></th>-->
+                <!--            </tr>-->
+            </table>
+
+        </form>
+        <!--    <ul>-->
+        <!--        <li th:text="#{action.addPassenger}">-->
+        <!--            <a href="reservations/make">-->
+        <!--                Add another passenger.-->
+        <!--            </a>-->
+        <button type="button" id="addPassengerButton" th:text="#{action.addPassenger}"></button>
+        <!--        </li>-->
+        <!--    </ul>-->
+
+
+    </th:block>
+</div>
+
+</body>
+</html>

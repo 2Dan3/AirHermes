@@ -28,7 +28,7 @@
 <!--            <tr>-->
 <!--                <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>-->
 <!--            </tr>-->
-<!--            todo import this part of Flights Table as a fragment-->
+<!--             import this part of Flights Table as a fragment-->
             <tr>
                 <th></th>
                 <th th:text="#{data.flightId}"></th>
@@ -65,7 +65,7 @@
             </tr>
         </table>
 
-    <form method="post" class="ticket" th:action="@{reservations/make}">
+    <form method="post" class="ticket" th:action="@{reservations/cart}">
 
         <input th:each="iterFlight, status: ${flights}" style="visibility: hidden;" type="search" name="flightId" th:value="${iterFlight.id}"/>
 
@@ -73,6 +73,12 @@
             <li>
                 <input type="submit" th:value="#{data.cart}"/>
 <!--                <a th:href="|make|" th:text="|Make the reservation!|"></a>-->
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <input type="number" name="loyaltyPointsToUse" min="0"/>
+                <!--                <a th:href="|make|" th:text="|Make the reservation!|"></a>-->
             </li>
         </ul>
 
@@ -119,8 +125,6 @@
 <!--            </tr>-->
         </table>
 
-<!--        todo onClick insert more of these "tables" into form or remove existing ones
-                    with a "remove" button on each-->
     </form>
 <!--    <ul>-->
 <!--        <li th:text="#{action.addPassenger}">-->

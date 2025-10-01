@@ -26,6 +26,9 @@ import java.util.List;
 @RequestMapping(value = "/reservations")
 public class ReservationController {
 
+    public static final String CART_KEY = "cart";
+
+
     @Autowired
     private FlightService flightService;
 
@@ -186,8 +189,59 @@ public class ReservationController {
             loyaltyCardService.update(loyaltyCard);
         }
 
-        response.sendRedirect(baseURL + "flights");
+        if (session.getAttribute(ReservationController.CART_KEY) != null) {
+            System.out.println("Emptying the shopping cart after reservation...");
+            session.removeAttribute(ReservationController.CART_KEY);
+        }
+
+        response.sendRedirect(baseURL + "users/profile?username=" + loggedUser.getUsername());
     }
 
+    @GetMapping(value="/cart")
+    public ModelAndView getShoppingCart(
+            HttpSession session, HttpServletResponse response) throws IOException {
 
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null) {
+            response.sendRedirect(baseURL + "flights");
+            return null;
+        }
+
+        List<Flight> flights = new ArrayList<>();
+
+        ShoppingCart shoppingCart = (ShoppingCart) session.getAttribute(ReservationController.CART_KEY);
+
+        if (shoppingCart != null) {
+            flights = flightService.findByID(shoppingCart.getFlightIDs());
+        }
+
+
+        ModelAndView retval = new ModelAndView("shoppingCart");
+        retval.addObject("cart", shoppingCart);
+        retval.addObject("flights", flights);
+
+        return retval;
+    }
+
+    @PostMapping(value="/cart")
+    public void putToShoppingCart(
+            @RequestParam(name="flightId") Long[] flightIDs,
+            @RequestParam(name = "seatNumber") Integer[] seatNumbers,
+            @RequestParam(name = "passengerName") String[] passengerNames,
+            @RequestParam(name = "passengerSurname") String[] passengerSurnames,
+            @RequestParam(name = "passportNumber") Integer[] passportNumbers,
+            @RequestParam(name = "loyaltyPointsToUse", required = false) Integer loyaltyPointsToUse,
+            HttpSession session, HttpServletResponse response) throws IOException {
+
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null) {
+            response.sendRedirect(baseURL + "flights");
+            return;
+        }
+
+        ShoppingCart shoppingCart = new ShoppingCart(loggedUser, flightIDs, seatNumbers, passengerNames, passengerSurnames, passportNumbers, loyaltyPointsToUse);
+        session.setAttribute(ReservationController.CART_KEY, shoppingCart);
+
+        response.sendRedirect(baseURL + "reservations/cart");
+    }
 }
