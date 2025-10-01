@@ -100,11 +100,12 @@ public class ReservationController {
             @RequestParam(name = "flightId") Long[] flightIds,
             HttpSession session, HttpServletResponse response) throws IOException {
 
-//        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
-//        if (loggedUser == null || !loggedUser.isAdmin()) {
-//            response.sendRedirect(baseURL + "flights");
-//            return null;
-//        }
+        User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
+        if (loggedUser == null) {
+            session.setAttribute(FlightsController.FLIGHT_KEY, flightIds);
+            response.sendRedirect(baseURL + "users/login");
+            return null;
+        }
 
         List<Flight> flights = flightService.findAllBy(flightIds);
 
@@ -125,10 +126,10 @@ public class ReservationController {
                        HttpSession session, HttpServletResponse response) throws IOException {
 
         User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
-//        if (loggedUser == null || !loggedUser.isAdmin()) {
-//            response.sendRedirect(baseURL + "flights");
-//            return;
-//        }
+        if (loggedUser == null) {
+            response.sendRedirect(baseURL + "flights");
+            return;
+        }
 
         if (loyaltyPointsToUse == null || loyaltyPointsToUse < 0) {
             loyaltyPointsToUse = 0;

@@ -26,7 +26,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/flights")
 public class FlightsController {
-    public static final String FLIGHT_KEY = "flight";
+    public static final String FLIGHT_KEY = "flightIDs";
 
     @Autowired
     private FlightService flightService;

@@ -163,8 +163,26 @@ public class UsersController {
             session.setAttribute(UsersController.USER_KEY, user);
 
 //            response.sendRedirect(baseURL);
-            response.sendRedirect(baseURL + "flights");
-            return null;
+
+            Long[] IDsOfFlightsThatUserBeganReservating = (Long[]) session.getAttribute(FlightsController.FLIGHT_KEY);
+
+            boolean unloggedUserWasRedirectedFromReservation = IDsOfFlightsThatUserBeganReservating != null;
+            if (unloggedUserWasRedirectedFromReservation) {
+
+                String reservationURL = "reservations/create?flightId=" + IDsOfFlightsThatUserBeganReservating[0];
+
+                for (int i = 1; i < IDsOfFlightsThatUserBeganReservating.length; i++) {
+                    reservationURL += ("&flightId=" + IDsOfFlightsThatUserBeganReservating[i]);
+                }
+                response.sendRedirect(baseURL + reservationURL);
+
+                session.removeAttribute(FlightsController.FLIGHT_KEY);
+                return null;
+            }else {
+                response.sendRedirect(baseURL + "flights");
+                return null;
+            }
+
 
         } catch (Exception ex) {
             String poruka = ex.getMessage();
