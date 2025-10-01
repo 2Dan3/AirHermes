@@ -1,10 +1,7 @@
 package com.ftn.dan.airhermes.controller;
 
 import com.ftn.dan.airhermes.model.entity.*;
-import com.ftn.dan.airhermes.service.FlightService;
-import com.ftn.dan.airhermes.service.LoyaltyCardService;
-import com.ftn.dan.airhermes.service.ReservationService;
-import com.ftn.dan.airhermes.service.TicketService;
+import com.ftn.dan.airhermes.service.*;
 import org.apache.catalina.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -40,6 +37,9 @@ public class ReservationController {
 
     @Autowired
     private LoyaltyCardService loyaltyCardService;
+
+    @Autowired
+    private DiscountService discountService;
 
     @Autowired
     private ServletContext servletContext;
@@ -130,7 +130,7 @@ public class ReservationController {
 //            return;
 //        }
 
-        if (loyaltyPointsToUse == null) {
+        if (loyaltyPointsToUse == null || loyaltyPointsToUse < 0) {
             loyaltyPointsToUse = 0;
         }
 
@@ -140,13 +140,16 @@ public class ReservationController {
             loyaltyPointsToUse = 0;
         } else {
             if (loyaltyCard.getPointsCollected() < loyaltyPointsToUse) {
-//            todo return msg not enough points on loyalty card
-                return ;
+//             return msg not enough points on loyalty card
+//                return;
+                loyaltyPointsToUse = loyaltyCard.getPointsCollected();
             }
         }
 
-        List<Flight> flights = flightService.findAllBy(flightIDs);
-//        todo handle the error if no flight found
+        List<Flight> flights = flightService.findByID(flightIDs);
+//         handle the error if no flight found
+        if (flights.isEmpty())
+            return;
 
 //        reservation = reservationService.save(reservation, flightIDs);
 
@@ -157,7 +160,7 @@ public class ReservationController {
         for (int i = 0; i < flights.size(); i++) {
 
             DiscountStandard discountStandard = flights.get(i).getDiscountStandard();
-            double discountCoefficient = discountStandard == null ? 1 : discountStandard.getDiscountCoefficient();
+            double discountCoefficient = discountStandard == null || discountService.isExpired(discountStandard.getId()) ? 0 : discountStandard.getDiscountCoefficient();
             double priceAfterStandardDiscount = flights.get(i).getFlightTicketPrice() * (1 - discountCoefficient);
             double priceAfterStandardAndPersonalDiscounts = (1 - (0.07 * loyaltyPointsToUse)) * priceAfterStandardDiscount;
 

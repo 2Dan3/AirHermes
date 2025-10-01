@@ -9,11 +9,13 @@ import com.ftn.dan.airhermes.service.FlightService;
 import com.ftn.dan.airhermes.service.LoyaltyCardService;
 import com.ftn.dan.airhermes.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -83,5 +85,13 @@ public class DatabaseFlightService implements FlightService {
         Integer hours = Integer.valueOf(segments[0]);
         Integer minutes = Integer.valueOf(segments[1]);
         return (hours * 60) + minutes;
+    }
+
+    public List<Flight> findByID(Long[] id) {
+        try {
+            return flightDAO.findByID(id);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<Flight>();
+        }
     }
 }

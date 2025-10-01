@@ -6,6 +6,7 @@ import com.ftn.dan.airhermes.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,5 +27,17 @@ public class DatabaseDiscountService implements DiscountService {
     @Override
     public DiscountStandard findByID(Long id) {
         return discountDAO.findByID(id);
+    }
+
+    @Override
+    public boolean isExpired(Long discountId) {
+        DiscountStandard foundDiscount = findByID(discountId);
+
+        return foundDiscount == null || foundDiscount.getValidUntilDate().toLocalDateTime().isAfter(LocalDateTime.now());
+    }
+
+    @Override
+    public List<DiscountStandard> findAllNonExpired() {
+        return discountDAO.findAllNonExpired();
     }
 }

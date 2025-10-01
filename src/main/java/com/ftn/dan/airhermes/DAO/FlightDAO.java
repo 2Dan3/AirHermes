@@ -26,4 +26,6 @@ public interface FlightDAO {
     void update(Long flightID, String airportDepartureCodeName, String airportDestinationCodeName, Long airplaneID, LocalDateTime departureLocalDateTime, Integer flightDurationMinutes, Integer flightTicketPrice, Long discountStandardID);
 
     void delete(Long id);
+
+    List<Flight> findByID(Long[] flightIds);
 }

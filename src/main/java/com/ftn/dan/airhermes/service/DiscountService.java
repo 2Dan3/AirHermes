@@ -10,4 +10,8 @@ public interface DiscountService {
     Long save(DiscountStandard discount);
 
     DiscountStandard findByID(Long id);
+
+    boolean isExpired(Long discountId);
+
+    List<DiscountStandard> findAllNonExpired();
 }

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -97,7 +98,8 @@ public class FlightsController {
             response.sendRedirect(baseURL + "flights");
             return null;
         }
-        List<Flight> flights = flightService.findAllBy(new Long[]{flight_id});
+//        List<Flight> flights = flightService.findAllBy(new Long[]{flight_id});
+        List<Flight> flights = flightService.findByID(new Long[]{flight_id});
 
         ModelAndView responsePage = new ModelAndView("flights");
         responsePage.addObject("flights", flights);
@@ -209,7 +211,7 @@ public class FlightsController {
         List<Location> allLocations = locationService.findAll();
         List<Airport> allAirports = airportService.findAll();
         List<Airplane> allAirplanes = airplaneService.findAll();
-        List<DiscountStandard> allDiscounts = discountService.findAll();
+        List<DiscountStandard> allDiscounts = discountService.findAllNonExpired();
 
         mov.addObject("allLocations", allLocations);
         mov.addObject("airports", allAirports);
@@ -234,7 +236,7 @@ public class FlightsController {
             HttpSession session, HttpServletResponse response) throws IOException {
 
         User loggedUser = (User) session.getAttribute(UsersController.USER_KEY);
-        if (loggedUser == null || !loggedUser.isAdmin()) {
+        if (loggedUser == null || !loggedUser.isAdmin() || discountService.isExpired(discountStandardID)) {
             response.sendRedirect(baseURL + "flights");
             return;
         }

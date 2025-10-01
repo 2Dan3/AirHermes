@@ -27,4 +27,6 @@ public interface FlightService {
     void deleteFlight(Flight flight);
 
     Integer parseMinutes(String formattedHoursAndMinutes);
+
+    List<Flight> findByID(Long[] id);
 }

@@ -37,6 +37,23 @@ public class FlightDAOImpl implements FlightDAO {
             "LEFT JOIN discounts_standard d ON d.id = f.discount_standard_id " +
             "LEFT JOIN flight_cancellations c ON c.flight_cancelled_id = f.id ";
 
+    private final String SQL_GET_ALL_FLIGHTS_AND_REFERENCES_WITH_ACTIVE_DISCOUNTS =
+            "SELECT f.id, f.departure_timestamp, f.flight_duration_minutes, f.flight_ticket_price, " +
+                    "adep.airport_code_name, ades.airport_code_name, " +
+                    "ldep.id, ldep.city, ldep.state, ldep.continent, ldep.image_path, " +
+                    "ldes.id, ldes.city, ldes.state, ldes.continent, ldes.image_path, " +
+                    "av.id, av.name, av.seat_rows, av.seat_columns, " +
+                    "d.id, d.discount_coefficient, d.valid_until_date, " +
+                    "c.flight_cancelled_id " +
+                    "FROM flights f " +
+                    "LEFT JOIN airports adep ON adep.airport_code_name = f.airport_departure_code_name " +
+                    "LEFT JOIN airports ades ON ades.airport_code_name = f.airport_destination_code_name " +
+                    "LEFT JOIN airplanes av ON av.id = f.airplane_id " +
+                    "LEFT JOIN locations ldep ON ldep.id = adep.location_id " +
+                    "LEFT JOIN locations ldes ON ldes.id = ades.location_id " +
+                    "LEFT JOIN discounts_standard d ON d.id = f.discount_standard_id AND d.valid_until_date > NOW() " +
+                    "LEFT JOIN flight_cancellations c ON c.flight_cancelled_id = f.id ";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -90,9 +107,7 @@ public class FlightDAOImpl implements FlightDAO {
     @Override
     public List<Flight> find(Long flight_id, Timestamp departureTimestamp, String departureAirportOrCityOrStateSearchTerm, String destinationAirportOrCityOrStateSearchTerm, Integer passengers, Boolean lookForSimilarTimingFlights, String sortAndDirection) {
 
-        final String all_discounted_flights = " WHERE f.discount_standard_id IS NOT NULL AND c.flight_cancelled_id IS NULL";
-
-        String sql = SQL_GET_ALL_FLIGHTS_AND_REFERENCES;
+        final String all_discounted_flights = " WHERE f.discount_standard_id IS NOT NULL AND c.flight_cancelled_id IS NULL AND d.valid_until_date > NOW() ";
 
         ArrayList<Object> listaArgumenata = new ArrayList<Object>();
 
@@ -150,10 +165,16 @@ public class FlightDAOImpl implements FlightDAO {
             listaArgumenata.add(passengers);
         }
 
-        if(imaArgumenata)
+        String sql;
+
+        if(imaArgumenata) {
+            sql = SQL_GET_ALL_FLIGHTS_AND_REFERENCES_WITH_ACTIVE_DISCOUNTS;
             sql = sql + whereSql.toString();
-        else
+        }
+        else {
+            sql = SQL_GET_ALL_FLIGHTS_AND_REFERENCES;
             sql = sql + all_discounted_flights;
+        }
 
         sql = sql + " ORDER BY " + sortAndDirection;
 //        listaArgumenata.add(sortAndDirection);
@@ -357,5 +378,37 @@ public class FlightDAOImpl implements FlightDAO {
             return flightDTO;
         }
 
+    }
+
+    @Override
+    public List<Flight> findByID(Long[] flightIds) {
+        System.out.println(Arrays.toString(flightIds));
+        String sql = SQL_GET_ALL_FLIGHTS_AND_REFERENCES_WITH_ACTIVE_DISCOUNTS;
+
+        ArrayList<Object> listaArgumenata = new ArrayList<Object>();
+        boolean imaArgumenata = false;
+
+        StringBuffer whereSql = new StringBuffer(" WHERE c.flight_cancelled_id IS NULL ");
+
+        for (Long flightId : flightIds) {
+            if (imaArgumenata)
+                whereSql.append(" OR ");
+            else
+                whereSql.append(" AND ( ");
+            whereSql.append("f.id = ?");
+            listaArgumenata.add(flightId);
+            imaArgumenata = true;
+        }
+
+        if (flightIds.length != 0)
+            whereSql.append(" ) ");
+
+        if(imaArgumenata)
+            sql = sql + whereSql.toString();
+
+        sql = sql + " ORDER BY f.departure_timestamp";
+        System.out.println("DAO findAllBy: " + sql);
+
+        return jdbcTemplate.query(sql, listaArgumenata.toArray(), new FlightRowMapper());
     }
 }

@@ -10,4 +10,6 @@ public interface DiscountDAO {
     Long save(DiscountStandard discount);
 
     DiscountStandard findByID(Long id);
+
+    List<DiscountStandard> findAllNonExpired();
 }

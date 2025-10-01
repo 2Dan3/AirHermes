@@ -80,4 +80,12 @@ public class DiscountDAOImpl implements DiscountDAO {
             return null;
         }
     }
+
+    @Override
+    public List<DiscountStandard> findAllNonExpired() {
+        final String sql =
+                "SELECT d.id, d.discount_coefficient, d.valid_until_date " +
+                        "FROM discounts_standard d " +
+                        "WHERE d.valid_until_date > NOW()";
+        return jdbcTemplate.query(sql, new DiscountRowMapper());    }
 }
