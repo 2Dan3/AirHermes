@@ -67,14 +67,16 @@
             </tr>
         </table>
 
-        <form method="post" class="ticket" th:action="@{reservations/make}">
+        <form method="post" class="ticket" id="formTickets" th:action="@{reservations/make}">
 
             <input th:each="iterFlight, status: ${flights}" style="visibility: hidden;" type="search" name="flightId" th:value="${iterFlight.id}"/>
 
             <ul>
                 <li>
                     <input type="submit" th:value="#{action.reserve}"/>
-                    <!--                <a th:href="|make|" th:text="|Make the reservation!|"></a>-->
+                </li>
+                <li>
+                    <button type="button" th:text="#{data.cart}" onclick="saveCart()"></button>
                 </li>
             </ul>
             <ul>

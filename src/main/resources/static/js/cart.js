@@ -1,10 +1,39 @@
 var num = 1;
 var table;
 
+
+const saveCart = () => {
+  const form = document.getElementById('formTickets');
+  const formData = new FormData(form);
+
+  fetch('http://localhost:8080/airhermes/reservations/cart', {
+    method: 'POST',
+    body: formData
+  })
+  .then(async res => {
+//    const text = await res.text(); // get raw response
+//    console.log('Raw response:', text);
+
+    // try to parse it as JSON only if it's actually JSON
+//    try {
+//      const json = JSON.parse(text);
+//      console.log('Parsed JSON:', json);
+//    } catch (err) {
+//      console.error('Failed to parse JSON:', err);
+//    }
+  })
+  .catch(err => {
+    console.error('Error posting form:', err);
+  });
+
+
+  console.log("saved Cart content");
+};
+
 function removePassenger(rowOfPassenger) {
     num += 1;
-    let rowToRemove = document.getElementById(rowOfPassenger);
-    table.removeChild(rowToRemove);
+//    let rowToRemove = document.getElementById(rowOfPassenger);
+    $("tr#"+rowOfPassenger).first().remove();
 }
 
 function chooseSeat(passengerNum, idOfFlight) {
@@ -20,7 +49,7 @@ function addPassengerRow(removable) {
     const newPassengerRow = document.createElement('tr');
     newPassengerRow.setAttribute('id', 'passenger' + passengerNumber);
 
-    table.appendChild(newPassengerRow);
+    table.append(newPassengerRow);
 
 
 
@@ -117,7 +146,7 @@ $(document).ready(
 
 //                    num = getIdOfLastRowInTable()...
 
-                    table = document.getElementById('ticketsTable');
+                    table = $("table#ticketsTable");
 
 //                    addPassengerRow(false);
 
