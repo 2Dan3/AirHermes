@@ -121,7 +121,8 @@ public class ReservationDAOImpl implements ReservationDAO {
         String sql =
                 "SELECT ? > ( (av.seat_rows * av.seat_columns) - (SELECT COUNT(ft.id) FROM flight_tickets ft WHERE ft.flight_id = f.id AND f.id = ?)) " +
                 " FROM flights f " +
-                "LEFT JOIN airplanes av ON av.id = f.airplane_id";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, seats, flight1Id);
+                "LEFT JOIN airplanes av ON av.id = f.airplane_id " +
+                "WHERE f.id = ?";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, seats, flight1Id, flight1Id);
     }
 }
