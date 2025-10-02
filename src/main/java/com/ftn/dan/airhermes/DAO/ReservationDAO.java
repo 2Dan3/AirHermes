@@ -13,4 +13,6 @@ public interface ReservationDAO {
     List<ReservationDTO> findAllWithFlightsByUserId(Long userId);
 
     boolean existsReservationForFlight(Long flightID);
+
+    boolean notEnoughSeats(int seats, Long flight1Id);
 }

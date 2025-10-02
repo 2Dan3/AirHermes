@@ -135,6 +135,16 @@ public class ReservationController {
             return;
         }
 
+        if (reservationService.notEnoughSeats(seatNumbers.length, flightIDs[0])) {
+            String reservationURL = "reservations/create?flightId=" + flightIDs[0];
+
+            for (int i = 1; i < flightIDs.length; i++) {
+                reservationURL += ("&flightId=" + flightIDs[i]);
+            }
+            response.sendRedirect(baseURL + reservationURL);
+            return;
+        }
+
         if (loyaltyPointsToUse == null || loyaltyPointsToUse < 0) {
             loyaltyPointsToUse = 0;
         }

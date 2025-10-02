@@ -45,6 +45,11 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationDAO.existsReservationForFlight(flightId);
     }
 
+    @Override
+    public boolean notEnoughSeats(int seats, Long flight1Id) {
+        return reservationDAO.notEnoughSeats(seats, flight1Id);
+    }
+
     private int updateTotalPrice(FlightReservation reservation, double price) {
         return reservationDAO.updateTotalPrice(reservation, price);
     }

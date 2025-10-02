@@ -115,4 +115,13 @@ public class ReservationDAOImpl implements ReservationDAO {
         final String sql = "SELECT EXISTS (SELECT fr.flight_reservation_id FROM flight_flight_reservation fr WHERE fr.flight_id = ?) AS 'exists';";
         return jdbcTemplate.queryForObject(sql, Integer.class, flightID) == 0 ? false : true;
     }
+
+    @Override
+    public boolean notEnoughSeats(int seats, Long flight1Id) {
+        String sql =
+                "SELECT ? > ( (av.seat_rows * av.seat_columns) - (SELECT COUNT(ft.id) FROM flight_tickets ft WHERE ft.flight_id = f.id AND f.id = ?)) " +
+                " FROM flights f " +
+                "LEFT JOIN airplanes av ON av.id = f.airplane_id";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, seats, flight1Id);
+    }
 }
