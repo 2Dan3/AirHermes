@@ -31,9 +31,12 @@ public class DatabaseDiscountService implements DiscountService {
 
     @Override
     public boolean isExpired(Long discountId) {
+        if (discountId == null)
+            return false;
+
         DiscountStandard foundDiscount = findByID(discountId);
 
-        return foundDiscount == null || foundDiscount.getValidUntilDate().toLocalDateTime().isAfter(LocalDateTime.now());
+        return foundDiscount == null || foundDiscount.getValidUntilDate().toLocalDateTime().isBefore(LocalDateTime.now());
     }
 
     @Override
