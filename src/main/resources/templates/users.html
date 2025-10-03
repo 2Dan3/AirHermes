@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StiloviTabela.css}"/>
+    <title th:fragment="title" th:text="#{data.users}"></title>
+    <script th:fragment="script" th:src="@{/js/userSort.js}"></script>
+</head>
+<body>
+
+<div th:fragment="centralniDiv">
+<!--    <form method="get">-->
+        <table class="tabela">
+            <caption th:text="#{data.users}"></caption>
+            <tr>
+                <th></th>
+                <th th:text="#{data.nameOfPerson}"></th>
+                <th th:text="#{data.lastName}"></th>
+                <th th:text="#{data.email}"></th>
+                <th th:text="#{data.username}"></th>
+                <th th:text="#{data.dateOfBirth}"></th>
+                <th th:text="#{data.registeredOn}"></th>
+                <th th:text="#{data.admin}"></th>
+                <th th:text="#{data.blocked}"></th>
+                <th></th>
+            </tr>
+
+            <form method="get" th:action="@{/users}">
+            <tr>
+                <th>
+                    <select name="sort" id="sort">
+                        <option value="username-asc" th:text="|#{data.username} #{sort.asc}|" th:selected="${#strings.equals(sort,'username-asc')}"></option>
+                        <option value="username-desc" th:text="|#{data.username} #{sort.desc}|" th:selected="${#strings.equals(sort,'username-desc')}"></option>
+                        <option value="admin-asc" th:text="|#{data.role} #{sort.asc}|" th:selected="${#strings.equals(sort,'admin-asc')}"></option>
+                        <option value="admin-desc" th:text="|#{data.role} #{sort.desc}|" th:selected="${#strings.equals(sort,'admin-desc')}"></option>
+                        <!--                        <option value="en" th:text="#{lang.eng}" th:selected="${#strings.equals(language,'en')}"></option>-->
+                    </select>
+                </th>
+<!--                <th>-->
+<!--                    <select name="pol">-->
+<!--                        <option value="">odaberi</option>-->
+<!--                        <option value="muški" th:selected="${#strings.equals(param.pol, 'muški')}">muški</option>-->
+<!--                        <option value="ženski" th:selected="${#strings.equals(param.pol, 'ženski')}">ženski</option>-->
+<!--                    </select>-->
+<!--                </th>-->
+                <th><input type="search" name="name" th:value="${param.name}?: null"/></th>
+                <th><input type="search" name="surname" th:value="${param.surname}?: null"/></th>
+                <th><input type="search" name="username" th:value="${param.username}?: null"/></th>
+                <th><input type="search" name="email" th:value="${param.email}?: null"/></th>
+                <th></th>
+                <th></th>
+                <th><input type="checkbox" name="admin" th:checked="${param.admin != null}"/></th>
+                <th><input type="checkbox" name="blocked" th:checked="${param.blocked != null}"/></th>
+                <th><input type="submit" th:value="#{action.search}"/></th>
+            </tr>
+            </form>
+
+            <tr th:each="iterUser, status: ${users}">
+                <td></td>
+                <td th:text="${iterUser.name}"></td>
+                <td th:text="${iterUser.surname}"></td>
+                <td th:text="${iterUser.email}"></td>
+                <td th:text="${iterUser.username}">
+<!--                    <a th:href="|users/profile?username=${iterUser.username}|" th:text="${iterUser.username}"></a>-->
+                </td>
+<!--                <td th:text="${iterUser.dateOfBirth}"></td>-->
+                <td th:text="${#dates.format(iterUser.dateOfBirth, 'yyyy-MM-dd')}"></td>
+<!--                <td th:text="${iterUser.registrationTimestamp}"></td>-->
+                <td th:text="${#dates.format(iterUser.registrationTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${iterUser.admin}? '✅': '❌'"></td>
+<!--                <td th:text="${iterUser.blocked}? '✔': '❌'"></td>-->
+                <th>
+                    <form th:id="|blockingForm${status.index}|" method="post" th:action="@{/users/block}">
+                    <input type="checkbox" name="blocked" th:value="${!iterUser.blocked}" th:checked="${iterUser.blocked}" th:onchange="|document.getElementById('blockingForm${status.index}').submit()|" th:disabled="${iterUser.admin}">
+                </th>
+                    <th><input type="search" name="userId" th:value="${iterUser.id}" style="display: none;"/>
+                </form></th>
+                <td></td>
+            </tr>
+        </table>
+<!--    </form>-->
+
+
+<!--    <ul>-->
+<!--        <li><a href="users/create">Add a new user</a></li>-->
+<!--    </ul>-->
+</div>
+</body>
+</html>

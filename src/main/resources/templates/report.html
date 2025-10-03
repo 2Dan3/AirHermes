@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StiloviTabela.css}"/>
+    <title th:fragment="title" th:text="#{data.flightsAndRevenue}"></title>
+    <script th:fragment="script" th:src="@{/js/reportSort.js}"></script>
+</head>
+<body>
+<div th:fragment="centralniDiv">
+    <table class="tabela">
+        <caption th:text="#{data.flightsAndRevenue}"></caption>
+        <tr>
+<!--            <th></th>-->
+            <th></th>
+            <th></th>
+            <th th:text="#{data.timeFrom}"></th>
+            <th th:text="#{data.timeUntil}"></th>
+            <th></th>
+        </tr>
+        <tr>
+<!--            <th></th>-->
+            <th>
+                <select name="sort" id="sort">
+                    <option value="flight_id-asc" th:text="|#{data.flightId} #{sort.asc}|" th:selected="${#strings.equals(sort,'flight_id-asc')}"></option>
+                    <option value="flight_id-desc" th:text="|#{data.flightId} #{sort.desc}|" th:selected="${#strings.equals(sort,'flight_id-desc')}"></option>
+                    <option value="seats_total-asc" th:text="|#{data.seatsTotal} #{sort.asc}|" th:selected="${#strings.equals(sort,'seats_total-asc')}"></option>
+                    <option value="seats_total-desc" th:text="|#{data.seatsTotal} #{sort.desc}|" th:selected="${#strings.equals(sort,'seats_total-desc')}"></option>
+                    <option value="seats_sold-asc" th:text="|#{data.ticketsSold} #{sort.asc}|" th:selected="${#strings.equals(sort,'seats_sold-asc')}"></option>
+                    <option value="seats_sold-desc" th:text="|#{data.ticketsSold} #{sort.desc}|" th:selected="${#strings.equals(sort,'seats_sold-desc')}"></option>
+                    <option value="total_flight_revenue-asc" th:text="|#{data.flightsAndRevenue} #{sort.asc}|" th:selected="${#strings.equals(sort,'total_flight_revenue-asc')}"></option>
+                    <option value="total_flight_revenue-desc" th:text="|#{data.flightsAndRevenue} #{sort.desc}|" th:selected="${#strings.equals(sort,'total_flight_revenue-desc')}"></option>
+                    <!--                        <option value="en" th:text="#{lang.eng}" th:selected="${#strings.equals(language,'en')}"></option>-->
+                </select>
+            </th>
+            <th></th>
+            <form method="get">
+                <th><input type="datetime-local" name="timestampMin" th:value="${param.timestampMin}?: null"/></th>
+                <th><input type="datetime-local" name="timestampMax" th:value="${param.timestampMax}?: null"/></th>
+                <th><input type="submit" th:value="#{action.report}"/></th>
+            </form>
+        </tr>
+        <tr>
+<!--            <th></th>-->
+            <th th:text="#{data.flightId}"></th>
+            <th th:text="#{data.departureTime}"></th>
+            <th th:text="#{data.seatsTotal}"></th>
+            <th th:text="#{data.ticketsSold}"></th>
+            <th th:text="#{data.flightsAndRevenue}"></th>
+        </tr>
+        <tr th:each="iterFlight, status: ${flights}">
+            <td th:text="${iterFlight.flightId}"></td>
+            <td th:text="${#dates.format(iterFlight.departureTimestamp, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${iterFlight.seatsTotal}"></td>
+            <td th:text="${iterFlight.seatsSold}"></td>
+            <td th:text="|${iterFlight.flightRevenue} #{currency}|"></td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;" th:text="#{data.total}"></td>
+            <td></td>
+            <td></td>
+            <td th:text="${totalTicketsSold}" style="font-weight: bold;"></td>
+            <td th:text="${totalRevenue}?:null" style="font-weight: bold;"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

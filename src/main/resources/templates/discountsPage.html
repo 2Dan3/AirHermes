@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StylesInvertedTable.css}"/>
+    <title th:fragment="title" th:text="#{data.discounts}"></title>
+    <th:block th:fragment="script">
+        <script src="webjars/jquery/3.2.1/jquery.min.js"></script>
+<!--        <script th:src="@{/js/discounts.js}"></script>-->
+    </th:block>
+</head>
+<body>
+    <div th:fragment="centralniDiv" th:replace="~{fragments/discounts.html :: layout(~{::title},~{::link},~{::script})}"></div>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StiloviForma.css}"/>
+    <title th:fragment="title" th:text="#{data.cancellation}"></title>
+    <script th:fragment="script" src=""></script>
+</head>
+<body>
+    <div th:fragment="centralniDiv">
+        <form method="post" th:action="@{/flights/cancel}">
+            <table class="forma">
+                <caption th:text="#{data.cancelSelection}"></caption>
+                <tr>
+                    <th th:text="#{data.cancelReason}"></th>
+                    <td>
+                        <input type="text" name="flightId" th:value="${flight.id}" style="display:none;"/>
+                        <input type="text" name="reason"/>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input type="submit" th:value="#{action.saveChanges}"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <p class="greska" th:text="${error}"></p>
+    </div>
+</body>
+</html>

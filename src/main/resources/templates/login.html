@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/StiloviForma.css}"/>
+    <title th:text="#{data.login}"></title>
+</head>
+<body>
+<div th:fragment="centralniDiv">
+    <form method="post" th:action="@{/users/login}">
+        <table class="forma">
+            <caption th:text="#{data.login}"></caption>
+            <tr><th th:text="#{data.username}"></th><td><input type="text" name="username"/></td></tr>
+            <tr><th th:text="#{data.password}"></th><td><input type="password" name="password"/></td></tr>
+            <tr><th></th><td><input type="submit" th:value="#{data.login}"/></td></tr>
+        </table>
+    </form>
+    <p class="greska" th:text="${poruka}"></p>
+    <ul><li><a th:href="@{/users/register}" th:text="#{action.toRegister}"></a></li></ul>
+</div>
+</body>
+</html>

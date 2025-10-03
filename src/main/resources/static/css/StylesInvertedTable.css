@@ -1,0 +1,51 @@
+table {
+	border-collapse: collapse;
+	margin: 5px;
+}
+
+.inverted {
+    width: 100%;
+
+}
+
+img {
+    max-width: 80px;
+}
+
+table caption {
+	font-size: 16pt
+}
+
+table th, td {
+#	border: 1px solid gray;
+}
+
+table th {
+	color: white;
+	background-color: DodgerBlue;
+}
+
+table tr:nth-child(even) {
+	background-color: LightGray;
+}
+
+table input, textarea, select {
+	box-sizing: border-box;
+}
+
+table input[type="checkbox"] {
+	width: 20px;
+}
+
+table input[type="radio"] {
+	width: 20px;
+}
+
+p.greska {
+	color: red;
+}
+
+input[type="submit"] {
+    background-color: lightgrey;
+    border: 1px solid lightorange;
+}

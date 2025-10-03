@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html th:replace="~{fragments/base.html :: layout(~{::title}, ~{::link}, ~{::script}, ~{::centralniDiv})}" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:fragment="link" rel="stylesheet" type="text/css" th:href="@{/css/StiloviTabela.css}"/>
+    <title th:fragment="title" th:text="#{data.cardRequests}"></title>
+    <script th:fragment="script" src=""></script>
+</head>
+<body>
+<div th:fragment="centralniDiv">
+    <table class="tabela">
+        <tr>
+            <th th:text="#{data.username}"></th>
+            <th th:text="#{data.email}"></th>
+            <th th:text="#{data.status}"></th>
+        </tr>
+
+        <tr th:each="iterRequest, st: ${requests}">
+            <th th:text="${iterRequest.user.username}"></th>
+            <th th:text="${iterRequest.user.email}"></th>
+            <th>
+                <form th:id="|requestResolvingForm${st.index}|" method="post" th:action="@{/cards/resolve}">
+                    <select name="newStatus" th:onchange="|document.getElementById('requestResolvingForm${st.index}').submit()|" th:disabled="${iterRequest.status.name() != 'SENT'}">
+<!--                        <option th:each="status : ${T(com.ftn.dan.airhermes.model.enums.LoyaltyCardCreationRequestStatus).values()}"-->
+<!--                                th:value="${status.name()}"-->
+<!--                                th:text="${status.name()}"-->
+<!--                                th:disabled="${status.name() == 'SENT'}"-->
+<!--                                th:selected="${status.name() == iterRequest.status}">-->
+<!--                        </option>-->
+                        <!-- Show 'SENT' as selected and disabled if current status is SENT -->
+                        <option th:if="${iterRequest.status.name() == 'SENT'}"
+                                value="SENT"
+                                selected
+                                disabled th:text="#{SENT}">
+
+                        </option>
+
+                        <!-- Loop only through selectable statuses -->
+                        <option th:each="status : ${T(com.ftn.dan.airhermes.model.enums.LoyaltyCardCreationRequestStatus).values()}"
+                                th:if="|${status.name() != 'SENT'}|"
+                                th:value="${status.name()}"
+                                th:text="${#messages.msg(status.name())}"
+                                th:selected="${status.name() == iterRequest.status.name()}">
+<!--                            th:text="${status.name()}"-->
+                        </option>
+                    </select>
+                    <input type="text" name="userId" th:value="${iterRequest.user.id}" style="display: none;"/>
+                </form>
+            </th>
+        </tr>
+
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html th:fragment="layout(title, links, scripts)" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:replace="${links}" rel="stylesheet" type="text/css" th:href="@{/css/StylesInvertedTable.css}"/>
+    <title th:text="#{data.airplanes}" th:replace="${title}"></title>
+    <script th:replace="${scripts}"></script>
+</head>
+<body>
+    <div th:fragment="mainDivAirplanes" id="mainDivAirplanes">
+        <table>
+            <caption th:text="#{data.airplanes}"></caption>
+            <tr>
+                <th th:text="#{data.nameOfThing}"></th>
+                <th th:text="#{data.seatRows}"></th>
+                <th th:text="#{data.seatColumns}"></th>
+                <th></th>
+            </tr>
+            <tr th:each="iterAirplane: ${airplanes}">
+
+                <td th:text="${iterAirplane.name}"></td>
+                <td th:text="${iterAirplane.seatRows}"></td>
+                <td th:text="${iterAirplane.seatColumns}"></td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <form method="post" th:action="@{/airplanes}">
+                    <td><input type="text" name="name" required/></td>
+                    <td><input type="number" min="1" name="seatRows" required/></td>
+                    <td><input type="number" min="1" name="seatColumns" required/></td>
+                    <td><input type="submit" th:value="#{action.saveAirplane}"/></td>
+                </form>
+            </tr>
+        </table>
+        <p class="greska" th:text="${errorMessage}"></p>
+    </div>
+</body>
+</html>
