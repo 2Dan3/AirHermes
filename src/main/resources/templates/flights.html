@@ -23,15 +23,7 @@
     <!--            <form method="get">-->
                 <tr>
                     <th>
-                        <select name="sort" id="sort">
-                            <option value="airport_departure_code_name-asc" th:text="|#{data.departures} #{sort.asc}|" th:selected="${#strings.equals(sort,'airport_departure_code_name-asc')}"></option>
-                            <option value="airport_departure_code_name-desc" th:text="|#{data.departures} #{sort.desc}|" th:selected="${#strings.equals(sort,'airport_departure_code_name-desc')}"></option>
-                            <option value="airport_destination_code_name-asc" th:text="|#{data.destinations} #{sort.asc}|" th:selected="${#strings.equals(sort,'airport_destination_code_name-asc')}"></option>
-                            <option value="airport_destination_code_name-desc" th:text="|#{data.destinations} #{sort.desc}|" th:selected="${#strings.equals(sort,'airport_destination_code_name-desc')}"></option>
-                            <option value="departure_timestamp-asc" th:text="|#{data.departureTime} #{sort.asc}|" th:selected="${#strings.equals(sort,'departure_timestamp-asc')}"></option>
-                            <option value="departure_timestamp-desc" th:text="|#{data.departureTime} #{sort.desc}|" th:selected="${#strings.equals(sort,'departure_timestamp-desc')}"></option>
-                            <!--                        <option value="en" th:text="#{lang.eng}" th:selected="${#strings.equals(language,'en')}"></option>-->
-                        </select>
+                        <p th:text="#{action.sort}"></p>
                     </th>
                     <th><p th:if="${session.loggedUser != null and session.loggedUser.admin}" th:text="#{search.flightId}"></p></th>
                     <th></th>
@@ -45,7 +37,17 @@
                     <th></th>
                 </tr>
                 <tr>
-                    <th></th>
+                    <th>
+                        <select name="sort" id="sort">
+                            <option value="airport_departure_code_name-asc" th:text="|#{data.departures} #{sort.asc}|" th:selected="${#strings.equals(sort,'airport_departure_code_name-asc')}"></option>
+                            <option value="airport_departure_code_name-desc" th:text="|#{data.departures} #{sort.desc}|" th:selected="${#strings.equals(sort,'airport_departure_code_name-desc')}"></option>
+                            <option value="airport_destination_code_name-asc" th:text="|#{data.destinations} #{sort.asc}|" th:selected="${#strings.equals(sort,'airport_destination_code_name-asc')}"></option>
+                            <option value="airport_destination_code_name-desc" th:text="|#{data.destinations} #{sort.desc}|" th:selected="${#strings.equals(sort,'airport_destination_code_name-desc')}"></option>
+                            <option value="departure_timestamp-asc" th:text="|#{data.departureTime} #{sort.asc}|" th:selected="${#strings.equals(sort,'departure_timestamp-asc')}"></option>
+                            <option value="departure_timestamp-desc" th:text="|#{data.departureTime} #{sort.desc}|" th:selected="${#strings.equals(sort,'departure_timestamp-desc')}"></option>
+                            <!--                        <option value="en" th:text="#{lang.eng}" th:selected="${#strings.equals(language,'en')}"></option>-->
+                        </select>
+                    </th>
                     <th th:unless="${session.loggedUser != null and session.loggedUser.admin}"></th>
                     <!--                <th>-->
                     <!--                    <select name="pol">-->
